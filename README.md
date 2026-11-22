@@ -10,12 +10,21 @@ It ships with the studio's real menu, copied from the old Acuity page:
 
 ## What clients get
 
-- The same flow as Acuity: category → service → location ("Any available",
-  Covington or Decatur) → add-ons + weekly time grid → details + intake forms
-  → deposit → confirmation.
-- The same look: pink/plum palette, Alegreya type, black buttons and the policy banner.
-- Live availability in 30-minute steps. It respects hours, add-on time,
-  buffers, 12-hour minimum notice, blocked time and special hours.
+- **A landing page in the studio's own style**, with the black-satin and neon
+  graphics, chrome logo and portrait. It includes:
+  - The full menu right on the page, with category chips and search.
+  - Booking policies, prep checklists for brows, lash lifts and waxing, and
+    payment info.
+  - Locations, hours and contact links.
+  - Client results, and a Book button that stays within reach on phones.
+  - All the text from the old policy graphics as real, readable text that
+    search engines can see.
+- **A focused booking flow** with a progress stepper and a live price summary:
+  location → extras + a day strip with morning/afternoon/evening times →
+  details and consent forms → deposit → confirmation.
+  - Returning clients can have their details remembered on their own device.
+  - Phone numbers format as you type.
+  - Every missing answer is pointed out at once.
 - **Double booking is impossible**: every booking runs under a database lock,
   and two people racing for one slot get a "just taken" message.
 - A $10 non-refundable deposit, collected one of two ways:
@@ -24,11 +33,14 @@ It ships with the studio's real menu, copied from the old Acuity page:
     the client pays.
   - **No Stripe**: Cash App / Zelle instructions. The owner marks the deposit
     paid in the dashboard.
-- A confirmation page with an address, Google/Apple calendar buttons and
-  self-service reschedule/cancel. The policy cutoffs are enforced online
-  (24 h by default).
+- **A confirmation page** with the address, directions, Google/Apple calendar
+  buttons, prep tips for the booked service, and self-service reschedule or
+  cancel. The policy cutoffs are enforced online (24 h by default).
 - Email confirmations, reschedule/cancel notices and day-before reminders.
   Clients who opt in get texts too.
+- Accessibility is checked automatically with axe (WCAG 2.1 AA, including
+  contrast). The pages work by keyboard, respect reduced-motion settings, and
+  have no horizontal scrolling on phones.
 
 ## What the owner gets (`/admin`)
 
@@ -66,7 +78,7 @@ is nothing to install.
 
 ```bash
 npm test          # availability engine, booking rules, Stripe flow (mocked)
-npm run e2e       # real browser: booking, reschedule/cancel, race, dashboard, phone layout
+npm run e2e       # real browser: landing, booking, reschedule/cancel, race, dashboard, phone, accessibility
 ```
 
 `npm run e2e` builds the app and serves it on port 3100 with a throwaway
@@ -138,4 +150,7 @@ src/lib/booking.ts                create / reschedule / cancel / deposit logic
 src/lib/notify.ts                 email + SMS templates
 src/db/schema.ts, drizzle/        database schema + migrations
 src/db/seed-data.ts               the studio's menu, forms and locations
+src/components/landing/           landing page sections (hero, policies, prep, visit, results)
+src/content/prep.ts               prep checklists shown on the landing + confirmation pages
+src/assets/brand/                 logo, portrait and results images cut from the studio's graphics
 ```

@@ -1,4 +1,5 @@
 import type { FieldType } from "@/db/schema";
+import type { HoursRow } from "@/lib/display";
 
 export type PublicService = {
   id: number;
@@ -24,19 +25,29 @@ export type PublicForm = {
 export type PublicData = {
   businessName: string;
   timezone: string;
-  bannerImages: string[];
   policies: { title: string; body: string }[];
   locationNote: string;
+  confirmationNote: string;
   phone: string;
   email: string;
   instagram: string;
+  facebook: string;
+  cashAppHandle: string;
+  zelleHandle: string;
   onlineDeposit: boolean;
   manualDepositInstructions: string;
+  /** The deposit most services use, for headline copy. */
+  depositCents: number;
+  /** e.g. "Mon – Sat · 9:30 AM – 8 PM" */
+  hoursHeadline: string;
+  /** One group when every studio keeps the same hours, otherwise one per studio. */
+  hours: { label: string; rows: HoursRow[] }[];
   categories: { id: number; name: string }[];
   services: PublicService[];
   addons: { id: number; name: string; durationMin: number; priceCents: number }[];
   forms: PublicForm[];
-  locations: { id: number; name: string; address: string }[];
+  /** Street addresses are only shared after booking, so the page gets the city. */
+  locations: { id: number; name: string; city: string | null }[];
 };
 
 export type Slot = { start: string; locationIds: number[] };
