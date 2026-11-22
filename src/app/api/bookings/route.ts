@@ -8,6 +8,7 @@ import { appUrl, stripeEnabled } from "@/lib/env";
 import { errorResponse } from "@/lib/http";
 import { notifyBooked } from "@/lib/notify";
 import { createDepositCheckout } from "@/lib/stripe";
+import { currentClient } from "@/lib/client-session";
 
 export const dynamic = "force-dynamic";
 
@@ -36,8 +37,12 @@ export async function POST(req: NextRequest) {
     const base = appUrl(req);
     const online = stripeEnabled();
 
+    // Signed-in clients always book under their account's email.
+    const me = await currentClient(db);
+    const input = me ? { ...parsed.data, client: { ...parsed.data.client, email: me.email } } : parsed.data;
+
     const { appointment, client, needsOnlinePayment, settings } = await createBooking(db, {
-      ...parsed.data,
+      ...input,
       bookedBy: "client",
       onlineDeposit: online,
     });

@@ -195,9 +195,31 @@ export const clients = pgTable(
     notes: text("notes").notNull().default(""),
     stripeCustomerId: text("stripe_customer_id"),
     stripePaymentMethodId: text("stripe_payment_method_id"),
+    /** Last time the client signed in to their account (null = never). */
+    lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [uniqueIndex("clients_email").on(t.email)],
+);
+
+/**
+ * One-time sign-in codes for client accounts (passwordless email sign-in).
+ * Only hashes are stored: a 6-digit code typed by the client, and a token for
+ * the one-click link in the same email.
+ */
+export const clientLoginCodes = pgTable(
+  "client_login_codes",
+  {
+    id: serial("id").primaryKey(),
+    email: text("email").notNull(),
+    codeHash: text("code_hash").notNull(),
+    linkHash: text("link_hash").notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    attempts: integer("attempts").notNull().default(0),
+    consumedAt: timestamp("consumed_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("client_login_codes_email").on(t.email), uniqueIndex("client_login_codes_link").on(t.linkHash)],
 );
 
 export const appointments = pgTable(

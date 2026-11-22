@@ -79,6 +79,8 @@ export default async function ClientPage({ params, searchParams }: { params: Pro
             <p className="text-xs text-stone-500">
               Client since {DateTime.fromJSDate(c.createdAt).setZone(settings.timezone).toFormat("LLL yyyy")}
               {c.stripePaymentMethodId && " · card on file"}
+              {" · "}
+              {c.lastLoginAt ? `account: last signed in ${DateTime.fromJSDate(c.lastLoginAt).setZone(settings.timezone).toRelative()}` : "hasn't signed in to an account"}
             </p>
           </form>
         </Card>

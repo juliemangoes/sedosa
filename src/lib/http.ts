@@ -16,3 +16,15 @@ export function errorResponse(e: unknown) {
   console.error(e);
   return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
 }
+
+/** Rejects cross-site POSTs (defense in depth on top of SameSite cookies). */
+export function sameOrigin(req: Request) {
+  const origin = req.headers.get("origin");
+  if (!origin) return true;
+  try {
+    const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}

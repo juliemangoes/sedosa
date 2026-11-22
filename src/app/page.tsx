@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
 import { cache } from "react";
+import { and, desc, gte, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/db";
+import * as t from "@/db/schema";
 import { loadCatalog } from "@/lib/catalog";
 import { getSettings } from "@/lib/settings";
 import { appUrl, stripeEnabled } from "@/lib/env";
 import { cityFromAddress, hoursRows, openingHoursSpec, placesLabel } from "@/lib/display";
 import BookingApp from "@/components/booking/BookingApp";
+import { accountsEnabled, currentClient } from "@/lib/client-session";
+import { profileOf, savedAnswers } from "@/lib/account";
 import Hero from "@/components/landing/Hero";
 import InfoSections, { SiteFooter } from "@/components/landing/InfoSections";
 import type { PublicData } from "@/components/booking/types";
@@ -18,6 +22,20 @@ const load = cache(async () => {
   const [catalog, settings] = await Promise.all([loadCatalog(db, { publicOnly: true }), getSettings(db)]);
   return { catalog, settings };
 });
+
+/** Up to three services with real recent demand: at least 3 bookings in the last 120 days. */
+async function popularServiceIds(): Promise<number[]> {
+  const db = await getDb();
+  const since = new Date(Date.now() - 120 * 86_400_000);
+  const rows = await db
+    .select({ serviceId: t.appointments.serviceId, n: sql<number>`count(*)::int` })
+    .from(t.appointments)
+    .where(and(gte(t.appointments.createdAt, since), inArray(t.appointments.status, ["confirmed", "completed"])))
+    .groupBy(t.appointments.serviceId)
+    .orderBy(desc(sql`count(*)`))
+    .limit(3);
+  return rows.filter((r) => r.n >= 3).map((r) => r.serviceId);
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const { catalog, settings } = await load();
@@ -35,7 +53,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
-  const [{ catalog, settings }, sp] = await Promise.all([load(), searchParams]);
+  const db = await getDb();
+  const [{ catalog, settings }, sp, popularIds, me] = await Promise.all([load(), searchParams, popularServiceIds(), currentClient(db)]);
+  const answers = me ? await savedAnswers(db, me.id) : {};
 
   // Hours: one table when every studio keeps the same hours, otherwise one per studio.
   const hourGroups = catalog.locations.map((l) => ({ label: l.name, rows: hoursRows(l.weeklyHours) }));
@@ -65,6 +85,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     hoursHeadline: openRow ? `${openRow.days} · ${openRow.hours}` : "By appointment",
     hours,
     categories: catalog.categories.map((c) => ({ id: c.id, name: c.name })),
+    popularIds: popularIds.filter((id) => catalog.services.some((s) => s.id === id)),
     services: catalog.services.map((s) => ({
       id: s.id,
       categoryId: s.categoryId,
@@ -114,6 +135,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
         hero={<Hero data={data} />}
         sections={<InfoSections data={data} />}
         footer={<SiteFooter data={data} />}
+        initialAccount={me ? profileOf(me) : null}
+        initialSavedAnswers={answers}
+        accountsEnabled={accountsEnabled()}
       />
     </>
   );

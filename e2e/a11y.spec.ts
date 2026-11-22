@@ -54,3 +54,21 @@ test("scroll animations never leave content hidden", async ({ browser }) => {
   expect(minOpacity).toBe(1);
   await calm.close();
 });
+
+test("menu details sheet and account pages are accessible", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Brow Lami Set ♡, details" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await audit(page, "details sheet");
+  await page.keyboard.press("Escape");
+
+  await page.goto("/account");
+  await audit(page, "account sign-in");
+  await page.getByLabel("Email").fill(`axe${Date.now()}@example.com`);
+  await page.getByRole("button", { name: /Email me a code/ }).click();
+  const hint = await page.getByText(/here's the code for testing/).textContent();
+  await page.getByLabel("6-digit code").fill(hint!.match(/(\d{6})/)![1]);
+  await expect(page.getByRole("heading", { name: /^Hi/ })).toBeVisible();
+  await audit(page, "account dashboard");
+});

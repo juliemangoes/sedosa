@@ -13,6 +13,7 @@ import { prettyName, shortDuration } from "@/lib/display";
 import { googleCalendarLink } from "@/lib/ics";
 import { appointmentEvent } from "@/lib/notify";
 import { syncCheckoutSession } from "@/lib/stripe";
+import { accountsEnabled, currentClient } from "@/lib/client-session";
 import { PREP_ALWAYS, guidesFor } from "@/content/prep";
 import ManageBooking from "@/components/booking/ManageBooking";
 import PayDepositButton from "@/components/booking/PayDepositButton";
@@ -51,7 +52,8 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
   }
 
   const { appointment: a, client } = found;
-  const settings = await getSettings(db);
+  const [settings, me] = await Promise.all([getSettings(db), currentClient(db)]);
+  const signedInHere = !!me && me.id === client.id;
   const zone = settings.timezone;
   const s = a.snapshot;
   const isNew = !!sp.new || !!sp.session_id;
@@ -276,6 +278,22 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
                 </span>
               ))}
             </div>
+          </section>
+        )}
+
+        {confirmed && (signedInHere || accountsEnabled()) && (
+          <section data-reveal className="flex flex-col items-start gap-4 rounded-3xl bg-black p-6 text-[#fde7f5] sm:flex-row sm:items-center sm:justify-between sm:p-7">
+            <div>
+              <p className="flex items-center gap-2 text-lg font-semibold text-white">
+                <Sparkle className="text-neon" size={14} /> {signedInHere ? "It's in your account" : "Keep all your bookings in one place"}
+              </p>
+              <p className="mt-1 text-sm text-[#f3d6e8]">
+                {signedInHere ? "See every upcoming and past visit, and book again in a tap." : "Create a free account with this email: no password, and booking next time is quicker."}
+              </p>
+            </div>
+            <a href={signedInHere ? "/account" : `/account?email=${encodeURIComponent(client.email)}`} className="btn-neon shrink-0 px-6 py-3">
+              {signedInHere ? "My appointments" : "Create my account"}
+            </a>
           </section>
         )}
 

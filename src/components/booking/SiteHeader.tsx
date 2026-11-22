@@ -4,13 +4,48 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import logo from "@/assets/brand/logo.png";
 import { IconChevronLeft } from "@/components/landing/icons";
+import type { AccountProfile } from "@/components/account/SignInPanel";
 
-type Props = { businessName: string; mode: "browse" | "booking"; onExit: () => void };
+type Props = {
+  businessName: string;
+  mode: "browse" | "booking";
+  onExit: () => void;
+  account?: AccountProfile | null;
+  accountsEnabled?: boolean;
+};
+
+function AccountLink({ account }: { account: AccountProfile | null }) {
+  const initial = (account?.firstName || account?.email || "?").slice(0, 1).toUpperCase();
+  return (
+    <a
+      href="/account"
+      className="group flex items-center gap-2 rounded-full py-1 pl-1 pr-1 text-sm transition hover:text-white sm:pr-3"
+      aria-label={account ? `My account${account.firstName ? `, signed in as ${account.firstName}` : ""}` : "Sign in to your account"}
+    >
+      <span
+        aria-hidden="true"
+        className={`grid size-9 place-items-center rounded-full text-sm font-semibold transition ${
+          account ? "bg-neon text-black group-hover:shadow-[0_0_16px_rgba(255,92,191,0.7)]" : "ring-1 ring-white/30 group-hover:ring-neon"
+        }`}
+      >
+        {account ? (
+          initial
+        ) : (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round">
+            <circle cx="12" cy="8.5" r="3.8" />
+            <path d="M4.5 20c1.4-3.6 4.3-5.5 7.5-5.5s6.1 1.9 7.5 5.5" />
+          </svg>
+        )}
+      </span>
+      <span className="hidden sm:inline">{account ? "My account" : "Sign in"}</span>
+    </a>
+  );
+}
 
 const navLink =
   "relative py-1 transition-colors hover:text-white after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px after:origin-center after:scale-x-0 after:bg-neon after:transition-transform after:duration-300 hover:after:scale-x-100";
 
-export default function SiteHeader({ businessName, mode, onExit }: Props) {
+export default function SiteHeader({ businessName, mode, onExit, account = null, accountsEnabled = false }: Props) {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -65,9 +100,12 @@ export default function SiteHeader({ businessName, mode, onExit }: Props) {
                 Visit
               </a>
             </nav>
-            <a href="#services" className="btn-neon px-5 py-2.5 hover:-translate-y-px">
-              Book now
-            </a>
+            <div className="flex items-center gap-2 sm:gap-3">
+              {(accountsEnabled || account) && <AccountLink account={account} />}
+              <a href="#services" className="btn-neon px-5 py-2.5 hover:-translate-y-px">
+                Book now
+              </a>
+            </div>
           </>
         ) : (
           <button type="button" onClick={onExit} className="btn-ghost px-4 py-2.5">

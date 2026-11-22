@@ -50,29 +50,97 @@ async function login(page: Page) {
   await expect(page.getByRole("heading", { name: "Appointments" })).toBeVisible();
 }
 
-test("landing page: brand hero, menu filters and search", async ({ page }) => {
+test("landing page: hero shortcuts, menu navigation, search and details sheet", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Sedosa Beauty Studio" })).toBeVisible();
-  await expect(page.getByText("Welcome to my booking site ♡")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Booking policies" })).toBeAttached();
-  await expect(page.getByRole("heading", { name: "How to prepare" })).toBeAttached();
 
-  const filters = page.getByRole("group", { name: "Filter by category" });
-  await filters.getByRole("button", { name: /^Waxing/ }).click();
-  await expect(page.getByRole("button", { name: /^Book / })).toHaveCount(3);
-  await filters.getByRole("button", { name: /^All services/ }).click();
+  // Hero category shortcut jumps straight to that part of the menu.
+  await page.getByRole("navigation", { name: "Jump to a category" }).getByRole("link", { name: "Waxing" }).click();
+  await expect(page.locator("#services").getByRole("heading", { name: "Waxing", level: 3 })).toBeInViewport();
+
+  // Sidebar navigation follows along and jumps between categories.
+  const nav = page.getByRole("navigation", { name: "Jump to category" });
+  await nav.getByRole("button", { name: /Korean Lash Lifts/ }).click();
+  await expect(page.locator("#services").getByRole("heading", { name: "Korean Lash Lifts", level: 3 })).toBeInViewport();
+  await expect(nav.getByRole("button", { name: /Korean Lash Lifts/ })).toHaveAttribute("aria-current", "true");
+
   await expect(page.getByRole("button", { name: /^Book / })).toHaveCount(18);
-
-  await page.getByLabel("Search services").fill("lami");
+  const search = page.getByRole("searchbox", { name: "Search services" });
+  await search.fill("lami");
   await expect(page.getByRole("button", { name: "Book Brow Lami Set ♡" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Book Chin Wax!" })).toHaveCount(0);
-  await page.getByLabel("Search services").fill("zzz");
+  await search.fill("zzz");
   await expect(page.getByText("No services match")).toBeVisible();
   await page.getByRole("button", { name: "Show all services" }).click();
   await expect(page.getByRole("button", { name: /^Book / })).toHaveCount(18);
 
+  // Details sheet, then book from it.
+  await page.getByRole("button", { name: "Brow Lami Set ♡, details" }).click();
+  const sheet = page.getByRole("dialog", { name: "Brow Lami Set ♡" });
+  await expect(sheet).toBeVisible();
+  await expect(sheet.getByText(/\$10 non-refundable deposit/)).toBeVisible();
+  await expect(sheet.getByText("Add-ons you can include")).toBeVisible();
+  await expect(sheet.getByText(/consent forms when you book/)).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(sheet).toBeHidden();
+  await page.getByRole("button", { name: "Brow Lami Set ♡, details" }).click();
+  await sheet.getByRole("button", { name: "Book this service" }).click();
+  await expect(page.getByRole("heading", { name: "Choose a studio" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe("");
+
   // Street addresses are not published before booking.
+  await page.goto("/");
   expect(await page.content()).not.toContain("2843 Fairview");
+});
+
+test("client account: create from a booking, sign in with a code, rebook with saved answers", async ({ page }) => {
+  const email = `acct${Date.now()}@example.com`;
+  await pickService(page, "Underarm Wax!");
+  await pickTime(page);
+  await fillClient(page, { first: "Jada", last: "Moore", email });
+  await answerWaxingForm(page);
+  await agreeToWaiver(page);
+  await page.getByRole("button", { name: "Confirm booking" }).click();
+  await expect(page.getByRole("heading", { name: /You're booked, Jada/ })).toBeVisible();
+
+  await page.getByRole("link", { name: "Create my account" }).click();
+  await expect(page.getByLabel("Email")).toHaveValue(email);
+  await page.getByRole("button", { name: /Email me a code/ }).click();
+  const hint = await page.getByText(/here's the code for testing/).textContent();
+  const code = hint!.match(/(\d{6})/)![1];
+  // A wrong code is rejected first.
+  await page.getByLabel("6-digit code").fill(code === "000000" ? "111111" : "000000");
+  await expect(page.getByText(/doesn't match/)).toBeVisible();
+  await page.getByLabel("6-digit code").fill(code);
+  await expect(page.getByRole("heading", { name: "Hi, Jada ♡" })).toBeVisible();
+  await expect(page.getByText("Underarm Wax!")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Manage" })).toBeVisible();
+
+  await page.getByLabel("Mobile number").fill("4045550199");
+  await page.getByRole("button", { name: "Save details" }).click();
+  await expect(page.getByText("Saved ♡")).toBeVisible();
+
+  // Booking again: details and previous answers are filled in; consent must be re-ticked.
+  await page.goto("/");
+  await expect(page.getByRole("link", { name: /My account, signed in as Jada/ })).toBeVisible();
+  await pickService(page, "Underarm Wax!");
+  await pickTime(page, 3);
+  await expect(page.getByRole("heading", { name: "Booking as Jada ♡" })).toBeVisible();
+  await expect(page.getByLabel("Mobile number")).toHaveValue("(404) 555-0199");
+  await expect(page.getByText(/filled in your answers from last time/)).toBeVisible();
+  await page.getByRole("button", { name: "Confirm booking" }).click();
+  await expect(page.getByText(/1 thing still needs your attention|2 things still need your attention/)).toBeVisible();
+  await page.getByText(/I understand that If I begin using/).click();
+  await agreeToWaiver(page);
+  await page.getByRole("button", { name: "Confirm booking" }).click();
+  await expect(page.getByRole("heading", { name: /You're booked, Jada/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: "My appointments" })).toBeVisible();
+
+  await page.goto("/account");
+  await expect(page.getByText("You have 2 upcoming appointments.")).toBeVisible();
+  await page.getByRole("button", { name: "Sign out" }).click();
+  await expect(page.getByRole("heading", { name: "Sign in or create your account" })).toBeVisible();
 });
 
 test("client books a waxing service with an add-on and intake forms", async ({ page }) => {
@@ -194,7 +262,7 @@ test("owner closes a day and changes a price; the booking page follows", async (
   await page.getByRole("button", { name: "Save service" }).click();
   await expect(page.getByText("Service saved.")).toBeVisible();
   await page.goto("/");
-  await expect(page.locator("article").filter({ hasText: "Brow Sculpt/Thread" })).toContainText("$20");
+  await expect(page.locator("#services li").filter({ hasText: "Brow Sculpt/Thread" })).toContainText("$20");
 });
 
 test("owner books a client by phone, outside regular hours @mobile", async ({ page }) => {

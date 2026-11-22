@@ -224,3 +224,25 @@ async function notifyOwner(db: DB, settings: Settings, subject: string, appt: Ap
     html: htmlWrap(settings, subject, `${detailsHtml(appt, settings)}<p>${esc(client.firstName)} ${esc(client.lastName)}<br>${esc(prettyPhone(client.phone))}<br>${esc(client.email)}</p>${button(`${base}/admin/appointments/${appt.id}`, "Open in dashboard")}`),
   });
 }
+
+/** Passwordless sign-in email: a 6-digit code plus a one-click link. */
+export async function sendLoginCode(db: DB, email: string, code: string, link: string) {
+  const settings = await getSettings(db);
+  const spaced = `${code.slice(0, 3)} ${code.slice(3)}`;
+  const text = [
+    `Your ${settings.businessName} sign-in code is ${code}.`,
+    "",
+    `Or sign in with one tap: ${link}`,
+    "",
+    "The code and link expire in 10 minutes. If you didn't ask for this, you can ignore this email.",
+  ].join("\n");
+  const html = htmlWrap(
+    settings,
+    "Your sign-in code",
+    `<p style="margin:0 0 10px">Enter this code to sign in to your account:</p>
+<p style="margin:0 0 18px;font-size:34px;letter-spacing:.18em;font-weight:700;text-align:center;background:#fff;border-radius:12px;padding:14px">${spaced}</p>
+<p style="margin:0">Or sign in with one tap:</p>${button(link, "Sign in")}
+<p style="font-size:13px;color:#6d2b67;margin-top:16px">The code and link expire in 10 minutes. If you didn't ask for this, you can ignore this email.</p>`,
+  );
+  return sendEmail(db, null, { to: email, subject: `${spaced} is your ${settings.businessName} sign-in code`, text, html });
+}

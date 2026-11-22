@@ -27,6 +27,8 @@ export default defineConfig({
       STRIPE_SECRET_KEY: "",
       RESEND_API_KEY: "",
       TWILIO_ACCOUNT_SID: "",
+      // Shows sign-in codes on screen because the test server has no email provider. Never set in production.
+      DEV_LOGIN_CODES: "1",
     },
   },
 });

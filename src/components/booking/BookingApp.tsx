@@ -9,6 +9,7 @@ import { AddonPicker, LocationStep, MobileSummary, Stepper, Summary, slotLabel, 
 import type { PublicData, PublicService, Slot } from "./types";
 import { prettyName } from "@/lib/display";
 import { IconArrowRight } from "@/components/landing/icons";
+import type { AccountProfile } from "@/components/account/SignInPanel";
 
 type Step = "browse" | "location" | "time" | "details";
 type LocationChoice = number | "any";
@@ -20,9 +21,15 @@ type Props = {
   hero: React.ReactNode;
   sections: React.ReactNode;
   footer: React.ReactNode;
+  /** Signed-in client, if any, and their previous intake answers. */
+  initialAccount: AccountProfile | null;
+  initialSavedAnswers: Record<string, unknown>;
+  accountsEnabled: boolean;
 };
 
-export default function BookingApp({ data, initialServiceId, hero, sections, footer }: Props) {
+export default function BookingApp({ data, initialServiceId, hero, sections, footer, initialAccount, initialSavedAnswers, accountsEnabled }: Props) {
+  const [account, setAccount] = useState<AccountProfile | null>(initialAccount);
+  const [savedAnswers, setSavedAnswers] = useState<Record<string, unknown>>(initialSavedAnswers);
   const initialService = data.services.find((s) => s.id === initialServiceId) ?? null;
   const [step, setStepState] = useState<Step>(initialService ? (initialService.locationIds.length > 1 ? "location" : "time") : "browse");
   const [service, setService] = useState<PublicService | null>(initialService);
@@ -89,7 +96,7 @@ export default function BookingApp({ data, initialServiceId, hero, sections, foo
   if (step === "browse" || !service) {
     return (
       <div id="top">
-        <SiteHeader businessName={data.businessName} mode="browse" onExit={exit} />
+        <SiteHeader businessName={data.businessName} mode="browse" onExit={exit} account={account} accountsEnabled={accountsEnabled} />
         {hero}
         <ServiceMenu data={data} onBook={chooseService} />
         {sections}
@@ -118,7 +125,7 @@ export default function BookingApp({ data, initialServiceId, hero, sections, foo
 
   return (
     <div className="min-h-screen">
-      <SiteHeader businessName={data.businessName} mode="booking" onExit={exit} />
+      <SiteHeader businessName={data.businessName} mode="booking" onExit={exit} account={account} accountsEnabled={accountsEnabled} />
       <main className="mx-auto max-w-6xl px-4 pb-36 pt-6 sm:px-6 lg:pb-20 lg:pt-10">
         <Stepper steps={steps} current={current} />
         <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
@@ -187,6 +194,17 @@ export default function BookingApp({ data, initialServiceId, hero, sections, foo
                 location={location}
                 addonIds={addonIds}
                 chosenAddons={chosenAddons}
+                account={account}
+                savedAnswers={savedAnswers}
+                accountsEnabled={accountsEnabled}
+                onSignedIn={(r) => {
+                  setAccount(r.account);
+                  setSavedAnswers(r.savedAnswers);
+                }}
+                onSignedOut={() => {
+                  setAccount(null);
+                  setSavedAnswers({});
+                }}
                 onSlotTaken={(msg) => {
                   setSlot(null);
                   setNotice(msg);

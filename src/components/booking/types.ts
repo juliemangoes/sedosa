@@ -43,6 +43,8 @@ export type PublicData = {
   /** One group when every studio keeps the same hours, otherwise one per studio. */
   hours: { label: string; rows: HoursRow[] }[];
   categories: { id: number; name: string }[];
+  /** Most-booked services recently (shown with a "Popular" badge). */
+  popularIds: number[];
   services: PublicService[];
   addons: { id: number; name: string; durationMin: number; priceCents: number }[];
   forms: PublicForm[];

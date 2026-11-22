@@ -12,13 +12,23 @@ It ships with the studio's real menu, copied from the old Acuity page:
 
 - **A landing page in the studio's own style**, with the black-satin and neon
   graphics, chrome logo and portrait. It includes:
-  - The full menu right on the page, with category chips and search.
+  - A hero that fits the first screen on any phone: portrait with the logo,
+    one line, the Book button and one-tap category shortcuts.
+  - A menu laid out like a salon price list, with a category nav that follows
+    your scroll (sticky chips on phones, a sidebar on desktop) and search.
+    Tapping a service opens a details sheet (description, deposit, consent
+    forms, add-ons, prep). "Popular" badges come from real bookings.
   - Booking policies, prep checklists for brows, lash lifts and waxing, and
     payment info.
   - Locations, hours and contact links.
   - Client results, and a Book button that stays within reach on phones.
   - All the text from the old policy graphics as real, readable text that
     search engines can see.
+- **Client accounts** with passwordless sign-in (a 6-digit code or a one-tap
+  link by email). Clients see upcoming and past appointments, manage or rebook
+  them, and keep their details. When signed in, booking pre-fills their
+  details and previous consent answers; consent boxes must be ticked again.
+  Any booking can be turned into an account from the confirmation page.
 - **A focused booking flow** with a progress stepper and a live price summary:
   location → extras + a day strip with morning/afternoon/evening times →
   details and consent forms → deposit → confirmation.
@@ -121,6 +131,12 @@ database. Stop `npm run dev` first if Next.js complains about another instance.
 | `OWNER_EMAIL` | optional | email the owner on every booking |
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` | optional | texts |
 
+**Client accounts need email.** Sign-in codes are sent with Resend, so on a
+live site account sign-in only appears once `RESEND_API_KEY` and `EMAIL_FROM`
+are set. In local development (and in the test suite, via
+`DEV_LOGIN_CODES=1`) the code is shown on screen instead. Never set
+`DEV_LOGIN_CODES` on a real deployment.
+
 Until email or SMS is configured, messages are still recorded under
 **Messages**, so nothing is lost while you set things up.
 
@@ -139,8 +155,8 @@ hourly, or ping the URL hourly from any cron service with the header
   Sunday) for both locations. Adjust them under **Hours & time off**.
 - **Prices, durations and forms** match the old Acuity page as of Nov 2026.
 - Not included yet (Acuity has these): two-way Google Calendar sync (there is a
-  one-way calendar feed), packages and gift certificates, client logins,
-  waitlist, staff logins and a CAPTCHA on the public form.
+  one-way calendar feed), packages and gift certificates, a waitlist, staff
+  logins and a CAPTCHA on the public form.
 
 ## Project layout
 
