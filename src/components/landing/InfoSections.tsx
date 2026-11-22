@@ -4,6 +4,7 @@ import type { PublicData } from "@/components/booking/types";
 import { PREP_ALWAYS, PREP_GUIDES } from "@/content/prep";
 import { placesLabel, priceLabel } from "@/lib/display";
 import { prettyPhone, normalizePhone } from "@/lib/format";
+import { popIndex, revealDelay } from "@/lib/motion";
 import {
   IconCalendar,
   IconCancel,
@@ -34,7 +35,7 @@ function policyIcon(title: string) {
 
 function SectionHead({ kicker, title, children, id }: { kicker: string; title: string; children?: React.ReactNode; id: string }) {
   return (
-    <div className="mx-auto max-w-2xl text-center">
+    <div data-reveal className="mx-auto max-w-2xl text-center">
       <p className="kicker text-sm text-plum">{kicker}</p>
       <h2 id={id} className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
         {title}
@@ -61,21 +62,23 @@ export default function InfoSections({ data }: { data: PublicData }) {
             Please read these before booking. They keep things fair for everyone ♡
           </SectionHead>
           <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {data.policies.map((p) => {
+            {data.policies.map((p, i) => {
               const Icon = policyIcon(p.title);
               return (
-                <li key={p.title} className="rounded-3xl bg-white/80 p-6 shadow-sm ring-1 ring-petal-line">
-                  <span className="grid size-11 place-items-center rounded-2xl bg-black text-neon">
-                    <Icon size={22} />
-                  </span>
-                  <h3 className="mt-4 text-lg font-semibold">{p.title}</h3>
-                  <p className="mt-1.5 leading-relaxed text-ink/80">{p.body}</p>
+                <li key={p.title} data-reveal style={revealDelay(i * 110)}>
+                  <div className="group h-full rounded-3xl bg-white/80 p-6 shadow-sm ring-1 ring-petal-line transition duration-300 ease-out hover:-translate-y-1 hover:bg-white hover:shadow-[0_22px_44px_-24px_rgba(109,43,103,0.6)]">
+                    <span className="grid size-11 place-items-center rounded-2xl bg-black text-neon transition duration-300 group-hover:-rotate-6 group-hover:scale-110 group-hover:shadow-[0_0_26px_rgba(255,92,191,0.55)]">
+                      <Icon size={22} />
+                    </span>
+                    <h3 className="mt-4 text-lg font-semibold">{p.title}</h3>
+                    <p className="mt-1.5 leading-relaxed text-ink/80">{p.body}</p>
+                  </div>
                 </li>
               );
             })}
           </ul>
 
-          <div className="mt-6 grid gap-4 rounded-3xl bg-black p-6 text-[#fde7f5] sm:grid-cols-[auto_1fr] sm:items-center sm:gap-8 sm:p-8">
+          <div data-reveal="scale" className="mt-6 grid gap-4 rounded-3xl bg-black p-6 text-[#fde7f5] sm:grid-cols-[auto_1fr] sm:items-center sm:gap-8 sm:p-8">
             <div>
               <p className="kicker text-sm text-neon-soft">Payments</p>
               <p className="mt-1 text-xl font-semibold">How to pay</p>
@@ -120,25 +123,27 @@ export default function InfoSections({ data }: { data: PublicData }) {
             A few simple things so your results come out their best.
           </SectionHead>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {PREP_GUIDES.map((g) => (
-              <article key={g.id} className="rounded-3xl bg-white/70 p-6 ring-1 ring-petal-line">
-                <h3 className="flex items-center gap-2 text-xl font-semibold">
-                  <Sparkle className="text-neon" size={14} /> {g.title}
-                </h3>
-                <ul className="mt-4 space-y-3">
-                  {g.items.map((it) => (
-                    <li key={it} className="flex gap-3 leading-snug">
-                      <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-plum text-white">
-                        <IconCheck size={13} strokeWidth={2.6} />
-                      </span>
-                      <span>{it}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
+            {PREP_GUIDES.map((g, gi) => (
+              <div key={g.id} data-reveal style={revealDelay(gi * 130)}>
+                <article className="group h-full rounded-3xl bg-white/70 p-6 ring-1 ring-petal-line transition duration-300 ease-out hover:-translate-y-1 hover:bg-white hover:shadow-[0_22px_44px_-24px_rgba(109,43,103,0.6)]">
+                  <h3 className="flex items-center gap-2 text-xl font-semibold">
+                    <Sparkle className="text-neon transition-transform duration-500 group-hover:rotate-90 group-hover:scale-125" size={14} /> {g.title}
+                  </h3>
+                  <ul className="mt-4 space-y-3">
+                    {g.items.map((it, i) => (
+                      <li key={it} className="flex gap-3 leading-snug">
+                        <span className="reveal-pop mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-plum text-white" style={popIndex(i + gi)}>
+                          <IconCheck size={13} strokeWidth={2.6} />
+                        </span>
+                        <span>{it}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </div>
             ))}
           </div>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
+          <div data-reveal className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
             <span className="kicker mr-1 text-plum">Every appointment</span>
             {PREP_ALWAYS.map((it) => (
               <span key={it} className="rounded-full bg-black px-3.5 py-1.5 text-white">
@@ -154,7 +159,7 @@ export default function InfoSections({ data }: { data: PublicData }) {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <SectionHead id="visit-title" kicker="Visit" title={visitTitle} />
           <div className="mt-10 grid gap-4 lg:grid-cols-3">
-            <div className="rounded-3xl bg-white/80 p-6 ring-1 ring-petal-line">
+            <div data-reveal style={revealDelay(0)} className="rounded-3xl bg-white/80 p-6 ring-1 ring-petal-line">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <IconPin className="text-plum" /> Locations
               </h3>
@@ -169,7 +174,7 @@ export default function InfoSections({ data }: { data: PublicData }) {
               <p className="mt-4 rounded-2xl bg-blush px-4 py-3 text-sm">{data.locationNote}</p>
             </div>
 
-            <div className="rounded-3xl bg-white/80 p-6 ring-1 ring-petal-line">
+            <div data-reveal style={revealDelay(120)} className="rounded-3xl bg-white/80 p-6 ring-1 ring-petal-line">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <IconClock className="text-plum" /> Booking hours
               </h3>
@@ -188,7 +193,7 @@ export default function InfoSections({ data }: { data: PublicData }) {
               ))}
             </div>
 
-            <div className="rounded-3xl bg-white/80 p-6 ring-1 ring-petal-line">
+            <div data-reveal style={revealDelay(240)} className="rounded-3xl bg-white/80 p-6 ring-1 ring-petal-line">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <IconHeart className="text-plum" /> Say hi
               </h3>
@@ -238,9 +243,9 @@ export default function InfoSections({ data }: { data: PublicData }) {
       <section aria-labelledby="results-title" className="on-dark relative isolate overflow-hidden bg-noir text-[#fde7f5]">
         <div aria-hidden="true" className="absolute -right-32 top-10 -z-10 size-[30rem] rounded-full bg-neon/20 blur-[120px]" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
-          <div className="text-center lg:text-left">
+          <div data-reveal="left" className="text-center lg:text-left">
             <p className="kicker text-sm text-neon-soft">Real clients ♡</p>
-            <h2 id="results-title" className="neon-text mt-2 font-script text-6xl leading-tight sm:text-7xl">
+            <h2 id="results-title" className="neon-text reveal-flicker mt-2 font-script text-6xl leading-tight sm:text-7xl">
               Tag us in your selfies
             </h2>
             <p className="mx-auto mt-4 max-w-md text-lg text-[#f6d9ec] lg:mx-0">
@@ -258,13 +263,19 @@ export default function InfoSections({ data }: { data: PublicData }) {
               )}
             </div>
           </div>
-          <Image
-            src={results}
-            alt="Two clients showing their fresh brow and lash results in phone selfies"
-            sizes="(min-width: 1024px) 34rem, 90vw"
-            placeholder="blur"
-            className="mx-auto h-auto w-full max-w-md rounded-[2rem] lg:max-w-lg"
-          />
+          <div data-reveal="right" className="relative mx-auto w-full max-w-md lg:max-w-lg">
+            <div className="animate-float [animation-duration:8s]">
+              <Image
+                src={results}
+                alt="Two clients showing their fresh brow and lash results in phone selfies"
+                sizes="(min-width: 1024px) 34rem, 90vw"
+                placeholder="blur"
+                className="h-auto w-full rounded-[2rem]"
+              />
+            </div>
+            <Sparkle className="absolute -left-2 top-[12%] animate-twinkle text-white drop-shadow-[0_0_8px_#fff]" size={18} />
+            <Sparkle className="absolute -right-1 bottom-[18%] animate-twinkle text-neon-soft [animation-delay:1.1s]" size={14} />
+          </div>
         </div>
       </section>
     </>

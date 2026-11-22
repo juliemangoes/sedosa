@@ -3,7 +3,8 @@
 import { useId, useMemo, useRef, useState } from "react";
 import type { PublicData, PublicService } from "./types";
 import { categoryLabel, prettyName, priceLabel, shortDuration } from "@/lib/display";
-import { IconClock, IconSearch, IconX } from "@/components/landing/icons";
+import { IconArrowRight, IconClock, IconSearch, IconX } from "@/components/landing/icons";
+import { revealDelay } from "@/lib/motion";
 
 export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook: (s: PublicService) => void }) {
   const [cat, setCat] = useState<number | "all">("all");
@@ -27,7 +28,7 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
 
   return (
     <section id="services" aria-labelledby="services-title" className="scroll-mt-16 py-16 sm:py-20">
-      <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
+      <div data-reveal className="mx-auto max-w-2xl px-4 text-center sm:px-6">
         <p className="kicker text-sm text-plum">The menu</p>
         <h2 id="services-title" className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
           Choose your service
@@ -86,7 +87,7 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
           {shown} service{shown === 1 ? "" : "s"} shown
         </p>
         {shown === 0 ? (
-          <div className="mx-auto max-w-md rounded-3xl bg-white/70 p-8 text-center ring-1 ring-petal-line">
+          <div data-reveal="scale" className="mx-auto max-w-md rounded-3xl bg-white/70 p-8 text-center ring-1 ring-petal-line">
             <p className="text-lg font-semibold">No services match “{q}”</p>
             <p className="mt-1 text-ink/70">Try another word, or browse everything.</p>
             <button
@@ -104,15 +105,17 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
           <div className="space-y-12">
             {groups.map((g) => (
               <div key={g.id}>
-                <h3 className="mb-4 flex items-baseline gap-3 text-2xl font-semibold">
+                <h3 data-reveal className="mb-4 flex items-baseline gap-3 text-2xl font-semibold">
                   {categoryLabel(g.name)}
                   <span className="text-sm font-normal text-ink/70">
                     {g.services.length} service{g.services.length === 1 ? "" : "s"}
                   </span>
                 </h3>
                 <div className="grid gap-4 md:grid-cols-2">
-                  {g.services.map((s) => (
-                    <ServiceCard key={s.id} service={s} onBook={() => onBook(s)} />
+                  {g.services.map((s, i) => (
+                    <div key={s.id} data-reveal style={revealDelay((i % 2) * 110)}>
+                      <ServiceCard service={s} onBook={() => onBook(s)} />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -130,7 +133,7 @@ function ServiceCard({ service: s, onBook }: { service: PublicService; onBook: (
   const long = s.description.length > 150 || s.description.split("\n").filter(Boolean).length > 2;
   const name = prettyName(s.name);
   return (
-    <article className="group flex flex-col rounded-3xl bg-white/75 p-5 ring-1 ring-petal-line transition duration-200 hover:bg-white hover:shadow-[0_18px_40px_-22px_rgba(109,43,103,0.55)] sm:p-6">
+    <article className="group flex h-full flex-col rounded-3xl bg-white/75 p-5 ring-1 ring-petal-line transition duration-300 ease-out hover:-translate-y-1 hover:bg-white hover:shadow-[0_22px_44px_-22px_rgba(109,43,103,0.6)] hover:ring-plum/40 sm:p-6">
       <div className="flex items-start justify-between gap-4">
         <h4 className="text-lg font-semibold leading-snug">{name}</h4>
         <p className="shrink-0 text-lg font-semibold">{priceLabel(s.priceCents)}</p>
@@ -155,6 +158,7 @@ function ServiceCard({ service: s, onBook }: { service: PublicService; onBook: (
         <span className="text-xs text-ink/70">{s.depositCents > 0 ? `${priceLabel(s.depositCents)} deposit to book` : "No deposit needed"}</span>
         <button type="button" className="btn-black px-6" onClick={onBook} aria-label={`Book ${name}`}>
           Book
+          <IconArrowRight size={15} className="-ml-1 w-0 opacity-0 transition-all duration-300 group-hover:ml-0 group-hover:w-[15px] group-hover:opacity-100" />
         </button>
       </div>
     </article>

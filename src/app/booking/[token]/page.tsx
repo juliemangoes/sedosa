@@ -21,6 +21,11 @@ import { IconCalendar, IconCancel, IconCheck, IconChevronDown, IconClock, IconIn
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Your appointment · Sedosa Beauty Studio", robots: { index: false } };
 
+/** Where each sparkle flies to when a booking is confirmed (px from the check mark). */
+const BURST: [number, number][] = [
+  [-70, -38], [-48, -78], [0, -92], [52, -76], [74, -30], [80, 22], [-82, 18], [-40, 58], [44, 60],
+];
+
 function maskEmail(email: string) {
   const [user, domain] = email.split("@");
   if (!domain) return email;
@@ -64,6 +69,7 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
   const phone = normalizePhone(settings.phone);
   const ig = settings.instagram.replace(/^@/, "");
   const durationMin = Math.round((a.endsAt.getTime() - a.startsAt.getTime()) / 60000);
+  const celebrate = confirmed && isNew;
 
   const status = confirmed
     ? {
@@ -98,18 +104,34 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
       <section className="on-dark relative isolate overflow-hidden bg-noir pb-20 pt-8 text-center text-[#fde7f5]">
         <div aria-hidden="true" className="absolute left-1/2 top-0 -z-10 size-[28rem] -translate-x-1/2 rounded-full bg-neon/25 blur-[110px]" />
         <div className="mx-auto max-w-2xl px-4">
-          <span className={`mx-auto grid size-16 animate-pop place-items-center rounded-full ${confirmed || a.status === "completed" ? "bg-neon text-black shadow-[0_0_40px_rgba(255,92,191,0.7)]" : "bg-white/10 text-neon-soft ring-1 ring-white/20"}`}>
-            <status.Icon size={32} strokeWidth={2.4} />
-          </span>
-          <p className="kicker mt-5 text-sm text-neon-soft">{status.kicker}</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">{status.title}</h1>
-          <p className="mt-2 text-[#f3d6e8]">{status.sub}</p>
+          <div className="relative mx-auto size-16">
+            {celebrate && (
+              <>
+                <span aria-hidden="true" className="absolute inset-0 animate-ripple rounded-full bg-neon [animation-delay:250ms]" />
+                <span aria-hidden="true" className="absolute inset-0 animate-ripple rounded-full bg-neon [animation-delay:650ms]" />
+                {BURST.map((b, i) => (
+                  <Sparkle
+                    key={i}
+                    className={`absolute left-1/2 top-1/2 -ml-2 -mt-2 animate-burst ${i % 2 ? "text-white" : "text-neon-soft"}`}
+                    size={i % 3 === 0 ? 18 : 13}
+                    style={{ "--bx": `${b[0]}px`, "--by": `${b[1]}px`, animationDelay: `${300 + i * 40}ms` } as React.CSSProperties}
+                  />
+                ))}
+              </>
+            )}
+            <span className={`relative grid size-16 animate-pop place-items-center rounded-full ${confirmed || a.status === "completed" ? "bg-neon text-black shadow-[0_0_40px_rgba(255,92,191,0.7)]" : "bg-white/10 text-neon-soft ring-1 ring-white/20"}`}>
+              <status.Icon size={32} strokeWidth={2.4} />
+            </span>
+          </div>
+          <p className="kicker mt-5 animate-rise text-sm text-neon-soft [animation-delay:150ms]">{status.kicker}</p>
+          <h1 className="mt-2 animate-rise text-3xl font-semibold tracking-tight text-white [animation-delay:230ms] sm:text-4xl">{status.title}</h1>
+          <p className="mt-2 animate-rise text-[#f3d6e8] [animation-delay:310ms]">{status.sub}</p>
           {sp.canceled && holdActive && <p className="mt-2 text-sm text-[#f3d6e8]">Payment was canceled. You can try again below.</p>}
         </div>
       </section>
 
       <main className="relative mx-auto -mt-12 max-w-3xl space-y-5 px-4 pb-16 sm:px-6">
-        <section aria-label="Appointment details" className="overflow-hidden rounded-3xl bg-white shadow-[0_24px_60px_-30px_rgba(109,43,103,0.55)] ring-1 ring-petal-line">
+        <section aria-label="Appointment details" className="animate-rise overflow-hidden rounded-3xl [animation-delay:380ms] bg-white shadow-[0_24px_60px_-30px_rgba(109,43,103,0.55)] ring-1 ring-petal-line">
           <div className={`grid gap-4 p-6 sm:grid-cols-[auto_1fr] sm:items-center sm:p-8 ${inactive ? "opacity-60" : ""}`}>
             <div className="mx-auto grid w-24 place-items-center rounded-2xl bg-black py-3 text-center text-white sm:mx-0">
               <span className="kicker text-xs text-neon-soft">{start.toFormat("LLL")}</span>
@@ -193,7 +215,7 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
         </section>
 
         {confirmed && a.depositStatus === "due" && !stripeEnabled() && (
-          <section aria-labelledby="deposit-title" className="rounded-3xl bg-black p-6 text-[#fde7f5] shadow-[0_0_0_2px_var(--color-neon)] sm:p-7">
+          <section aria-labelledby="deposit-title" data-reveal="scale" className="rounded-3xl bg-black p-6 text-[#fde7f5] shadow-[0_0_0_2px_var(--color-neon)] sm:p-7">
             <h2 id="deposit-title" className="flex items-center gap-2 text-xl font-semibold text-white">
               <Sparkle className="text-neon" size={14} /> One more step: your {money(a.depositCents)} deposit
             </h2>
@@ -214,6 +236,7 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
         )}
 
         {confirmed && (
+          <div data-reveal>
           <ManageBooking
             token={a.token}
             timezone={zone}
@@ -221,10 +244,11 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
             canCancel={cancel.ok ? null : cancel.reason}
             depositNote={a.depositStatus === "paid" ? "Your deposit is non-refundable." : ""}
           />
+          </div>
         )}
 
         {confirmed && (guides.length > 0 || PREP_ALWAYS.length > 0) && (
-          <section aria-labelledby="prep-title" className="rounded-3xl bg-white/80 p-6 ring-1 ring-petal-line sm:p-7">
+          <section aria-labelledby="prep-title" data-reveal className="rounded-3xl bg-white/80 p-6 ring-1 ring-petal-line sm:p-7">
             <h2 id="prep-title" className="text-xl font-semibold">
               Get ready for your appointment
             </h2>
@@ -256,7 +280,7 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
         )}
 
         {(confirmed || a.status === "pending") && (
-          <details className="group rounded-3xl bg-white/80 ring-1 ring-petal-line">
+          <details data-reveal className="group rounded-3xl bg-white/80 ring-1 ring-petal-line">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-6 text-lg font-semibold sm:px-7 [&::-webkit-details-marker]:hidden">
               Booking policies
               <IconChevronDown className="transition group-open:rotate-180" />
@@ -281,8 +305,8 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
       </main>
 
       {confirmed && (
-        <section className="on-dark bg-noir py-14 text-center text-[#fde7f5]">
-          <p className="neon-text font-script text-5xl sm:text-6xl">Thank you, babe</p>
+        <section data-reveal="fade" className="on-dark bg-noir py-14 text-center text-[#fde7f5]">
+          <p className="neon-text reveal-flicker font-script text-5xl sm:text-6xl">Thank you, babe</p>
           <p className="mx-auto mt-3 max-w-md px-4 text-[#f3d6e8]">{settings.confirmationNote}</p>
           {ig && (
             <a href={`https://instagram.com/${ig}`} target="_blank" rel="noopener noreferrer" className="btn-ghost mt-6 px-6 py-3">

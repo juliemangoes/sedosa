@@ -233,7 +233,7 @@ export default function DetailsStep(props: {
         </div>
       )}
 
-      <section aria-labelledby="notes-title" className="rounded-3xl bg-white/80 p-5 ring-1 ring-petal-line sm:p-7">
+      <section aria-labelledby="notes-title" data-reveal className="rounded-3xl bg-white/80 p-5 ring-1 ring-petal-line sm:p-7">
         <h2 id="notes-title" className="text-xl font-semibold">
           Anything I should know? <span className="text-sm font-normal text-ink/70">Optional</span>
         </h2>
@@ -251,7 +251,7 @@ export default function DetailsStep(props: {
         />
       </section>
 
-      <section aria-labelledby="policy-title" className="rounded-3xl bg-black p-5 text-[#fde7f5] sm:p-7">
+      <section aria-labelledby="policy-title" data-reveal="scale" className="rounded-3xl bg-black p-5 text-[#fde7f5] sm:p-7">
         <h2 id="policy-title" className="flex items-center gap-2 text-lg font-semibold">
           <IconHeart className="text-neon" /> Before you confirm
         </h2>

@@ -22,7 +22,7 @@ export default function IntakeForm({ forms, answers, errors, onChange }: Props) 
           return f.type === "checkbox" ? v === true : f.type === "checkboxlist" ? Array.isArray(v) && v.length > 0 : !!v;
         }).length;
         return (
-          <fieldset key={form.id} className="rounded-3xl bg-white/80 p-5 ring-1 ring-petal-line sm:p-7">
+          <fieldset key={form.id} data-reveal className="rounded-3xl bg-white/80 p-5 ring-1 ring-petal-line sm:p-7">
             <legend className="sr-only">{form.name}</legend>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <h3 className="text-xl font-semibold">{form.name}</h3>

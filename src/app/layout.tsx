@@ -6,6 +6,7 @@ import "@fontsource/alegreya/700.css";
 import "@fontsource/antonio/latin-300.css";
 import "@fontsource/sacramento/latin-400.css";
 import "./globals.css";
+import RevealObserver from "@/components/RevealObserver";
 
 export const metadata: Metadata = {
   title: "Sedosa Beauty Studio · Book an appointment",
@@ -17,7 +18,10 @@ export const viewport: Viewport = { themeColor: "#0b0709", width: "device-width"
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body className="min-h-screen font-serif antialiased">{children}</body>
+      <body className="min-h-screen font-serif antialiased">
+        {children}
+        <RevealObserver />
+      </body>
     </html>
   );
 }

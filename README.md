@@ -38,6 +38,11 @@ It ships with the studio's real menu, copied from the old Acuity page:
   cancel. The policy cutoffs are enforced online (24 h by default).
 - Email confirmations, reschedule/cancel notices and day-before reminders.
   Clients who opt in get texts too.
+- **Motion**: the hero floats and twinkles, with a chrome shine on the logo
+  and a glowing Book button. Sections and cards ease in as you scroll, times
+  cascade in, picks pop, and a confirmed booking gets a sparkle burst. All of
+  it is transform/opacity only and switches off for anyone with "reduce motion"
+  on. Content never depends on it: without JavaScript everything simply shows.
 - Accessibility is checked automatically with axe (WCAG 2.1 AA, including
   contrast). The pages work by keyboard, respect reduced-motion settings, and
   have no horizontal scrolling on phones.

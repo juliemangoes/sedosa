@@ -136,13 +136,13 @@ export default function SlotPicker({ query, timezone, selected, onSelect, emptyM
           <div role="group" aria-label="Choose a day" className={`mt-4 grid grid-cols-7 gap-1.5 sm:gap-2 ${loading && data ? "opacity-50" : ""}`}>
             {!data
               ? Array.from({ length: DAYS }, (_, i) => <div key={i} className="h-[4.6rem] animate-pulse rounded-2xl bg-petal" />)
-              : data.dates.map((d) => {
+              : data.dates.map((d, di) => {
                   const dt = DateTime.fromISO(d.date, { zone: timezone });
                   const n = d.slots.length;
                   const sel = d.date === day;
                   return (
+                    <div key={d.date} className="animate-rise" style={{ animationDelay: `${di * 35}ms` }}>
                     <button
-                      key={d.date}
                       type="button"
                       disabled={!n}
                       aria-pressed={sel}
@@ -152,9 +152,9 @@ export default function SlotPicker({ query, timezone, selected, onSelect, emptyM
                         setDay(d.date);
                         onSelect(null);
                       }}
-                      className={`flex flex-col items-center rounded-2xl py-2 transition sm:py-2.5 ${
+                      className={`flex w-full flex-col items-center rounded-2xl py-2 transition sm:py-2.5 ${
                         sel
-                          ? "bg-black text-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.6)]"
+                          ? "animate-select bg-black text-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.6)]"
                           : n
                             ? "bg-white ring-1 ring-petal-line hover:ring-plum"
                             : "cursor-not-allowed text-ink/30"
@@ -162,8 +162,9 @@ export default function SlotPicker({ query, timezone, selected, onSelect, emptyM
                     >
                       <span className="text-[0.68rem] font-medium uppercase tracking-wider">{dt.toFormat("ccc")}</span>
                       <span className="text-xl font-semibold leading-tight">{dt.day}</span>
-                      <span aria-hidden="true" className={`mt-1 size-1.5 rounded-full ${n ? (sel ? "bg-neon" : "bg-plum/70") : "bg-transparent"}`} />
+                      <span aria-hidden="true" className={`mt-1 size-1.5 rounded-full transition-colors ${n ? (sel ? "bg-neon" : "bg-plum/70") : "bg-transparent"}`} />
                     </button>
+                    </div>
                   );
                 })}
           </div>
@@ -195,7 +196,7 @@ export default function SlotPicker({ query, timezone, selected, onSelect, emptyM
                     </span>
                   </p>
                 )}
-                <div className="space-y-5">
+                <div key={day ?? "none"} className="space-y-5">
                   {groups
                     .filter((g) => g.slots.length)
                     .map((g) => (
@@ -206,19 +207,23 @@ export default function SlotPicker({ query, timezone, selected, onSelect, emptyM
                         <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-4">
                           {g.slots.map((s) => {
                             const sel = selected?.start === s.start;
+                            const order = daySlots.indexOf(s);
                             return (
+                              <div key={s.start} className="animate-rise" style={{ animationDelay: `${Math.min(order, 16) * 22}ms` }}>
                               <button
-                                key={s.start}
                                 type="button"
                                 data-slot
                                 aria-pressed={sel}
                                 onClick={() => onSelect(s)}
-                                className={`rounded-xl px-1 py-3 text-[0.95rem] font-medium transition ${
-                                  sel ? "bg-black text-white shadow-[0_8px_24px_-10px_rgba(0,0,0,0.7)]" : "bg-white ring-1 ring-petal-line hover:ring-2 hover:ring-plum"
+                                className={`w-full rounded-xl px-1 py-3 text-[0.95rem] font-medium transition ${
+                                  sel
+                                    ? "animate-select bg-black text-white shadow-[0_8px_24px_-10px_rgba(0,0,0,0.7)]"
+                                    : "bg-white ring-1 ring-petal-line hover:-translate-y-0.5 hover:ring-2 hover:ring-plum"
                                 }`}
                               >
                                 {DateTime.fromISO(s.start).setZone(timezone).toFormat("h:mm a")}
                               </button>
+                              </div>
                             );
                           })}
                         </div>

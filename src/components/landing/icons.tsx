@@ -154,9 +154,9 @@ export const IconMoon = (p: P) => (
 );
 
 /** Four-point star, as in the studio's graphics. */
-export function Sparkle({ className = "", size = 16 }: { className?: string; size?: number }) {
+export function Sparkle({ className = "", size = 16, style }: { className?: string; size?: number; style?: React.CSSProperties }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false" className={className}>
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false" className={className} style={style}>
       <path d="M12 0c.6 6.6 5.4 11.4 12 12-6.6.6-11.4 5.4-12 12-.6-6.6-5.4-11.4-12-12C6.6 11.4 11.4 6.6 12 0Z" fill="currentColor" />
     </svg>
   );

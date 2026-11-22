@@ -30,3 +30,27 @@ test("client pages have no serious accessibility issues", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /You're booked/ })).toBeVisible();
   await audit(page, "confirmation");
 });
+
+test("scroll animations never leave content hidden", async ({ browser }) => {
+  // With motion: everything is revealed once scrolled past.
+  const page = await browser.newPage();
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("data-reveal-ready", "");
+  const height = await page.evaluate(() => document.body.scrollHeight);
+  for (let y = 0; y <= height; y += 500) {
+    await page.evaluate((top) => window.scrollTo({ top, behavior: "instant" as ScrollBehavior }), y);
+    await page.waitForTimeout(50);
+  }
+  await expect
+    .poll(() => page.evaluate(() => [...document.querySelectorAll("[data-reveal]")].filter((e) => !e.hasAttribute("data-revealed")).length))
+    .toBe(0);
+  await page.close();
+
+  // Reduced motion: nothing is ever hidden.
+  const calm = await browser.newPage({ reducedMotion: "reduce" });
+  await calm.goto("/");
+  await expect(calm.locator("html")).not.toHaveAttribute("data-reveal-ready", "");
+  const minOpacity = await calm.evaluate(() => Math.min(...[...document.querySelectorAll("[data-reveal]")].map((e) => Number(getComputedStyle(e).opacity))));
+  expect(minOpacity).toBe(1);
+  await calm.close();
+});

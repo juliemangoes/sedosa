@@ -22,7 +22,7 @@ export function Stepper({ steps, current }: { steps: StepDef[]; current: number 
           const dot = (
             <span
               className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-semibold transition ${
-                done ? "bg-plum text-white" : active ? "bg-black text-white ring-4 ring-neon/30" : "bg-white text-ink/70 ring-1 ring-petal-line"
+                done ? "animate-pop bg-plum text-white" : active ? "relative isolate bg-black text-white ring-4 ring-neon/30 before:absolute before:-z-10 before:inset-0 before:animate-ping before:rounded-full before:bg-neon/30 before:[animation-duration:2.2s]" : "bg-white text-ink/70 ring-1 ring-petal-line"
               }`}
             >
               {done ? <IconCheck size={14} strokeWidth={2.6} /> : i + 1}
@@ -119,7 +119,9 @@ export function Summary({ data, service, location, addons, slot, action }: Summa
         ))}
         <div className="flex justify-between gap-3 pt-2 text-base font-semibold">
           <dt>Total</dt>
-          <dd>{money(totalPrice)}</dd>
+          <dd key={totalPrice} className="inline-block animate-bump origin-right">
+            {money(totalPrice)}
+          </dd>
         </div>
       </dl>
       {deposit > 0 ? (
@@ -187,8 +189,8 @@ export function LocationStep({ data, service, onPick }: { data: PublicData; serv
   ];
   return (
     <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-      {options.map((o) => (
-        <li key={o.id} className={o.id === "any" ? "sm:col-span-2" : ""}>
+      {options.map((o, i) => (
+        <li key={o.id} className={`animate-rise ${o.id === "any" ? "sm:col-span-2" : ""}`} style={{ animationDelay: `${120 + i * 90}ms` }}>
           <button
             type="button"
             onClick={() => onPick(o.id)}
@@ -259,12 +261,12 @@ export function AddonPicker({ addons, selected, onToggle }: { addons: PublicData
           return (
             <label
               key={a.id}
-              className={`flex cursor-pointer items-center gap-3 rounded-2xl px-4 py-3 transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-plum ${
-                on ? "bg-black text-white" : "bg-white/80 ring-1 ring-petal-line hover:ring-plum"
+              className={`flex cursor-pointer items-center gap-3 rounded-2xl px-4 py-3 transition duration-200 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-plum ${
+                on ? "bg-black text-white shadow-[0_10px_28px_-14px_rgba(0,0,0,0.7)]" : "bg-white/80 ring-1 ring-petal-line hover:-translate-y-0.5 hover:ring-plum"
               }`}
             >
               <input type="checkbox" className="sr-only" checked={on} onChange={(e) => onToggle(a.id, e.target.checked)} />
-              <span className={`grid size-6 shrink-0 place-items-center rounded-full ${on ? "bg-neon text-black" : "ring-1 ring-ink/25"}`}>{on && <IconCheck size={14} strokeWidth={2.6} />}</span>
+              <span className={`grid size-6 shrink-0 place-items-center rounded-full ${on ? "animate-select bg-neon text-black" : "ring-1 ring-ink/25"}`}>{on && <IconCheck size={14} strokeWidth={2.6} />}</span>
               <span className="min-w-0 flex-1">
                 <span className="block font-medium leading-tight">{a.name}</span>
                 <span className={`text-sm ${on ? "text-white/70" : "text-ink/70"}`}>+ {shortDuration(a.durationMin)}</span>
