@@ -1,4 +1,5 @@
 import {
+  customType,
   pgTable,
   serial,
   integer,
@@ -16,6 +17,13 @@ import {
 export type DayInterval = { start: string; end: string };
 /** Keyed by ISO weekday as a string: "1" = Monday … "7" = Sunday. */
 export type WeeklyHours = Record<string, DayInterval[]>;
+
+/** Binary column (images). node-postgres returns Buffer, PGlite returns Uint8Array. */
+const bytea = customType<{ data: Buffer; driverData: Buffer | Uint8Array }>({
+  dataType: () => "bytea",
+  toDriver: (v) => v,
+  fromDriver: (v) => (Buffer.isBuffer(v) ? v : Buffer.from(v)),
+});
 
 export type FieldType = "yesno" | "checkbox" | "checkboxlist" | "dropdown" | "text" | "textarea";
 
@@ -92,9 +100,23 @@ export const timeOff = pgTable("time_off", {
   reason: text("reason").notNull().default(""),
 });
 
+/** Uploaded images (category photos, receipts), stored as re-encoded WebP. */
+export const media = pgTable("media", {
+  id: serial("id").primaryKey(),
+  kind: text("kind").$type<"category" | "receipt">().notNull(),
+  mime: text("mime").notNull(),
+  width: integer("width").notNull(),
+  height: integer("height").notNull(),
+  bytes: bytea("bytes").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const categories = pgTable("categories", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  /** Short line shown on the category card in the menu carousel. */
+  description: text("description").notNull().default(""),
+  imageId: integer("image_id").references(() => media.id, { onDelete: "set null" }),
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
@@ -192,6 +214,8 @@ export const clients = pgTable(
     email: text("email").notNull(),
     phone: text("phone").notNull().default(""),
     smsOptIn: boolean("sms_opt_in").notNull().default(false),
+    /** Agreed to appointment reminders on WhatsApp. */
+    whatsappOptIn: boolean("whatsapp_opt_in").notNull().default(false),
     notes: text("notes").notNull().default(""),
     stripeCustomerId: text("stripe_customer_id"),
     stripePaymentMethodId: text("stripe_payment_method_id"),
@@ -292,7 +316,7 @@ export const messageLog = pgTable(
   {
     id: serial("id").primaryKey(),
     appointmentId: uuid("appointment_id").references(() => appointments.id, { onDelete: "set null" }),
-    channel: text("channel").$type<"email" | "sms">().notNull(),
+    channel: text("channel").$type<"email" | "sms" | "whatsapp">().notNull(),
     to: text("to").notNull(),
     subject: text("subject").notNull().default(""),
     body: text("body").notNull(),
@@ -301,4 +325,56 @@ export const messageLog = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("message_log_created").on(t.createdAt)],
+);
+
+export type TxKind = "income" | "expense";
+
+/**
+ * Manually entered money: expenses, and income that isn't an appointment payment
+ * (product sales, gift cards…). Appointment payments live in `payments`.
+ */
+export const transactions = pgTable(
+  "transactions",
+  {
+    id: serial("id").primaryKey(),
+    kind: text("kind").$type<TxKind>().notNull(),
+    date: text("date").notNull(), // YYYY-MM-DD, studio time zone
+    amountCents: integer("amount_cents").notNull(),
+    category: text("category").notNull(),
+    method: text("method").notNull().default("other"),
+    description: text("description").notNull().default(""),
+    /** A template that can be logged again each month (rent, software…). */
+    recurringMonthly: boolean("recurring_monthly").notNull().default(false),
+    recurringSourceId: integer("recurring_source_id"),
+    receiptMediaId: integer("receipt_media_id").references(() => media.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("transactions_date").on(t.date)],
+);
+
+/**
+ * Messages queued to go out later — WhatsApp reminders. Bodies keep {placeholders}
+ * that are filled in at send time, so a rescheduled appointment shows the new time.
+ */
+export const scheduledMessages = pgTable(
+  "scheduled_messages",
+  {
+    id: serial("id").primaryKey(),
+    appointmentId: uuid("appointment_id")
+      .notNull()
+      .references(() => appointments.id, { onDelete: "cascade" }),
+    channel: text("channel").$type<"whatsapp">().notNull(),
+    /** "auto": the standard reminder, kept in sync with the appointment. "owner": added by hand. */
+    origin: text("origin").$type<"auto" | "owner">().notNull(),
+    /** For auto reminders: how long before the appointment it goes out. */
+    offsetMinutes: integer("offset_minutes"),
+    sendAt: timestamp("send_at", { withTimezone: true }).notNull(),
+    template: text("template").notNull(),
+    status: text("status").$type<"scheduled" | "sent" | "failed" | "canceled">().notNull().default("scheduled"),
+    sentVia: text("sent_via").$type<"twilio" | "manual">(),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    error: text("error"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("scheduled_messages_due").on(t.status, t.sendAt), index("scheduled_messages_appt").on(t.appointmentId)],
 );

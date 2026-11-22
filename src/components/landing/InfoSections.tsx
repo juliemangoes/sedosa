@@ -18,6 +18,7 @@ import {
   IconHeart,
   IconInstagram,
   IconLate,
+  IconWhatsApp,
   IconMail,
   IconPhone,
   IconPin,
@@ -48,6 +49,12 @@ function SectionHead({ kicker, title, children, id }: { kicker: string; title: s
 export default function InfoSections({ data }: { data: PublicData }) {
   const phone = normalizePhone(data.phone);
   const igUrl = data.instagram ? `https://instagram.com/${data.instagram.replace(/^@/, "")}` : null;
+  const waDigits = (() => {
+    let d = data.whatsappNumber.replace(/\D/g, "");
+    if (d.length === 10) d = `1${d}`;
+    return d.length >= 11 && d.length <= 15 ? d : null;
+  })();
+  const waUrl = waDigits ? `https://wa.me/${waDigits}?text=${encodeURIComponent(`Hi ${data.businessName}! ♡ `)}` : null;
   const fbUrl = data.facebook ? `https://facebook.com/${data.facebook}` : null;
   const where = placesLabel(data.locations.map((l) => l.city));
   const n = data.locations.length;
@@ -211,6 +218,13 @@ export default function InfoSections({ data }: { data: PublicData }) {
                       </a>
                     </li>
                   </>
+                )}
+                {waUrl && (
+                  <li>
+                    <a href={waUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-2 py-2 hover:bg-blush">
+                      <IconWhatsApp className="text-plum" /> WhatsApp me
+                    </a>
+                  </li>
                 )}
                 {data.email && (
                   <li>

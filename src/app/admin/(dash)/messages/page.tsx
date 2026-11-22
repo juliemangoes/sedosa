@@ -34,9 +34,11 @@ export default async function MessagesPage() {
               <li key={m.id} className="py-3 text-sm">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className="text-stone-500">{DateTime.fromJSDate(m.createdAt).setZone(settings.timezone).toFormat("LLL d, h:mm a")}</span>
-                  <span className="rounded bg-stone-100 px-1.5 text-xs uppercase">{m.channel}</span>
+                  <span className={`rounded-full px-2 py-0.5 text-[0.7rem] font-medium ${m.channel === "whatsapp" ? "bg-emerald-50 text-[#075e54]" : "bg-stone-100 text-stone-600"}`}>
+                    {m.channel === "whatsapp" ? "WhatsApp" : m.channel === "sms" ? "SMS" : "Email"}
+                  </span>
                   <span className="font-medium">{m.to}</span>
-                  <span className={m.status === "failed" ? "text-red-700" : m.status === "logged" ? "text-amber-700" : "text-emerald-700"}>
+                  <span className={m.status === "failed" ? "text-rose-700" : m.status === "logged" ? "text-amber-800" : "text-emerald-700"}>
                     {m.status === "logged" ? "recorded only" : m.status}
                   </span>
                   {m.appointmentId && (

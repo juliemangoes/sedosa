@@ -23,6 +23,7 @@ const body = z.object({
     email: z.string().max(200),
     phone: z.string().max(40),
     smsOptIn: z.boolean().default(false),
+    whatsappOptIn: z.boolean().optional(),
   }),
   answers: z.record(z.string(), z.unknown()).default({}),
   clientNotes: z.string().max(2000).optional(),

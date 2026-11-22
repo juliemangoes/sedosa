@@ -6,6 +6,7 @@ import { duration, longDateTime, money, prettyPhone } from "./format";
 import { buildIcs, type IcsEvent } from "./ics";
 import { sendEmail, sendSms } from "./messaging";
 import { stripeEnabled } from "./env";
+import { scheduleAutoReminder } from "./whatsapp";
 
 type Appt = typeof t.appointments.$inferSelect;
 type Client = typeof t.clients.$inferSelect;
@@ -151,6 +152,7 @@ export async function notifyBooked(db: DB, appt: Appt, base: string) {
     );
   }
   await notifyOwner(db, settings, `New booking: ${client.firstName} ${client.lastName}`, appt, client, base);
+  await scheduleAutoReminder(db, appt, client, settings);
 }
 
 export async function notifyRescheduled(db: DB, appt: Appt, previousStart: Date, base: string, actor: "client" | "admin") {

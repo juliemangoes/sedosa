@@ -14,13 +14,17 @@ It ships with the studio's real menu, copied from the old Acuity page:
   graphics, chrome logo and portrait. It includes:
   - A hero that fits the first screen on any phone: portrait with the logo,
     one line, the Book button and one-tap category shortcuts.
-  - A menu laid out like a salon price list, with a category nav that follows
-    your scroll (sticky chips on phones, a sidebar on desktop) and search.
-    Tapping a service opens a details sheet (description, deposit, consent
-    forms, add-ons, prep). "Popular" badges come from real bookings.
+  - A menu that opens on a **carousel of category cards**, each with its own
+    photo (uploaded from the dashboard). Swipe on phones, arrows on desktop,
+    arrow keys for keyboard users; picking a card shows that category's
+    services right below, and "Next: …" walks through them in order. Search
+    looks across every category. Tapping a service opens a details sheet
+    (description, deposit, consent forms, add-ons, prep). "Popular" badges
+    come from real bookings.
   - Booking policies, prep checklists for brows, lash lifts and waxing, and
     payment info.
-  - Locations, hours and contact links.
+  - Locations, hours and contact links, including "WhatsApp me" once the
+    studio's WhatsApp number is set.
   - Client results, and a Book button that stays within reach on phones.
   - All the text from the old policy graphics as real, readable text that
     search engines can see.
@@ -47,7 +51,8 @@ It ships with the studio's real menu, copied from the old Acuity page:
   buttons, prep tips for the booked service, and self-service reschedule or
   cancel. The policy cutoffs are enforced online (24 h by default).
 - Email confirmations, reschedule/cancel notices and day-before reminders.
-  Clients who opt in get texts too.
+  Clients who opt in get texts too, and can tick **"Send my reminder on
+  WhatsApp"** when booking (or later from their account).
 - **Motion**: the hero floats and twinkles, with a chrome shine on the logo
   and a glowing Book button. Sections and cards ease in as you scroll, times
   cascade in, picks pop, and a confirmed booking gets a sparkle burst. All of
@@ -59,23 +64,60 @@ It ships with the studio's real menu, copied from the old Acuity page:
 
 ## What the owner gets (`/admin`)
 
-- **Appointments**: week agenda by location, today's count and a "needs
-  attention" list (unpaid deposits, possible clashes).
-- **Appointment page**: intake answers, deposit and payments (cash, Cash App,
-  Zelle, card), "charge card on file" for no-show and late-cancel fees,
-  completed/no-show, reschedule (with an outside-hours override), cancel,
-  private notes, and every message sent.
+A dashboard built for running the studio from a phone as much as a laptop: a
+dark sidebar on desktop, bottom tabs (Home, Calendar, Clients, Finance, More)
+and a "New" button on phones.
+
+- **Home**: a greeting and today at a glance: today's appointments, the week's
+  bookings, profit this month and deposits still due. Below that:
+  - **Next up**, with one-tap Call and WhatsApp.
+  - Today's timeline.
+  - **WhatsApp reminders to send** (when automatic sending isn't connected):
+    one tap opens WhatsApp with the message written, and marks it sent.
+  - **Needs attention**: possible clashes, and unpaid deposits with a
+    WhatsApp "Ask" button that drafts the deposit request.
+  - Quick actions.
+- **Calendar**: a real week grid on desktop (appointments placed by time and
+  length, side by side when they overlap, coloured by status, blocked time
+  hatched, a "now" line) and a day-by-day agenda on phones. Filter by studio,
+  include canceled ones, jump between weeks.
+- **Appointment page**: Call, Text, Email and a **WhatsApp menu of
+  ready-written messages** (confirmation, reminder, deposit request, running
+  late, aftercare, thank you) filled in with the client's name, service, date,
+  time, studio and manage link. Plus a **WhatsApp reminders** card: see what's
+  queued, cancel it, or schedule one (1 day before, 2 hours before, the
+  morning of, or any time you pick, with an editable message). Also: intake
+  answers, deposit and payments, "charge card on file" for no-show and
+  late-cancel fees, completed/no-show, reschedule, cancel, private notes and
+  every message sent.
+- **Finance**: track income and expenses.
+  - Income fills itself in from every payment recorded on appointments
+    (deposits, balances, tips, fees); add other income (product sales, gift
+    cards) by hand.
+  - Log expenses in a few taps, by category and payment method, with an
+    optional receipt photo. Monthly costs (rent, software) can be set to repeat
+    and logged again each month with one tap.
+  - Totals for income, expenses, net profit and money still owed to you; a
+    6-month income vs expenses chart (hover or focus for numbers, or view it
+    as a table); income by payment method; where the money goes.
+  - This month, last month, this year, last 12 months or any date range, a
+    filterable ledger, and **CSV export** for your accountant.
 - **New appointment**: book a client from a phone call or DM. Existing clients
-  autofill.
-- **Clients**: search, visit history, no-show count, private notes.
+  autofill; tick whether they agreed to WhatsApp reminders.
+- **Clients**: search, avatars, one-tap Call and WhatsApp, visit history,
+  total paid, no-shows, next visit, private notes and their reminder
+  preferences.
 - **Services, add-ons, forms**: edit names, prices, durations, deposits,
   buffers, which add-ons and forms each service uses, and the questions on
-  each form.
+  each form. **Upload a photo and a one-line description for each category**
+  (straight from your phone's camera roll); it appears on the menu carousel.
 - **Hours & time off**: weekly hours per location (split shifts are OK),
   special hours for a date, blocked time.
-- **Settings**: policies, booking rules, fees, Cash App/Zelle handles, and a
-  private **calendar feed** to subscribe to on your phone.
-- **Messages**: a log of every email and text.
+- **Settings**: policies, booking rules, fees, Cash App/Zelle handles,
+  **WhatsApp** (studio number, automatic reminders on/off, how many hours
+  before, the reminder wording and your quick messages), and a private
+  **calendar feed** to subscribe to on your phone.
+- **Messages**: a log of every email, text and WhatsApp message.
 
 ## Run it locally
 
@@ -92,8 +134,8 @@ is nothing to install.
 ## Tests
 
 ```bash
-npm test          # availability engine, booking rules, Stripe flow (mocked)
-npm run e2e       # real browser: landing, booking, reschedule/cancel, race, dashboard, phone, accessibility
+npm test          # availability engine, booking rules, Stripe flow (mocked), finance, WhatsApp scheduling, image processing
+npm run e2e       # real browser: landing + carousel, booking, accounts, reschedule/cancel, race, dashboard, finance, WhatsApp, phone, accessibility
 ```
 
 `npm run e2e` builds the app and serves it on port 3100 with a throwaway
@@ -130,6 +172,9 @@ database. Stop `npm run dev` first if Next.js complains about another instance.
 | `RESEND_API_KEY`, `EMAIL_FROM` | optional | emails |
 | `OWNER_EMAIL` | optional | email the owner on every booking |
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` | optional | texts |
+| `TWILIO_WHATSAPP_FROM` | optional | your WhatsApp Business sender (e.g. `+14045550000`), for automatic WhatsApp reminders |
+| `TWILIO_WHATSAPP_CONTENT_SID` | optional | an approved WhatsApp template for reminders (see below) |
+| `CRON_INTERVAL_MINUTES` | optional | how often the cron job runs; default `1440` (daily). Set `60` if you run it hourly |
 
 **Client accounts need email.** Sign-in codes are sent with Resend, so on a
 live site account sign-in only appears once `RESEND_API_KEY` and `EMAIL_FROM`
@@ -142,9 +187,34 @@ Until email or SMS is configured, messages are still recorded under
 
 **Reminders** run from `/api/cron/reminders`. `vercel.json` schedules it daily
 at 13:00 UTC (8 AM Eastern), which works on Vercel's free plan. Each run
-sends reminders for the next 24 hours. On Vercel Pro you can change it to
-hourly, or ping the URL hourly from any cron service with the header
-`Authorization: Bearer $CRON_SECRET`.
+sends email/text reminders for the next 24 hours, and any WhatsApp reminder
+that falls due before the next run (so they go out a little early rather than
+late). On Vercel Pro you can change it to hourly (and set
+`CRON_INTERVAL_MINUTES=60`), or ping the URL hourly from any cron service
+with the header `Authorization: Bearer $CRON_SECRET`.
+
+**WhatsApp works in two modes:**
+
+- **Out of the box (no setup):** every WhatsApp button opens WhatsApp on the
+  owner's phone or computer with the message already written, ready to
+  send. Scheduled reminders appear on Home when they're due ("WhatsApp
+  reminders to send") and go out with one tap from the studio's own number.
+- **Automatic:** with a WhatsApp Business sender on Twilio
+  (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_WHATSAPP_FROM`), the
+  cron job sends scheduled reminders on its own. WhatsApp only lets businesses
+  start a conversation with a pre-approved template, so create one in Twilio
+  for the reminder and set `TWILIO_WHATSAPP_CONTENT_SID`. Its variables are
+  `{{1}}` first name, `{{2}}` service, `{{3}}` date, `{{4}}` time, `{{5}}` studio,
+  `{{6}}` manage link. If a send fails, the reminder drops back onto Home for a
+  manual send.
+
+Reminders are only queued for clients who opted in. Rescheduling moves them,
+and canceling removes them.
+
+**Photos** (category pictures and receipts) are stored in the database, so
+there is no extra storage service to set up. Uploads are resized on the phone
+first, then re-encoded on the server (category photos cropped to 4:3, metadata
+and location data stripped).
 
 ## Things to know
 
@@ -163,12 +233,16 @@ hourly, or ping the URL hourly from any cron service with the header
 ```
 src/app/page.tsx                  public booking page
 src/app/booking/[token]/          confirmation / manage page
-src/app/admin/                    owner dashboard + server actions
+src/app/admin/                    owner dashboard (home, calendar, finance, clients…) + server actions
 src/app/api/                      availability, bookings, Stripe webhook, cron, calendar feed
-src/components/booking/           booking flow UI (time grid, intake forms)
+src/components/booking/           booking flow UI (category carousel, time grid, intake forms)
+src/components/admin/             dashboard shell, finance chart, WhatsApp buttons, uploads
 src/lib/availability.ts           slot engine (pure, unit tested)
 src/lib/booking.ts                create / reschedule / cancel / deposit logic
 src/lib/notify.ts                 email + SMS templates
+src/lib/whatsapp.ts               WhatsApp links, templates, scheduled reminders
+src/lib/finance.ts                income/expense ledger, periods, CSV
+src/lib/media.ts                  photo processing (sharp) and storage
 src/db/schema.ts, drizzle/        database schema + migrations
 src/db/seed-data.ts               the studio's menu, forms and locations
 src/components/landing/           landing page sections (hero, policies, prep, visit, results)

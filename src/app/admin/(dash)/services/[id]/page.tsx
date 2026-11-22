@@ -33,7 +33,7 @@ export default async function ServiceEdit({ params, searchParams }: { params: Pr
         )}
       </PageHeader>
       <Flash sp={sp} />
-      <form action={saveServiceAction} className="grid gap-6 lg:grid-cols-[1fr_20rem]">
+      <form action={saveServiceAction} className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_20rem]">
         <input type="hidden" name="id" value={s?.id ?? ""} />
         <Card>
           <div className="space-y-4">

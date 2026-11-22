@@ -4,6 +4,8 @@ import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import * as t from "@/db/schema";
 import { profileOf } from "@/lib/account";
+import { getSettings } from "@/lib/settings";
+import { applyOptIn } from "@/lib/whatsapp";
 import { currentClient } from "@/lib/client-session";
 import { normalizePhone } from "@/lib/format";
 import { sameOrigin } from "@/lib/http";
@@ -15,6 +17,7 @@ const body = z.object({
   lastName: z.string().trim().min(1, "Last name is required.").max(80),
   phone: z.string().max(40).default(""),
   smsOptIn: z.boolean().default(false),
+  whatsappOptIn: z.boolean().optional(),
 });
 
 /** POST /api/account/profile — the signed-in client updates their details. */
@@ -29,8 +32,15 @@ export async function POST(req: NextRequest) {
   if (parsed.data.phone && phone.replace(/\D/g, "").length < 10) return NextResponse.json({ error: "Please enter a full phone number." }, { status: 422 });
   const [updated] = await db
     .update(t.clients)
-    .set({ firstName: parsed.data.firstName, lastName: parsed.data.lastName, phone, smsOptIn: parsed.data.smsOptIn })
+    .set({
+      firstName: parsed.data.firstName,
+      lastName: parsed.data.lastName,
+      phone,
+      smsOptIn: parsed.data.smsOptIn,
+      ...(parsed.data.whatsappOptIn !== undefined ? { whatsappOptIn: parsed.data.whatsappOptIn } : {}),
+    })
     .where(eq(t.clients.id, me.id))
     .returning();
+  if (parsed.data.whatsappOptIn !== undefined && parsed.data.whatsappOptIn !== me.whatsappOptIn) await applyOptIn(db, me.id, await getSettings(db));
   return NextResponse.json({ ok: true, account: profileOf(updated) });
 }

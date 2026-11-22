@@ -11,7 +11,8 @@ import SignInPanel, { type AccountProfile, type SignInResult } from "@/component
 export const DETAILS_FORM_ID = "booking-details";
 const STORAGE_KEY = "sedosa.client.v1";
 
-type Client = { firstName: string; lastName: string; phone: string; email: string; smsOptIn: boolean };
+type Client = { firstName: string; lastName: string; phone: string; email: string; smsOptIn: boolean; whatsappOptIn: boolean };
+const EMPTY: Client = { firstName: "", lastName: "", phone: "", email: "", smsOptIn: false, whatsappOptIn: false };
 
 function formatPhone(raw: string) {
   // International numbers stay as typed; US numbers (incl. +1…) show as (404) 555-0123.
@@ -27,7 +28,7 @@ function formatPhone(raw: string) {
 function readSaved(): Client | null {
   try {
     const v = window.localStorage.getItem(STORAGE_KEY);
-    return v ? (JSON.parse(v) as Client) : null;
+    return v ? { ...EMPTY, ...(JSON.parse(v) as Partial<Client>) } : null;
   } catch {
     return null;
   }
@@ -59,7 +60,7 @@ export default function DetailsStep(props: {
   const { data, service, slot, location, addonIds, chosenAddons, account, savedAnswers } = props;
   const [showSignIn, setShowSignIn] = useState(false);
   const [prefilled, setPrefilled] = useState(false);
-  const [client, setClient] = useState<Client>({ firstName: "", lastName: "", phone: "", email: "", smsOptIn: false });
+  const [client, setClient] = useState<Client>(EMPTY);
   const [returning, setReturning] = useState(false);
   const [remember, setRemember] = useState(true);
   const [notes, setNotes] = useState("");
@@ -80,6 +81,7 @@ export default function DetailsStep(props: {
         phone: formatPhone(account.phone || c.phone),
         email: account.email,
         smsOptIn: account.smsOptIn,
+        whatsappOptIn: account.whatsappOptIn,
       }));
       setShowSignIn(false);
       return;
@@ -200,7 +202,7 @@ export default function DetailsStep(props: {
               className="text-sm font-semibold text-plum underline-offset-4 hover:underline"
               onClick={async () => {
                 await fetch("/api/account/logout", { method: "POST" }).catch(() => undefined);
-                setClient({ firstName: "", lastName: "", phone: "", email: "", smsOptIn: false });
+                setClient(EMPTY);
                 setAnswers({});
                 setPrefilled(false);
                 props.onSignedOut();
@@ -216,7 +218,7 @@ export default function DetailsStep(props: {
               onClick={() => {
                 writeSaved(null);
                 setReturning(false);
-                setClient({ firstName: "", lastName: "", phone: "", email: "", smsOptIn: false });
+                setClient(EMPTY);
               }}
             >
               Not you?
@@ -282,6 +284,14 @@ export default function DetailsStep(props: {
               Text me my confirmation and reminders. <span className="text-ink/70">Message frequency varies; msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</span>
             </span>
           </label>
+          {data.whatsappReminders && (
+            <label className="flex cursor-pointer items-start gap-3">
+              <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-black" checked={client.whatsappOptIn} onChange={(e) => setClient((c) => ({ ...c, whatsappOptIn: e.target.checked }))} />
+              <span>
+                Send my reminder on WhatsApp <span className="text-ink/70">(same number)</span>
+              </span>
+            </label>
+          )}
           {!account && (
             <label className="flex cursor-pointer items-start gap-3">
               <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-black" checked={remember} onChange={(e) => setRemember(e.target.checked)} />

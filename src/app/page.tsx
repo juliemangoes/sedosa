@@ -8,6 +8,7 @@ import { getSettings } from "@/lib/settings";
 import { appUrl, stripeEnabled } from "@/lib/env";
 import { cityFromAddress, hoursRows, openingHoursSpec, placesLabel } from "@/lib/display";
 import BookingApp from "@/components/booking/BookingApp";
+import { mediaUrl } from "@/lib/media";
 import { accountsEnabled, currentClient } from "@/lib/client-session";
 import { profileOf, savedAnswers } from "@/lib/account";
 import Hero from "@/components/landing/Hero";
@@ -80,11 +81,13 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     cashAppHandle: settings.cashAppHandle,
     zelleHandle: settings.zelleHandle,
     onlineDeposit: stripeEnabled(),
+    whatsappReminders: settings.whatsappReminders,
+    whatsappNumber: settings.whatsappNumber,
     manualDepositInstructions: settings.manualDepositInstructions,
     depositCents,
     hoursHeadline: openRow ? `${openRow.days} · ${openRow.hours}` : "By appointment",
     hours,
-    categories: catalog.categories.map((c) => ({ id: c.id, name: c.name })),
+    categories: catalog.categories.map((c) => ({ id: c.id, name: c.name, description: c.description, imageUrl: mediaUrl(c.imageId) })),
     popularIds: popularIds.filter((id) => catalog.services.some((s) => s.id === id)),
     services: catalog.services.map((s) => ({
       id: s.id,

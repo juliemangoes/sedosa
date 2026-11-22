@@ -204,7 +204,7 @@ export type CreateBookingInput = {
   locationId: number | "any";
   addonIds: number[];
   startsAt: string;
-  client: { firstName: string; lastName: string; email: string; phone: string; smsOptIn: boolean };
+  client: { firstName: string; lastName: string; email: string; phone: string; smsOptIn: boolean; whatsappOptIn?: boolean };
   answers: RawAnswers;
   clientNotes?: string;
   bookedBy: "client" | "admin";
@@ -306,10 +306,10 @@ export async function createBooking(db: DB, input: CreateBookingInput) {
 
     const [client] = await tx
       .insert(t.clients)
-      .values({ firstName, lastName, email, phone, smsOptIn: !!c.smsOptIn })
+      .values({ firstName, lastName, email, phone, smsOptIn: !!c.smsOptIn, whatsappOptIn: !!c.whatsappOptIn })
       .onConflictDoUpdate({
         target: t.clients.email,
-        set: { firstName, lastName, ...(phone ? { phone } : {}), smsOptIn: !!c.smsOptIn },
+        set: { firstName, lastName, ...(phone ? { phone } : {}), smsOptIn: !!c.smsOptIn, ...(c.whatsappOptIn !== undefined ? { whatsappOptIn: !!c.whatsappOptIn } : {}) },
       })
       .returning();
 

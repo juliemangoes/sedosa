@@ -3,6 +3,7 @@ import { getDb } from "@/db";
 import { requireAdmin } from "@/lib/auth";
 import { getSettings } from "@/lib/settings";
 import { appUrl, stripeEnabled } from "@/lib/env";
+import { PLACEHOLDERS, whatsappApiConfigured } from "@/lib/whatsapp";
 import { rotateFeedKeyAction, saveSettingsAction } from "../../actions";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { Card, Field, Flash, PageHeader, btnCls, btnSecondaryCls, inputCls } from "@/components/admin/ui";
@@ -29,13 +30,14 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   const h = await headers();
   const base = process.env.APP_URL ? appUrl() : `${h.get("x-forwarded-proto") ?? "http"}://${h.get("host")}`;
   const feed = `${base}/api/calendar/${s.calendarFeedKey}`;
+  const waTemplates = [...s.whatsappTemplates, ...Array.from({ length: Math.max(0, 8 - s.whatsappTemplates.length) }, () => ({ label: "", body: "" }))];
   const policies = [...s.policies, ...Array.from({ length: Math.max(0, 6 - s.policies.length) }, () => ({ title: "", body: "" }))];
 
   return (
     <>
       <PageHeader title="Settings" />
       <Flash sp={sp} />
-      <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_20rem]">
         <form action={saveSettingsAction} className="space-y-6">
           <Card title="Studio">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -120,6 +122,48 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
             </div>
           </Card>
 
+          <Card title="WhatsApp" subtitle="Message clients in one tap and send reminders on WhatsApp.">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="Studio WhatsApp number" htmlFor="whatsappNumber" hint="Shown on your booking page as a “WhatsApp me” link. Leave empty to hide it.">
+                <input id="whatsappNumber" name="whatsappNumber" type="tel" defaultValue={s.whatsappNumber} placeholder="(555) 123-4567" className={inputCls} />
+              </Field>
+              <Field label="Send reminders (hours before)" htmlFor="whatsappReminderHours">
+                <input id="whatsappReminderHours" name="whatsappReminderHours" type="number" min={1} max={168} defaultValue={s.whatsappReminderHours} className={inputCls} />
+              </Field>
+            </div>
+            <label className="mt-4 flex items-start gap-2.5 rounded-xl bg-stone-50 p-3 text-sm">
+              <input type="checkbox" name="whatsappReminders" defaultChecked={s.whatsappReminders} className="mt-0.5 size-4 accent-[#6d2b67]" />
+              <span>
+                <span className="font-medium">Offer WhatsApp reminders when clients book</span>
+                <span className="block text-xs text-stone-500">
+                  Clients who tick the box get a reminder queued automatically.{" "}
+                  {whatsappApiConfigured() ? "Your WhatsApp Business number sends it for you." : "When one is due it shows on Home, ready to send in one tap."}
+                </span>
+              </span>
+            </label>
+            <div className="mt-4">
+              <Field label="Reminder message" htmlFor="whatsappReminderTemplate">
+                <textarea id="whatsappReminderTemplate" name="whatsappReminderTemplate" rows={3} defaultValue={s.whatsappReminderTemplate} className={inputCls} />
+              </Field>
+              <p className="mt-1.5 text-xs text-stone-500">
+                Filled in for you:{" "}
+                {PLACEHOLDERS.map((k) => (
+                  <code key={k} className="mr-1 rounded bg-stone-100 px-1 py-0.5 text-[0.7rem] text-stone-700">{`{${k}}`}</code>
+                ))}
+              </p>
+            </div>
+            <h3 className="mb-2 mt-6 text-sm font-semibold text-stone-900">Quick messages</h3>
+            <p className="mb-3 text-sm text-stone-600">These appear in the WhatsApp menu on each appointment and client.</p>
+            <div className="space-y-3">
+              {waTemplates.map((m, i) => (
+                <div key={i} className="grid gap-2 sm:grid-cols-[10rem_1fr]">
+                  <input name={`waLabel_${i}`} defaultValue={m.label} placeholder="Name" className={inputCls} aria-label={`Quick message ${i + 1} name`} />
+                  <textarea name={`waBody_${i}`} defaultValue={m.body} rows={2} placeholder="Message" className={inputCls} aria-label={`Quick message ${i + 1} text`} />
+                </div>
+              ))}
+            </div>
+          </Card>
+
           <Card title="Policies & wording">
             <p className="mb-3 text-sm text-stone-600">Shown before clients book, on their confirmation page, and in emails.</p>
             <div className="space-y-3">
@@ -148,6 +192,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
               <Status on={stripeEnabled()} label="Stripe" hint="Card deposits & no-show fees. Set STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET." />
               <Status on={!!(process.env.RESEND_API_KEY && process.env.EMAIL_FROM)} label="Email" hint="Set RESEND_API_KEY and EMAIL_FROM." />
               <Status on={!!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_FROM)} label="Text messages" hint="Set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM." />
+              <Status on={whatsappApiConfigured()} label="WhatsApp (automatic)" hint="Optional. Set TWILIO_WHATSAPP_FROM (your WhatsApp Business sender). Without it you send reminders in one tap from Home." />
               <Status on={!!process.env.OWNER_EMAIL} label="New-booking alerts" hint="Set OWNER_EMAIL to get an email for each booking." />
             </ul>
           </Card>

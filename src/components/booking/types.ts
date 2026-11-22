@@ -35,6 +35,10 @@ export type PublicData = {
   cashAppHandle: string;
   zelleHandle: string;
   onlineDeposit: boolean;
+  /** Offer "send my reminder on WhatsApp" at checkout. */
+  whatsappReminders: boolean;
+  /** Studio WhatsApp number for the "WhatsApp me" link (empty = hidden). */
+  whatsappNumber: string;
   manualDepositInstructions: string;
   /** The deposit most services use, for headline copy. */
   depositCents: number;
@@ -42,7 +46,7 @@ export type PublicData = {
   hoursHeadline: string;
   /** One group when every studio keeps the same hours, otherwise one per studio. */
   hours: { label: string; rows: HoursRow[] }[];
-  categories: { id: number; name: string }[];
+  categories: { id: number; name: string; description: string; imageUrl: string | null }[];
   /** Most-booked services recently (shown with a "Popular" badge). */
   popularIds: number[];
   services: PublicService[];

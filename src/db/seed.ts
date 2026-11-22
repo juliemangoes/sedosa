@@ -6,6 +6,7 @@ import {
   DEFAULT_HOURS,
   SEED_ADDONS,
   SEED_CATEGORIES,
+  SEED_CATEGORY_DESCRIPTIONS,
   SEED_FORMS,
   SEED_LOCATIONS,
   SEED_SERVICES,
@@ -31,7 +32,7 @@ export async function seedIfEmpty(db: DB): Promise<boolean> {
 
     const cats = await tx
       .insert(t.categories)
-      .values(SEED_CATEGORIES.map((name, i) => ({ name, sortOrder: i })))
+      .values(SEED_CATEGORIES.map((name, i) => ({ name, sortOrder: i, description: SEED_CATEGORY_DESCRIPTIONS[name] ?? "" })))
       .returning();
     const catByName = new Map(cats.map((c) => [c.name, c.id]));
 

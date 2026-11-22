@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
 export function money(cents: number): string {
-  return `$${(cents / 100).toFixed(2)}`;
+  return `${cents < 0 ? "−" : ""}$${(Math.abs(cents) / 100).toFixed(2)}`;
 }
 
 /** 65 → "1 hour 5 minutes" (matches how the studio's menu has always read). */

@@ -10,7 +10,7 @@ type Props = {
   services: { id: number; name: string; category: string; durationMin: number; priceCents: number; depositCents: number; addonIds: number[]; locationIds: number[] }[];
   addons: { id: number; name: string; priceCents: number; durationMin: number }[];
   locations: { id: number; name: string }[];
-  clients: { id: number; firstName: string; lastName: string; email: string; phone: string; smsOptIn: boolean }[];
+  clients: { id: number; firstName: string; lastName: string; email: string; phone: string; smsOptIn: boolean; whatsappOptIn: boolean }[];
   defaultServiceId?: number;
   defaultClientId?: number;
 };
@@ -25,13 +25,14 @@ export default function NewAppointmentForm({ services, addons, locations, client
     email: initialClient?.email ?? "",
     phone: initialClient?.phone ?? "",
     smsOptIn: initialClient?.smsOptIn ?? false,
+    whatsappOptIn: initialClient?.whatsappOptIn ?? false,
   });
   const categories = useMemo(() => [...new Set(services.map((s) => s.category))], [services]);
   const svcAddons = addons.filter((a) => service?.addonIds.includes(a.id));
 
   const onEmail = (email: string) => {
     const match = clients.find((c) => c.email.toLowerCase() === email.trim().toLowerCase());
-    setClient((c) => (match ? { firstName: match.firstName, lastName: match.lastName, email: match.email, phone: match.phone, smsOptIn: match.smsOptIn } : { ...c, email }));
+    setClient((c) => (match ? { firstName: match.firstName, lastName: match.lastName, email: match.email, phone: match.phone, smsOptIn: match.smsOptIn, whatsappOptIn: match.whatsappOptIn } : { ...c, email }));
   };
 
   return (
@@ -121,9 +122,14 @@ export default function NewAppointmentForm({ services, addons, locations, client
           <Field label="Phone" htmlFor="phone">
             <input id="phone" name="phone" type="tel" className={inputCls} value={client.phone} onChange={(e) => setClient({ ...client, phone: e.target.value })} />
           </Field>
-          <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" name="smsOptIn" checked={client.smsOptIn} onChange={(e) => setClient({ ...client, smsOptIn: e.target.checked })} /> Client agreed to text messages
-          </label>
+          <div className="space-y-2 rounded-xl bg-stone-50 p-3">
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" name="whatsappOptIn" className="size-4 accent-[#6d2b67]" checked={client.whatsappOptIn} onChange={(e) => setClient({ ...client, whatsappOptIn: e.target.checked })} /> Client agreed to WhatsApp reminders
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" name="smsOptIn" className="size-4 accent-[#6d2b67]" checked={client.smsOptIn} onChange={(e) => setClient({ ...client, smsOptIn: e.target.checked })} /> Client agreed to text messages
+            </label>
+          </div>
           <Field label="Note" htmlFor="clientNotes">
             <textarea id="clientNotes" name="clientNotes" rows={3} className={inputCls} />
           </Field>

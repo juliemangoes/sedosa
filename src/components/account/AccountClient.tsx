@@ -39,7 +39,7 @@ function formatPhone(raw: string) {
   return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
 }
 
-export function ProfileForm({ profile, incomplete }: { profile: AccountProfile; incomplete: boolean }) {
+export function ProfileForm({ profile, incomplete, whatsapp }: { profile: AccountProfile; incomplete: boolean; whatsapp: boolean }) {
   const router = useRouter();
   const [form, setForm] = useState({ ...profile, phone: formatPhone(profile.phone) });
   const [busy, setBusy] = useState(false);
@@ -58,7 +58,7 @@ export function ProfileForm({ profile, incomplete }: { profile: AccountProfile; 
         const res = await fetch("/api/account/profile", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ firstName: form.firstName, lastName: form.lastName, phone: form.phone, smsOptIn: form.smsOptIn }),
+          body: JSON.stringify({ firstName: form.firstName, lastName: form.lastName, phone: form.phone, smsOptIn: form.smsOptIn, ...(whatsapp ? { whatsappOptIn: form.whatsappOptIn } : {}) }),
         }).catch(() => null);
         const j = res ? await res.json().catch(() => ({})) : {};
         setBusy(false);
@@ -92,6 +92,12 @@ export function ProfileForm({ profile, incomplete }: { profile: AccountProfile; 
         <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-black" checked={form.smsOptIn} onChange={(e) => setForm((f) => ({ ...f, smsOptIn: e.target.checked }))} />
         <span>Text me confirmations and reminders. Msg &amp; data rates may apply; reply STOP to opt out.</span>
       </label>
+      {whatsapp && (
+        <label className="flex cursor-pointer items-start gap-3 text-sm">
+          <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-black" checked={form.whatsappOptIn} onChange={(e) => setForm((f) => ({ ...f, whatsappOptIn: e.target.checked }))} />
+          <span>Send my appointment reminders on WhatsApp.</span>
+        </label>
+      )}
       <div className="flex items-center gap-3">
         <button type="submit" className="btn-black px-6 py-3" disabled={busy}>
           {busy ? "Saving…" : "Save details"}

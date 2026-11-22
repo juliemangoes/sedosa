@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { DateTime } from "luxon";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import * as t from "@/db/schema";
 import type { DayInterval, WeeklyHours, FieldType } from "@/db/schema";
@@ -23,6 +23,8 @@ import { notifyBooked, notifyCancelled, notifyRescheduled } from "@/lib/notify";
 import { getSettings, saveSettings, settingsSchema } from "@/lib/settings";
 import { chargeSavedCard } from "@/lib/stripe";
 import { parseHHMM } from "@/lib/availability";
+import { deleteMedia } from "@/lib/media";
+import { applyOptIn, markSentManually, waNumber, scheduleAutoReminder, scheduleManual, syncReminders } from "@/lib/whatsapp";
 
 // ---------------------------------------------------------------------------
 // helpers
@@ -138,6 +140,7 @@ export async function setStatusAction(fd: FormData) {
     if (!["completed", "no_show", "confirmed"].includes(status)) throw new BookingError("invalid", "Unknown status.");
     const db = await getDb();
     await db.update(t.appointments).set({ status, holdExpiresAt: null, updatedAt: new Date() }).where(eq(t.appointments.id, id));
+    await syncReminders(db, id);
     return status === "no_show" ? "Marked as no-show." : status === "completed" ? "Marked as completed." : "Restored to confirmed.";
   });
 }
@@ -148,6 +151,7 @@ export async function cancelAppointmentAction(fd: FormData) {
     const db = await getDb();
     const appt = await cancelBooking(db, id, { actor: "admin", reason: str(fd, "reason") });
     if (bool(fd, "notify")) await notifyCancelled(db, appt, await baseUrl(), "admin");
+    await syncReminders(db, id);
     return "Appointment canceled.";
   });
 }
@@ -214,6 +218,7 @@ export async function rescheduleAction(fd: FormData) {
       force: bool(fd, "force"),
     });
     if (bool(fd, "notify")) await notifyRescheduled(db, appointment, before.startsAt, await baseUrl(), "admin");
+    await syncReminders(db, id);
     return "Appointment moved.";
   });
 }
@@ -257,6 +262,7 @@ export async function createAppointmentAction(fd: FormData) {
         email: str(fd, "email"),
         phone: str(fd, "phone"),
         smsOptIn: bool(fd, "smsOptIn"),
+        whatsappOptIn: bool(fd, "whatsappOptIn"),
       },
       answers: {},
       clientNotes: str(fd, "clientNotes"),
@@ -271,9 +277,11 @@ export async function createAppointmentAction(fd: FormData) {
     } else if (appointment.depositCents > 0 && ["cash", "cashapp", "zelle", "card"].includes(deposit)) {
       await confirmDeposit(db, id, { method: deposit as "cash" });
     }
-    if (bool(fd, "notify")) {
-      const fresh = await db.query.appointments.findFirst({ where: eq(t.appointments.id, id) });
-      await notifyBooked(db, fresh!, await baseUrl());
+    const fresh = (await db.query.appointments.findFirst({ where: eq(t.appointments.id, id) }))!;
+    if (bool(fd, "notify")) await notifyBooked(db, fresh, await baseUrl());
+    else {
+      const client = await db.query.clients.findFirst({ where: eq(t.clients.id, fresh.clientId) });
+      if (client) await scheduleAutoReminder(db, fresh, client, settings);
     }
   } catch (e) {
     if (e instanceof BookingError) {
@@ -306,9 +314,11 @@ export async function updateClientAction(fd: FormData) {
         email,
         phone: normalizePhone(str(fd, "phone")),
         smsOptIn: bool(fd, "smsOptIn"),
+        whatsappOptIn: bool(fd, "whatsappOptIn"),
         notes: str(fd, "notes").slice(0, 5000),
       })
       .where(eq(t.clients.id, id));
+    await applyOptIn(db, id, await getSettings(db));
   });
 }
 
@@ -381,9 +391,24 @@ export async function saveCategoryAction(fd: FormData) {
     const name = str(fd, "name");
     if (!name) throw new BookingError("invalid", "Category name is required.");
     const sortOrder = int(fd, "sortOrder");
-    if (id) await db.update(t.categories).set({ name, sortOrder }).where(eq(t.categories.id, id));
-    else await db.insert(t.categories).values({ name, sortOrder });
+    const description = str(fd, "description").slice(0, 140);
+    if (id) await db.update(t.categories).set({ name, sortOrder, description }).where(eq(t.categories.id, id));
+    else await db.insert(t.categories).values({ name, sortOrder, description });
+    revalidatePath("/", "layout");
     return "Category saved.";
+  });
+}
+
+export async function removeCategoryImageAction(fd: FormData) {
+  await run("/admin/services", async () => {
+    const db = await getDb();
+    const cat = await db.query.categories.findFirst({ where: eq(t.categories.id, int(fd, "id")) });
+    if (cat?.imageId) {
+      await db.update(t.categories).set({ imageId: null }).where(eq(t.categories.id, cat.id));
+      await deleteMedia(db, cat.imageId);
+    }
+    revalidatePath("/", "layout");
+    return "Photo removed.";
   });
 }
 
@@ -569,6 +594,12 @@ export async function saveSettingsAction(fd: FormData) {
       const body = str(fd, `policyBody_${i}`);
       if (title && body) policies.push({ title, body });
     }
+    const whatsappTemplates: { label: string; body: string }[] = [];
+    for (let i = 0; i < 12; i++) {
+      const label = str(fd, `waLabel_${i}`).slice(0, 40);
+      const body = str(fd, `waBody_${i}`).slice(0, 1000);
+      if (label && body) whatsappTemplates.push({ label, body });
+    }
     const parsed = settingsSchema.safeParse({
       ...current,
       businessName: str(fd, "businessName"),
@@ -593,9 +624,15 @@ export async function saveSettingsAction(fd: FormData) {
       locationNote: str(fd, "locationNote"),
       confirmationNote: str(fd, "confirmationNote"),
       policies,
+      whatsappNumber: str(fd, "whatsappNumber"),
+      whatsappReminders: bool(fd, "whatsappReminders"),
+      whatsappReminderHours: int(fd, "whatsappReminderHours", current.whatsappReminderHours),
+      whatsappReminderTemplate: str(fd, "whatsappReminderTemplate").slice(0, 1000) || current.whatsappReminderTemplate,
+      whatsappTemplates,
     });
     if (!parsed.success) throw new BookingError("invalid", "Some settings are invalid: " + parsed.error.issues.map((i) => i.path.join(".")).join(", "));
     if (!DateTime.local().setZone(parsed.data.timezone).isValid) throw new BookingError("invalid", "Unknown time zone.");
+    if (parsed.data.whatsappNumber && !waNumber(parsed.data.whatsappNumber)) throw new BookingError("invalid", "Enter the WhatsApp number with area code (and country code outside the US).");
     await saveSettings(db, parsed.data);
     revalidatePath("/", "layout");
     return "Settings saved.";
@@ -607,5 +644,121 @@ export async function rotateFeedKeyAction() {
     const db = await getDb();
     await saveSettings(db, { calendarFeedKey: randomBytes(18).toString("base64url") });
     return "New calendar link created. Re-subscribe with the new link.";
+  });
+}
+
+// ---------------------------------------------------------------------------
+// finance
+
+export async function saveTransactionAction(fd: FormData) {
+  const back = str(fd, "back") || "/admin/finance";
+  await run(back, async () => {
+    const db = await getDb();
+    const id = int(fd, "id");
+    const kind = str(fd, "kind") === "income" ? "income" : "expense";
+    const date = str(fd, "date");
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new BookingError("invalid", "Pick a date.");
+    const amountCents = cents(fd, "amount");
+    if (amountCents <= 0) throw new BookingError("invalid", "Enter an amount.");
+    const category = str(fd, "category") || (kind === "expense" ? "Other" : "Other income");
+    const receipt = int(fd, "receiptMediaId");
+    const values = {
+      kind: kind as "income" | "expense",
+      date,
+      amountCents,
+      category: category.slice(0, 60),
+      method: str(fd, "method") || "other",
+      description: str(fd, "description").slice(0, 200),
+      recurringMonthly: kind === "expense" && bool(fd, "recurringMonthly"),
+      receiptMediaId: receipt || null,
+    };
+    if (id) await db.update(t.transactions).set(values).where(eq(t.transactions.id, id));
+    else {
+      const [row] = await db.insert(t.transactions).values(values).returning();
+      // A new recurring expense is also this month's first entry.
+      if (row.recurringMonthly) {
+        await db.insert(t.transactions).values({ ...values, recurringMonthly: false, recurringSourceId: row.id });
+      }
+    }
+    return kind === "expense" ? "Expense saved." : "Income saved.";
+  });
+}
+
+export async function deleteTransactionAction(fd: FormData) {
+  const back = str(fd, "back") || "/admin/finance";
+  await run(back, async () => {
+    const db = await getDb();
+    const row = await db.query.transactions.findFirst({ where: eq(t.transactions.id, int(fd, "id")) });
+    if (!row) throw new BookingError("not_found", "Entry not found.");
+    await db.delete(t.transactions).where(eq(t.transactions.id, row.id));
+    await deleteMedia(db, row.receiptMediaId);
+    return row.recurringMonthly ? "Recurring expense stopped." : "Entry deleted.";
+  });
+}
+
+export async function logRecurringAction(fd: FormData) {
+  const back = str(fd, "back") || "/admin/finance";
+  await run(back, async () => {
+    const db = await getDb();
+    const settings = await getSettings(db);
+    const src = await db.query.transactions.findFirst({ where: and(eq(t.transactions.id, int(fd, "id")), eq(t.transactions.recurringMonthly, true)) });
+    if (!src) throw new BookingError("not_found", "Recurring expense not found.");
+    const month = DateTime.now().setZone(settings.timezone);
+    const day = Math.min(Number(src.date.slice(8, 10)) || 1, month.daysInMonth ?? 28);
+    await db.insert(t.transactions).values({
+      kind: src.kind,
+      date: month.set({ day }).toISODate()!,
+      amountCents: src.amountCents,
+      category: src.category,
+      method: src.method,
+      description: src.description,
+      recurringMonthly: false,
+      recurringSourceId: src.id,
+    });
+    return `${src.description || src.category} logged for ${month.toFormat("LLLL")}.`;
+  });
+}
+
+// ---------------------------------------------------------------------------
+// WhatsApp
+
+export async function markReminderSentAction(fd: FormData) {
+  const back = str(fd, "back") || "/admin";
+  await run(back, async () => {
+    const db = await getDb();
+    await markSentManually(db, int(fd, "id"), await getSettings(db), await baseUrl());
+    return "Reminder marked as sent.";
+  });
+}
+
+export async function scheduleWhatsAppAction(fd: FormData) {
+  const id = str(fd, "appointmentId");
+  await run(`/admin/appointments/${id}`, async () => {
+    const db = await getDb();
+    const settings = await getSettings(db);
+    const appt = await db.query.appointments.findFirst({ where: eq(t.appointments.id, id) });
+    if (!appt) throw new BookingError("not_found", "Appointment not found.");
+    const when = str(fd, "when");
+    let sendAt: Date;
+    if (when === "custom") sendAt = localDateTime(str(fd, "sendAt"), settings.timezone);
+    else if (when === "morning") sendAt = DateTime.fromJSDate(appt.startsAt).setZone(settings.timezone).set({ hour: 9, minute: 0, second: 0 }).toJSDate();
+    else sendAt = new Date(appt.startsAt.getTime() - Math.max(1, int(fd, "when", 24)) * 3_600_000);
+    if (sendAt <= new Date()) throw new BookingError("invalid", "That time has already passed. Pick a later time, or send it now with the WhatsApp button.");
+    if (sendAt >= appt.startsAt) throw new BookingError("invalid", "Reminders need to go out before the appointment.");
+    const template = str(fd, "template").slice(0, 1000) || settings.whatsappReminderTemplate;
+    await scheduleManual(db, id, sendAt, template);
+    return `WhatsApp reminder scheduled for ${DateTime.fromJSDate(sendAt).setZone(settings.timezone).toFormat("ccc LLL d, h:mm a")}.`;
+  });
+}
+
+export async function cancelScheduledAction(fd: FormData) {
+  const back = str(fd, "back") || "/admin";
+  await run(back, async () => {
+    const db = await getDb();
+    await db
+      .update(t.scheduledMessages)
+      .set({ status: "canceled" })
+      .where(and(eq(t.scheduledMessages.id, int(fd, "id")), inArray(t.scheduledMessages.status, ["scheduled", "failed"])));
+    return "Reminder canceled.";
   });
 }

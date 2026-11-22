@@ -233,7 +233,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
               <IconHeart className="text-plum" /> My details
             </h2>
             <div className="mt-4">
-              <ProfileForm profile={profile} incomplete={incomplete} />
+              <ProfileForm profile={profile} incomplete={incomplete} whatsapp={settings.whatsappReminders} />
             </div>
           </section>
         </div>

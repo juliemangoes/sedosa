@@ -23,7 +23,7 @@ export type ServiceDetail = {
 };
 
 export type Catalog = {
-  categories: { id: number; name: string; sortOrder: number; services: ServiceDetail[] }[];
+  categories: { id: number; name: string; description: string; imageId: number | null; sortOrder: number; services: ServiceDetail[] }[];
   services: ServiceDetail[];
   addons: (typeof t.addons.$inferSelect)[];
   forms: FormWithFields[];

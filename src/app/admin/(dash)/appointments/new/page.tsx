@@ -15,7 +15,7 @@ export default async function NewAppointmentPage({ searchParams }: { searchParam
   const db = await getDb();
   const [catalog, clients] = await Promise.all([
     loadCatalog(db),
-    db.select({ id: t.clients.id, firstName: t.clients.firstName, lastName: t.clients.lastName, email: t.clients.email, phone: t.clients.phone, smsOptIn: t.clients.smsOptIn }).from(t.clients).orderBy(asc(t.clients.firstName)),
+    db.select({ id: t.clients.id, firstName: t.clients.firstName, lastName: t.clients.lastName, email: t.clients.email, phone: t.clients.phone, smsOptIn: t.clients.smsOptIn, whatsappOptIn: t.clients.whatsappOptIn }).from(t.clients).orderBy(asc(t.clients.firstName)),
   ]);
   return (
     <>

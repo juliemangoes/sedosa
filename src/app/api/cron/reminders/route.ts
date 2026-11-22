@@ -6,11 +6,12 @@ import { dueForReminder, expireStaleHolds } from "@/lib/booking";
 import { appUrl } from "@/lib/env";
 import { notifyReminder } from "@/lib/notify";
 import { getSettings } from "@/lib/settings";
+import { dispatchDueReminders } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
 
 /**
- * Run hourly (vercel.json). Releases unpaid holds and sends reminders.
+ * Run on a schedule (daily in vercel.json; hourly is better). Releases unpaid holds and sends reminders.
  * Protected by CRON_SECRET (Vercel Cron sends it as a Bearer token).
  */
 export async function GET(req: NextRequest) {
@@ -34,5 +35,9 @@ export async function GET(req: NextRequest) {
     await notifyReminder(db, claimed[0], appUrl(req));
     sent++;
   }
-  return NextResponse.json({ expired, reminders: sent });
+  // WhatsApp reminders due before the next run go out now (daily by default; set
+  // CRON_INTERVAL_MINUTES=60 when the job runs hourly).
+  const interval = Number(process.env.CRON_INTERVAL_MINUTES) || 24 * 60;
+  const whatsapp = await dispatchDueReminders(db, settings, appUrl(req), new Date(), interval);
+  return NextResponse.json({ expired, reminders: sent, whatsapp });
 }

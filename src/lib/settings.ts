@@ -74,6 +74,28 @@ export const settingsSchema = z.object({
       "/banner/banner-5.png",
       "/banner/banner-6.jpg",
     ]),
+  /** The studio's WhatsApp number (shown to clients as a "WhatsApp me" link). */
+  whatsappNumber: z.string().default(""),
+  /** Automatically schedule a WhatsApp reminder for clients who opt in. */
+  whatsappReminders: z.boolean().default(true),
+  whatsappReminderHours: z.coerce.number().int().min(1).max(168).default(24),
+  /** Placeholders: {first} {service} {date} {time} {studio} {address} {link} {deposit} {business} */
+  whatsappReminderTemplate: z
+    .string()
+    .default(
+      "Hi {first}! ♡ Just a reminder of your {service} appointment on {date} at {time} at {studio} ({address}). Please arrive on time and come with a clean face. Need to change it? {link}",
+    ),
+  /** Ready-made messages for the WhatsApp button on an appointment. */
+  whatsappTemplates: z
+    .array(z.object({ label: z.string(), body: z.string() }))
+    .default([
+      { label: "Confirmation", body: "Hi {first}! ♡ You're booked for {service} on {date} at {time} at {studio}. Can't wait to see you! Details: {link}" },
+      { label: "Reminder", body: "Hi {first}! Just a reminder of your {service} appointment on {date} at {time} at {studio} ({address}). See you soon ♡" },
+      { label: "Deposit request", body: "Hi {first}! To hold your {service} appointment on {date} at {time}, please send the {deposit} deposit within 24 hours (Cash App or Zelle). Thank you ♡" },
+      { label: "Running late", body: "Hi {first}, I'm running a few minutes behind today. Thank you so much for your patience ♡" },
+      { label: "Aftercare", body: "Hi {first}! Thank you for coming in ♡ Keep the area dry for 24 hours and avoid makeup and heat on it. Message me with any questions!" },
+      { label: "Thank you", body: "Thank you for visiting {business}, {first}! I'd love to see your selfies, tag us on Instagram ♡ Book your next visit: {link}" },
+    ]),
   /** Secret part of the owner's calendar subscription URL (rotate to revoke). */
   calendarFeedKey: z.string().default(""),
 });

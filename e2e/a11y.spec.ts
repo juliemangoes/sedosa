@@ -13,6 +13,9 @@ test("client pages have no serious accessibility issues", async ({ page }) => {
   await page.goto("/");
   await audit(page, "landing");
 
+  await page.getByRole("tab", { name: /Waxing/ }).click();
+  await audit(page, "carousel");
+  await page.getByRole("searchbox", { name: "Search services" }).fill("Brow Sculpt/Thread");
   await page.getByRole("button", { name: "Book Brow Sculpt/Thread", exact: true }).click();
   await page.getByRole("button", { name: "Select Any available" }).click();
   await page.locator("[data-slot]").first().click();
@@ -58,6 +61,7 @@ test("scroll animations never leave content hidden", async ({ browser }) => {
 test("menu details sheet and account pages are accessible", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
+  await page.getByRole("searchbox", { name: "Search services" }).fill("lami");
   await page.getByRole("button", { name: "Brow Lami Set ♡, details" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await audit(page, "details sheet");
@@ -71,4 +75,27 @@ test("menu details sheet and account pages are accessible", async ({ page }) => 
   await page.getByLabel("6-digit code").fill(hint!.match(/(\d{6})/)![1]);
   await expect(page.getByRole("heading", { name: /^Hi/ })).toBeVisible();
   await audit(page, "account dashboard");
+});
+
+test("owner dashboard pages are accessible", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/admin/login");
+  await page.getByLabel("Password").fill("e2e-owner-pass");
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: /^Good (morning|afternoon|evening)/ })).toBeVisible();
+  await audit(page, "dashboard home");
+  for (const [path, heading] of [
+    ["/admin/calendar", "Calendar"],
+    ["/admin/finance", "Finance"],
+    ["/admin/clients", "Clients"],
+    ["/admin/settings", "Settings"],
+  ]) {
+    await page.goto(path);
+    await expect(page.getByRole("heading", { level: 1, name: heading })).toBeVisible();
+    await audit(page, heading.toLowerCase());
+  }
+  await page.goto("/admin/finance");
+  await page.getByRole("button", { name: "Add expense" }).first().click();
+  await expect(page.getByRole("dialog", { name: "Add expense" })).toBeVisible();
+  await audit(page, "expense dialog");
 });

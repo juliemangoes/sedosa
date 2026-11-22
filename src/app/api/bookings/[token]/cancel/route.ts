@@ -4,6 +4,7 @@ import { cancelBooking, findByToken } from "@/lib/booking";
 import { appUrl } from "@/lib/env";
 import { errorResponse } from "@/lib/http";
 import { notifyCancelled } from "@/lib/notify";
+import { syncReminders } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,7 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ token: str
     if (!found) return NextResponse.json({ error: "Appointment not found." }, { status: 404 });
     const appt = await cancelBooking(db, found.appointment.id, { actor: "client" });
     await notifyCancelled(db, appt, appUrl(req), "client");
+    await syncReminders(db, appt.id);
     return NextResponse.json({ ok: true });
   } catch (e) {
     return errorResponse(e);

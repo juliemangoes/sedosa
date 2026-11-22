@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { IconArrowRight, IconMail } from "@/components/landing/icons";
 
-export type AccountProfile = { firstName: string; lastName: string; email: string; phone: string; smsOptIn: boolean };
+export type AccountProfile = { firstName: string; lastName: string; email: string; phone: string; smsOptIn: boolean; whatsappOptIn: boolean };
 export type SignInResult = { account: AccountProfile; savedAnswers: Record<string, unknown> };
 
 type Props = {

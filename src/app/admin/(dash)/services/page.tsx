@@ -3,7 +3,9 @@ import { getDb } from "@/db";
 import { requireAdmin } from "@/lib/auth";
 import { loadCatalog } from "@/lib/catalog";
 import { duration, money } from "@/lib/format";
-import { deleteCategoryAction, saveCategoryAction } from "../../actions";
+import { deleteCategoryAction, removeCategoryImageAction, saveCategoryAction } from "../../actions";
+import ImageUpload from "@/components/admin/ImageUpload";
+import { mediaUrl } from "@/lib/media";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { Card, Flash, PageHeader, btnCls, btnSecondaryCls, inputCls } from "@/components/admin/ui";
 
@@ -25,12 +27,23 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
       <div className="space-y-6">
         {catalog.categories.map((cat) => (
           <Card key={cat.id}>
-            <form action={saveCategoryAction} className="mb-4 flex flex-wrap items-center gap-2">
-              <input type="hidden" name="id" value={cat.id} />
-              <input name="name" defaultValue={cat.name} className={`${inputCls} max-w-xs font-semibold`} aria-label="Category name" />
-              <input name="sortOrder" type="number" defaultValue={cat.sortOrder} className={`${inputCls} w-20`} aria-label="Order" title="Display order" />
-              <SubmitButton className={btnSecondaryCls}>Rename</SubmitButton>
-            </form>
+            <div className="mb-5 grid gap-4 border-b border-stone-100 pb-5 md:grid-cols-[auto_1fr]">
+              <ImageUpload kind="category" categoryId={cat.id} currentUrl={mediaUrl(cat.imageId)} label={`${cat.name} photo`} removeAction={removeCategoryImageAction} />
+              <form key={`${cat.name}-${cat.description}-${cat.sortOrder}`} action={saveCategoryAction} className="grid gap-2 sm:grid-cols-[1fr_5rem_auto] sm:items-start">
+                <input type="hidden" name="id" value={cat.id} />
+                <input name="name" defaultValue={cat.name} className={`${inputCls} font-semibold`} aria-label="Category name" />
+                <input name="sortOrder" type="number" defaultValue={cat.sortOrder} className={inputCls} aria-label="Order" title="Display order" />
+                <SubmitButton className={btnSecondaryCls}>Save</SubmitButton>
+                <input
+                  name="description"
+                  defaultValue={cat.description}
+                  maxLength={140}
+                  placeholder="Short line for the menu card, e.g. Lamination, tints & sculpting"
+                  className={`${inputCls} sm:col-span-3`}
+                  aria-label="Card description"
+                />
+              </form>
+            </div>
             {cat.services.length === 0 ? (
               <form action={deleteCategoryAction}>
                 <input type="hidden" name="id" value={cat.id} />

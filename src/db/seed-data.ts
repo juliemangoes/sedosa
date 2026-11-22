@@ -34,6 +34,16 @@ export const SEED_CATEGORIES: string[] = [
   "Waxing!"
 ];
 
+/** Starter lines for the menu carousel cards (editable in the dashboard). */
+export const SEED_CATEGORY_DESCRIPTIONS: Record<string, string> = {
+  "All Things Brows:)": "Lamination, tints, stains & sculpting",
+  "Korean Lash Lifts♡´･ᴗ･`♡": "Lifted, curled & tinted natural lashes",
+  "Lash Lift + Brow Packages<3": "Lash lift + brow combos in one visit",
+  "Lash Removal<3": "Gentle, safe extension removal",
+  "PMU SERVICES<3": "Soft ombré powder brows that last",
+  "Waxing!": "Smooth underarms, lip & chin",
+};
+
 export const SEED_ADDONS: { name: string; durationMin: number; priceCents: number }[] = [
   {
     "name": "Bottom Lash lift",

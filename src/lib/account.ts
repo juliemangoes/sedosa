@@ -129,10 +129,10 @@ export async function verifyLoginLink(db: DB, token: string, now = new Date()) {
   return signIn(db, consumed[0].email, now);
 }
 
-export type AccountProfile = { firstName: string; lastName: string; email: string; phone: string; smsOptIn: boolean };
+export type AccountProfile = { firstName: string; lastName: string; email: string; phone: string; smsOptIn: boolean; whatsappOptIn: boolean };
 
 export function profileOf(c: typeof t.clients.$inferSelect): AccountProfile {
-  return { firstName: c.firstName, lastName: c.lastName, email: c.email, phone: c.phone, smsOptIn: c.smsOptIn };
+  return { firstName: c.firstName, lastName: c.lastName, email: c.email, phone: c.phone, smsOptIn: c.smsOptIn, whatsappOptIn: c.whatsappOptIn };
 }
 
 /**
