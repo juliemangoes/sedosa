@@ -27,7 +27,7 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
       <div className="space-y-6">
         {catalog.categories.map((cat) => (
           <Card key={cat.id}>
-            <div className="mb-5 grid gap-4 border-b border-stone-100 pb-5 md:grid-cols-[auto_1fr]">
+            <div className="mb-5 grid gap-4 border-b border-line pb-5 md:grid-cols-[auto_1fr]">
               <ImageUpload kind="category" categoryId={cat.id} currentUrl={mediaUrl(cat.imageId)} label={`${cat.name} photo`} removeAction={removeCategoryImageAction} />
               <form key={`${cat.name}-${cat.description}-${cat.sortOrder}`} action={saveCategoryAction} className="grid gap-2 sm:grid-cols-[1fr_5rem_auto] sm:items-start">
                 <input type="hidden" name="id" value={cat.id} />
@@ -47,7 +47,7 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
             {cat.services.length === 0 ? (
               <form action={deleteCategoryAction}>
                 <input type="hidden" name="id" value={cat.id} />
-                <p className="text-sm text-stone-500">
+                <p className="text-sm text-ink-soft">
                   No services.{" "}
                   <SubmitButton className="underline" confirm="Delete this category?">
                     Delete category
@@ -55,16 +55,16 @@ export default async function ServicesPage({ searchParams }: { searchParams: Pro
                 </p>
               </form>
             ) : (
-              <ul className="divide-y divide-stone-100">
+              <ul className="divide-y divide-line">
                 {cat.services.map((s) => (
                   <li key={s.id}>
-                    <Link href={`/admin/services/${s.id}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-2.5 text-sm hover:bg-stone-50">
-                      <span className={`flex-1 font-medium ${s.active ? "" : "text-stone-400 line-through"}`}>{s.name}</span>
-                      <span className="text-stone-600">{duration(s.durationMin)}</span>
+                    <Link href={`/admin/services/${s.id}`} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-2.5 text-sm hover:bg-plaster">
+                      <span className={`flex-1 font-medium ${s.active ? "" : "text-ink-soft line-through"}`}>{s.name}</span>
+                      <span className="text-ink-soft">{duration(s.durationMin)}</span>
                       <span className="w-20 text-right tabular-nums">{money(s.priceCents)}</span>
-                      <span className="w-28 text-right text-xs text-stone-500">{s.depositCents ? `${money(s.depositCents)} deposit` : "no deposit"}</span>
-                      {s.private && <span className="rounded-full bg-stone-100 px-2 text-xs">private</span>}
-                      {!s.active && <span className="rounded-full bg-stone-100 px-2 text-xs">off</span>}
+                      <span className="w-28 text-right text-xs text-ink-soft">{s.depositCents ? `${money(s.depositCents)} deposit` : "no deposit"}</span>
+                      {s.private && <span className="rounded-full bg-plaster-2 px-2 text-xs">private</span>}
+                      {!s.active && <span className="rounded-full bg-plaster-2 px-2 text-xs">off</span>}
                     </Link>
                   </li>
                 ))}

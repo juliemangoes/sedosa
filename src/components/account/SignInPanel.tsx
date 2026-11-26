@@ -76,7 +76,7 @@ export default function SignInPanel({ initialEmail = "", onSignedIn, compact }: 
   };
 
   const err = error ? (
-    <p role="alert" className="mt-3 rounded-2xl bg-red-50 px-4 py-2.5 text-sm font-medium text-red-900 ring-1 ring-red-200">
+    <p role="alert" className="mt-3 rounded-2xl bg-panel px-4 py-2.5 text-sm font-medium text-[#a61b2b] ring-1 ring-[#a61b2b]/50">
       {error}
     </p>
   ) : null;
@@ -98,11 +98,11 @@ export default function SignInPanel({ initialEmail = "", onSignedIn, compact }: 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <button type="submit" className={`btn-black shrink-0 px-6 py-3.5 ${compact ? "" : "w-full"}`} disabled={busy}>
+          <button type="submit" className={`btn-primary shrink-0 px-6 py-3.5 ${compact ? "" : "w-full"}`} disabled={busy}>
             {busy ? "Sending…" : "Email me a code"} {!busy && <IconArrowRight size={16} />}
           </button>
         </div>
-        {!compact && <p className="mt-3 text-sm text-ink/70">No password needed. We&apos;ll email you a 6-digit code and a one-tap sign-in link.</p>}
+        {!compact && <p className="mt-3 text-sm text-ink-soft">No password needed. We&apos;ll email you a 6-digit code and a one-tap sign-in link.</p>}
         {err}
       </form>
     );
@@ -117,13 +117,13 @@ export default function SignInPanel({ initialEmail = "", onSignedIn, compact }: 
       noValidate
     >
       <p className="flex items-start gap-2.5 text-sm">
-        <IconMail size={18} className="mt-0.5 shrink-0 text-plum" />
+        <IconMail size={18} className="mt-0.5 shrink-0 text-lacquer" />
         <span>
           We sent a code to <strong className="break-all">{email}</strong>. It expires in 10 minutes.
         </span>
       </p>
       {devCode && (
-        <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-2.5 text-sm text-amber-900 ring-1 ring-amber-200">
+        <p className="mt-3 rounded-2xl bg-plaster px-4 py-2.5 text-sm text-[#7a4a00] ring-1 ring-[#7a4a00]/40">
           Email isn&apos;t set up on this site yet, so here&apos;s the code for testing: <strong className="tracking-widest">{devCode}</strong>
         </p>
       )}
@@ -147,18 +147,18 @@ export default function SignInPanel({ initialEmail = "", onSignedIn, compact }: 
             if (v.length === 6) verify(v);
           }}
         />
-        <button type="submit" className={`btn-black shrink-0 px-6 py-3.5 ${compact ? "" : "w-full"}`} disabled={busy}>
+        <button type="submit" className={`btn-primary shrink-0 px-6 py-3.5 ${compact ? "" : "w-full"}`} disabled={busy}>
           {busy ? "Checking…" : "Sign in"}
         </button>
       </div>
       {err}
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-        <button type="button" className="font-semibold text-plum underline-offset-4 hover:underline disabled:text-ink/50 disabled:no-underline" disabled={cooldown > 0 || busy} onClick={() => sendCode()}>
+        <button type="button" className="font-medium text-lacquer underline-offset-4 hover:underline disabled:text-ink-soft disabled:no-underline" disabled={cooldown > 0 || busy} onClick={() => sendCode()}>
           {cooldown > 0 ? `Resend code in ${cooldown}s` : "Resend code"}
         </button>
         <button
           type="button"
-          className="font-semibold text-plum underline-offset-4 hover:underline"
+          className="font-medium text-lacquer underline-offset-4 hover:underline"
           onClick={() => {
             setStep("email");
             setError(null);

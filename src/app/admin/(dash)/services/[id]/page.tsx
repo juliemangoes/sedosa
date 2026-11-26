@@ -6,7 +6,7 @@ import { loadCatalog } from "@/lib/catalog";
 import { money } from "@/lib/format";
 import { deleteServiceAction, saveServiceAction } from "../../../actions";
 import SubmitButton from "@/components/admin/SubmitButton";
-import { Card, Field, Flash, PageHeader, btnCls, btnDangerCls, inputCls } from "@/components/admin/ui";
+import { BackLink, Card, Field, Flash, PageHeader, btnCls, btnDangerCls, inputCls } from "@/components/admin/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -22,12 +22,10 @@ export default async function ServiceEdit({ params, searchParams }: { params: Pr
 
   return (
     <>
-      <Link href="/admin/services" className="text-sm text-stone-600 hover:text-plum">
-        ‹ Services
-      </Link>
+      <BackLink href="/admin/services" label="Services" />
       <PageHeader title={s ? s.name : "New service"}>
         {s && (
-          <a href={`/?service=${s.id}`} target="_blank" className="text-sm text-stone-600 underline">
+          <a href={`/?service=${s.id}`} target="_blank" className="text-sm text-ink-soft underline">
             Direct booking link ↗
           </a>
         )}
@@ -96,7 +94,7 @@ export default async function ServiceEdit({ params, searchParams }: { params: Pr
             {catalog.addons.map((a) => (
               <label key={a.id} className="flex items-center gap-2 py-1 text-sm">
                 <input type="checkbox" name="addonIds" value={a.id} defaultChecked={s?.addonIds.includes(a.id)} /> {a.name}
-                <span className="text-stone-500">{money(a.priceCents)}</span>
+                <span className="text-ink-soft">{money(a.priceCents)}</span>
               </label>
             ))}
           </Card>

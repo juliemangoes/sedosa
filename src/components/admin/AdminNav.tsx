@@ -26,7 +26,7 @@ export default function AdminNav() {
               <Link
                 href={l.href}
                 aria-current={active ? "page" : undefined}
-                className={`block border-b-2 px-3 py-2.5 ${active ? "border-plum font-medium text-plum" : "border-transparent text-stone-600 hover:text-stone-900"}`}
+                className={`block border-b-2 px-3 py-2.5 ${active ? "border-lacquer font-medium text-lacquer" : "border-transparent text-ink-soft hover:text-ink"}`}
               >
                 {l.label}
               </Link>

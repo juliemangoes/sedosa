@@ -11,9 +11,14 @@ async function pickService(page: Page, service: string) {
 }
 
 /** Picks "Any available" (when asked) and an open time. Returns the time label, e.g. "9:30 AM". */
-async function pickTime(page: Page, index = 0) {
+async function pickTime(page: Page, index = 0, dayOffset = 0) {
   const any = page.getByRole("button", { name: "Select Any available" });
   if (await any.isVisible().catch(() => false)) await any.click();
+  if (dayOffset) {
+    const day = page.locator('section[aria-label="Choose a time"] [data-day]:not([disabled])').nth(dayOffset);
+    await expect(day).toBeVisible();
+    await day.click();
+  }
   const slot = page.locator('section[aria-label="Choose a time"] [data-slot]').nth(index);
   await expect(slot).toBeVisible();
   const label = (await slot.textContent())!.trim();
@@ -59,7 +64,7 @@ async function openClientAppointment(page: Page, name: string) {
   await page.locator('main a[href^="/admin/appointments/"]:not([href*="/new"])').first().click();
   await page.waitForURL(/\/admin\/appointments\/[0-9a-f-]{36}/);
   await expect(page.getByRole("heading", { level: 1, name })).toBeVisible();
-  await expect(page.getByRole("link", { name: "‹ Calendar" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Back to Calendar" })).toBeVisible();
 }
 
 test("landing page: hero shortcuts, category carousel, search and details sheet", async ({ page }) => {
@@ -137,20 +142,20 @@ test("client account: create from a booking, sign in with a code, rebook with sa
   await page.getByLabel("6-digit code").fill(code === "000000" ? "111111" : "000000");
   await expect(page.getByText(/doesn't match/)).toBeVisible();
   await page.getByLabel("6-digit code").fill(code);
-  await expect(page.getByRole("heading", { name: "Hi, Jada ♡" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Hi, Jada" })).toBeVisible();
   await expect(page.getByText("Underarm Wax!")).toBeVisible();
   await expect(page.getByRole("link", { name: "Manage" })).toBeVisible();
 
   await page.getByLabel("Mobile number").fill("4045550199");
   await page.getByRole("button", { name: "Save details" }).click();
-  await expect(page.getByText("Saved ♡")).toBeVisible();
+  await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 
   // Booking again: details and previous answers are filled in; consent must be re-ticked.
   await page.goto("/");
   await expect(page.getByRole("link", { name: /My account, signed in as Jada/ })).toBeVisible();
   await pickService(page, "Underarm Wax!");
   await pickTime(page, 3);
-  await expect(page.getByRole("heading", { name: "Booking as Jada ♡" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Booking as Jada" })).toBeVisible();
   await expect(page.getByLabel("Mobile number")).toHaveValue("(404) 555-0199");
   await expect(page.getByText(/filled in your answers from last time/)).toBeVisible();
   await page.getByRole("button", { name: "Confirm booking" }).click();
@@ -202,7 +207,7 @@ test("client books a waxing service with an add-on and intake forms", async ({ p
 
 test("returning client is remembered; reschedule then cancel", async ({ page }) => {
   await pickService(page, "Brow Sculpt/Thread");
-  await pickTime(page);
+  await pickTime(page, 0, 3);
   await fillClient(page, { first: "Rae", email: "rae.returning@example.com" });
   await agreeToWaiver(page);
   await page.getByRole("button", { name: "Confirm booking" }).click();
@@ -210,6 +215,8 @@ test("returning client is remembered; reschedule then cancel", async ({ page }) 
   const before = await page.getByTestId("appt-when").textContent();
 
   await page.getByRole("button", { name: "Reschedule" }).click();
+  // Move it a few days out too, so online cancellation (24-hour cutoff) stays open.
+  await page.locator('section[aria-label="Choose a time"] [data-day]:not([disabled])').nth(4).click();
   const slots = page.locator('section[aria-label="Choose a time"] [data-slot]');
   await expect(slots.nth(3)).toBeVisible();
   await slots.nth(3).click();
@@ -224,7 +231,7 @@ test("returning client is remembered; reschedule then cancel", async ({ page }) 
   // Details are prefilled next time.
   await pickService(page, "Lash Extension Removal");
   await pickTime(page);
-  await expect(page.getByRole("heading", { name: "Welcome back, Rae ♡" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Welcome back, Rae" })).toBeVisible();
   await expect(page.getByLabel("Email", { exact: true })).toHaveValue("rae.returning@example.com");
 });
 
@@ -385,7 +392,8 @@ test("client opts in to WhatsApp; owner messages and schedules a reminder", asyn
 
 test("phone: hero CTA, compact steps and sticky continue @phone", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("link", { name: /Book an appointment/ }).first()).toBeInViewport();
+  await expect(page.getByRole("link", { name: /^Book .+ on .+ at / }).first()).toBeInViewport();
+  await expect(page.getByRole("link", { name: "Book now" })).toBeInViewport();
   // Category cards swipe sideways on phones without widening the page.
   await page.getByRole("tab", { name: /Waxing/ }).click();
   await page.getByRole("button", { name: "Book Chin Wax!" }).click();

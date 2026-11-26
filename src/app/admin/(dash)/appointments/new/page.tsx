@@ -4,7 +4,7 @@ import { getDb } from "@/db";
 import * as t from "@/db/schema";
 import { requireAdmin } from "@/lib/auth";
 import { loadCatalog } from "@/lib/catalog";
-import { Flash, PageHeader } from "@/components/admin/ui";
+import { BackLink, Flash, PageHeader } from "@/components/admin/ui";
 import NewAppointmentForm from "@/components/admin/NewAppointmentForm";
 
 export const dynamic = "force-dynamic";
@@ -19,9 +19,7 @@ export default async function NewAppointmentPage({ searchParams }: { searchParam
   ]);
   return (
     <>
-      <Link href="/admin" className="text-sm text-stone-600 hover:text-plum">
-        ‹ Appointments
-      </Link>
+      <BackLink href="/admin" label="Appointments" />
       <PageHeader title="New appointment" />
       <Flash sp={sp} />
       <NewAppointmentForm

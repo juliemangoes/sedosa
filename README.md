@@ -10,11 +10,14 @@ It ships with the studio's real menu, copied from the old Acuity page:
 
 ## What clients get
 
-- **A landing page in the studio's own style**, with the black-satin and neon
-  graphics, chrome logo and portrait. It includes:
-  - A hero that fits the first screen on any phone: portrait with the logo,
-    one line, the Book button and one-tap category shortcuts.
-  - A menu that opens on a **carousel of category cards**, each with its own
+- **A landing page designed as "The Powder Room"**: lacquered rose walls,
+  blush plaster, oxblood and brass, with Bodoni Moda and Jost (see
+  [DESIGN.md](DESIGN.md)). It includes:
+  - A hero that fits the first screen on any phone: the name set in Bodoni
+    across the width, the studio portrait in an oval vanity mirror, one line,
+    and a reservation card with the **next three open times**. Tapping one
+    opens booking with that time already selected.
+  - A menu that opens on a **wall of category mirrors**, each with its own
     photo (uploaded from the dashboard). Swipe on phones, arrows on desktop,
     arrow keys for keyboard users; picking a card shows that category's
     services right below, and "Next: …" walks through them in order. Search
@@ -53,11 +56,10 @@ It ships with the studio's real menu, copied from the old Acuity page:
 - Email confirmations, reschedule/cancel notices and day-before reminders.
   Clients who opt in get texts too, and can tick **"Send my reminder on
   WhatsApp"** when booking (or later from their account).
-- **Motion**: the hero floats and twinkles, with a chrome shine on the logo
-  and a glowing Book button. Sections and cards ease in as you scroll, times
-  cascade in, picks pop, and a confirmed booking gets a sparkle burst. All of
-  it is transform/opacity only and switches off for anyone with "reduce motion"
-  on. Content never depends on it: without JavaScript everything simply shows.
+- **Motion**: one signature moment. Choosing a category mirror sends a light
+  sheen across its glass, and a fresh booking's confirmation card gets the same
+  sheen. Step content rises in briefly. Everything switches off for anyone with
+  "reduce motion" on, and content never depends on it.
 - Accessibility is checked automatically with axe (WCAG 2.1 AA, including
   contrast). The pages work by keyboard, respect reduced-motion settings, and
   have no horizontal scrolling on phones.
@@ -216,6 +218,25 @@ there is no extra storage service to set up. Uploads are resized on the phone
 first, then re-encoded on the server (category photos cropped to 4:3, metadata
 and location data stripped).
 
+## Design system
+
+The visual design was reworked with the [Impeccable](https://impeccable.style)
+design skill, installed for Claude Code at `.claude/skills/impeccable/`.
+
+- [PRODUCT.md](PRODUCT.md): who the product is for and the brand commitments
+  (pink is the studio colour; premium but never white and sterile).
+- [DESIGN.md](DESIGN.md): the Powder Room system: colour tokens with their
+  contrast pairings, type roles, shapes, shadows, components and rules. Start
+  here before adding a screen.
+- `.impeccable/surfaces/`: the direction contracts for the client site and the
+  dashboard. `.impeccable/design.json` carries shadows, motion and component
+  snippets.
+
+The skill's command-line engine downloads a binary on first use; it was not
+run in the cloud session that did this work, so its automated slop detector has
+not been run against the code yet. To use it locally, open the project in Claude
+Code and run `/impeccable`.
+
 ## Things to know
 
 - **One provider, two locations.** By default a booking at either location
@@ -247,5 +268,5 @@ src/db/schema.ts, drizzle/        database schema + migrations
 src/db/seed-data.ts               the studio's menu, forms and locations
 src/components/landing/           landing page sections (hero, policies, prep, visit, results)
 src/content/prep.ts               prep checklists shown on the landing + confirmation pages
-src/assets/brand/                 logo, portrait and results images cut from the studio's graphics
+src/assets/brand/                 portrait and results photos cropped from the studio's graphics (origin noted in each file)
 ```

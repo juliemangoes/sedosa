@@ -19,7 +19,7 @@ export default async function MessagesPage() {
     <>
       <PageHeader title="Messages" />
       {(!emailOn || !smsOn) && (
-        <p className="mb-4 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+        <p className="mb-4 rounded-md border border-[#7a4a00]/30 bg-[#fbe9c8] p-3 text-sm text-[#7a4a00]">
           {!emailOn && "Email isn't connected yet (RESEND_API_KEY / EMAIL_FROM). "}
           {!smsOn && "Text messages aren't connected yet (Twilio). "}
           Messages are still recorded below so you can see what clients would receive.
@@ -29,30 +29,30 @@ export default async function MessagesPage() {
         {rows.length === 0 ? (
           <Empty>No messages yet.</Empty>
         ) : (
-          <ul className="divide-y divide-stone-100">
+          <ul className="divide-y divide-line">
             {rows.map((m) => (
               <li key={m.id} className="py-3 text-sm">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <span className="text-stone-500">{DateTime.fromJSDate(m.createdAt).setZone(settings.timezone).toFormat("LLL d, h:mm a")}</span>
-                  <span className={`rounded-full px-2 py-0.5 text-[0.7rem] font-medium ${m.channel === "whatsapp" ? "bg-emerald-50 text-[#075e54]" : "bg-stone-100 text-stone-600"}`}>
+                  <span className="text-ink-soft">{DateTime.fromJSDate(m.createdAt).setZone(settings.timezone).toFormat("LLL d, h:mm a")}</span>
+                  <span className={`rounded-full px-2 py-0.5 text-[0.7rem] font-medium ${m.channel === "whatsapp" ? "bg-[#e3f1ea] text-[#075e54]" : "bg-plaster-2 text-ink-soft"}`}>
                     {m.channel === "whatsapp" ? "WhatsApp" : m.channel === "sms" ? "SMS" : "Email"}
                   </span>
                   <span className="font-medium">{m.to}</span>
-                  <span className={m.status === "failed" ? "text-rose-700" : m.status === "logged" ? "text-amber-800" : "text-emerald-700"}>
+                  <span className={m.status === "failed" ? "text-[#a61b2b]" : m.status === "logged" ? "text-[#7a4a00]" : "text-[#1f6b4a]"}>
                     {m.status === "logged" ? "recorded only" : m.status}
                   </span>
                   {m.appointmentId && (
-                    <Link href={`/admin/appointments/${m.appointmentId}`} className="text-plum underline">
+                    <Link href={`/admin/appointments/${m.appointmentId}`} className="text-lacquer underline">
                       appointment
                     </Link>
                   )}
                 </div>
                 {m.subject && <p className="mt-1 font-medium">{m.subject}</p>}
                 <details className="mt-1">
-                  <summary className="cursor-pointer text-stone-500">Show message</summary>
-                  <pre className="mt-2 whitespace-pre-wrap rounded bg-stone-50 p-3 font-sans text-xs">{m.body}</pre>
+                  <summary className="cursor-pointer text-ink-soft">Show message</summary>
+                  <pre className="mt-2 whitespace-pre-wrap rounded bg-plaster p-3 font-sans text-xs">{m.body}</pre>
                 </details>
-                {m.error && <p className="mt-1 text-xs text-red-700">{m.error}</p>}
+                {m.error && <p className="mt-1 text-xs text-[#a61b2b]">{m.error}</p>}
               </li>
             ))}
           </ul>

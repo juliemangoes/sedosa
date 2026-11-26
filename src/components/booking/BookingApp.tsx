@@ -17,6 +17,8 @@ type LocationChoice = number | "any";
 type Props = {
   data: PublicData;
   initialServiceId?: number;
+  /** A time picked from the hero's next openings: opens the time step with it selected. */
+  initialSlot?: Slot;
   /** Server-rendered landing sections. */
   hero: React.ReactNode;
   sections: React.ReactNode;
@@ -27,15 +29,16 @@ type Props = {
   accountsEnabled: boolean;
 };
 
-export default function BookingApp({ data, initialServiceId, hero, sections, footer, initialAccount, initialSavedAnswers, accountsEnabled }: Props) {
+export default function BookingApp({ data, initialServiceId, initialSlot, hero, sections, footer, initialAccount, initialSavedAnswers, accountsEnabled }: Props) {
   const [account, setAccount] = useState<AccountProfile | null>(initialAccount);
   const [savedAnswers, setSavedAnswers] = useState<Record<string, unknown>>(initialSavedAnswers);
   const initialService = data.services.find((s) => s.id === initialServiceId) ?? null;
-  const [step, setStepState] = useState<Step>(initialService ? (initialService.locationIds.length > 1 ? "location" : "time") : "browse");
+  const slotPicked = !!(initialService && initialSlot && !Number.isNaN(Date.parse(initialSlot.start)));
+  const [step, setStepState] = useState<Step>(initialService ? (slotPicked || initialService.locationIds.length === 1 ? "time" : "location") : "browse");
   const [service, setService] = useState<PublicService | null>(initialService);
   const [location, setLocation] = useState<LocationChoice>(initialService && initialService.locationIds.length === 1 ? initialService.locationIds[0] : "any");
   const [addonIds, setAddonIds] = useState<number[]>([]);
-  const [slot, setSlot] = useState<Slot | null>(null);
+  const [slot, setSlot] = useState<Slot | null>(slotPicked ? { start: initialSlot!.start, locationIds: initialSlot!.locationIds.length ? initialSlot!.locationIds : initialService!.locationIds } : null);
   const [notice, setNotice] = useState<string | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const browseScroll = useRef(0);
@@ -130,15 +133,16 @@ export default function BookingApp({ data, initialServiceId, hero, sections, foo
         <Stepper steps={steps} current={current} />
         <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
           <div key={step} className="min-w-0 animate-rise">
-            <p className="kicker text-xs text-plum">{prettyName(service.name)}</p>
-            <h1 ref={headingRef} tabIndex={-1} className="mt-1 text-3xl font-semibold tracking-tight outline-none sm:text-4xl">
+            <h1 ref={headingRef} tabIndex={-1} className="font-display text-[clamp(2.3rem,7vw,3.4rem)] font-medium leading-[1.02] outline-none">
               {title}
             </h1>
-            <p className="mt-2 text-ink/70">{subtitle}</p>
+            <p className="mt-3 text-[1.05rem] text-ink-soft">
+              <span className="font-medium text-ink">{prettyName(service.name)}</span> · {subtitle}
+            </p>
             {step !== "location" && <MobileSummary {...summaryProps} />}
 
             {notice && (
-              <div role="alert" className="mt-5 rounded-2xl bg-white px-4 py-3 text-center font-medium ring-2 ring-plum">
+              <div role="alert" className="mt-5 rounded-2xl bg-panel px-4 py-3 text-center font-medium ring-1 ring-lacquer">
                 {notice}
               </div>
             )}
@@ -165,7 +169,7 @@ export default function BookingApp({ data, initialServiceId, hero, sections, foo
                     setAddonIds((ids) => (on ? [...ids, id] : ids.filter((x) => x !== id)));
                   }}
                 />
-                <h2 className="mt-8 text-lg font-semibold">When works for you?</h2>
+                <h2 className="font-display mt-10 text-[1.75rem] font-medium">When works for you?</h2>
                 <div className="mt-3">
                   <SlotPicker
                     query={query}
@@ -179,7 +183,7 @@ export default function BookingApp({ data, initialServiceId, hero, sections, foo
                   />
                 </div>
                 <div className="mt-6 hidden justify-end sm:flex lg:hidden">
-                  <button type="button" className="btn-black px-8 py-3.5" disabled={!slot} onClick={toDetails}>
+                  <button type="button" className="btn-primary px-8 py-3.5" disabled={!slot} onClick={toDetails}>
                     Continue <IconArrowRight size={16} />
                   </button>
                 </div>
@@ -220,7 +224,7 @@ export default function BookingApp({ data, initialServiceId, hero, sections, foo
                 {...summaryProps}
                 action={
                   step === "time" ? (
-                    <button type="button" className="btn-black w-full py-3.5" disabled={!slot} onClick={toDetails}>
+                    <button type="button" className="btn-primary w-full py-3.5" disabled={!slot} onClick={toDetails}>
                       {slot ? "Continue" : "Choose a time"} {slot && <IconArrowRight size={16} />}
                     </button>
                   ) : undefined
@@ -232,13 +236,13 @@ export default function BookingApp({ data, initialServiceId, hero, sections, foo
       </main>
 
       {step === "time" && slot && (
-        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-petal-line bg-blush/95 px-4 py-3 backdrop-blur-md sm:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-brass bg-panel px-4 py-3 shadow-[0_-12px_30px_-20px_rgba(58,15,28,0.5)] sm:hidden">
           <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
             <div className="min-w-0 text-sm leading-tight">
-              <p className="font-semibold">{slotLabel(slot, data.timezone)}</p>
-              <p className="truncate text-ink/70">{prettyName(service.name)}</p>
+              <p className="font-medium">{slotLabel(slot, data.timezone)}</p>
+              <p className="truncate text-ink-soft">{prettyName(service.name)}</p>
             </div>
-            <button type="button" className="btn-black shrink-0 px-6 py-3" onClick={toDetails}>
+            <button type="button" className="btn-primary shrink-0 px-6 py-3" onClick={toDetails}>
               Continue <IconArrowRight size={16} />
             </button>
           </div>
@@ -274,7 +278,7 @@ function StickyBookBar() {
       className={`fixed inset-x-0 bottom-0 z-30 px-4 pb-4 transition duration-300 sm:hidden ${show ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-full opacity-0"}`}
       aria-hidden={!show}
     >
-      <a href="#services" tabIndex={show ? 0 : -1} className="btn-neon w-full py-4 text-sm shadow-[0_12px_40px_-8px_rgba(255,92,191,0.8)]">
+      <a href="#services" tabIndex={show ? 0 : -1} className="btn-primary w-full py-4 shadow-[0_14px_34px_-12px_rgba(58,15,28,0.75)]">
         Book an appointment <IconArrowRight size={18} />
       </a>
     </div>

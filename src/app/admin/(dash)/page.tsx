@@ -71,14 +71,14 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
     <>
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-sm text-stone-500">{now.toFormat("cccc, LLLL d")}</p>
-          <h1 className="font-serif text-[2rem] font-semibold leading-tight tracking-tight">{greeting} ♡</h1>
+          <p className="text-sm text-ink-soft">{now.toFormat("cccc, LLLL d")}</p>
+          <h1 className="font-display text-[2.3rem] font-medium leading-[1.05]">{greeting}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Link href="/admin/appointments/new" className="inline-flex items-center gap-2 rounded-xl bg-plum px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-[#5b2256]">
+          <Link href="/admin/appointments/new" className="inline-flex items-center gap-2 rounded-xl bg-oxblood px-4 py-2.5 text-sm font-medium text-panel shadow-sm hover:bg-[#5b2256]">
             <AIPlus size={17} /> New appointment
           </Link>
-          <Link href="/admin/calendar" className="inline-flex items-center gap-2 rounded-xl border border-stone-300 bg-white px-4 py-2.5 text-sm font-medium hover:bg-stone-50">
+          <Link href="/admin/calendar" className="inline-flex items-center gap-2 rounded-xl border border-line-strong bg-panel px-4 py-2.5 text-sm font-medium hover:bg-plaster">
             <AICalendar size={17} /> Calendar
           </Link>
         </div>
@@ -95,26 +95,28 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr]">
         <div className="space-y-6">
           {next && (
-            <section aria-label="Next up" className="relative overflow-hidden rounded-2xl bg-noir p-5 text-white shadow-[0_20px_40px_-24px_rgba(0,0,0,0.6)] sm:p-6">
-              <div aria-hidden="true" className="absolute -right-16 -top-16 size-56 rounded-full bg-neon/25 blur-3xl" />
-              <p className="kicker text-xs text-neon-soft">Next up · {DateTime.fromJSDate(next.a.startsAt).setZone(zone).toRelative({ base: now })}</p>
-              <div className="mt-3 flex flex-wrap items-center gap-4">
+            <section aria-labelledby="next-up-title" className="on-dark relative overflow-hidden rounded-[1.25rem] bg-oxblood p-5 text-plaster shadow-[0_20px_40px_-24px_rgba(58,15,28,0.8)] sm:p-6">
+              <h2 id="next-up-title" className="flex flex-wrap items-baseline gap-x-2 text-sm">
+                <span className="font-display text-xl font-medium">Next up</span>
+                <span className="text-brass-light">{DateTime.fromJSDate(next.a.startsAt).setZone(zone).toRelative({ base: now })}</span>
+              </h2>
+              <div className="mt-4 flex flex-wrap items-center gap-4">
                 <Avatar first={next.c.firstName} last={next.c.lastName} size="lg" />
                 <div className="min-w-0 flex-1">
-                  <p className="font-serif text-2xl font-semibold leading-tight">
+                  <p className="font-display text-[1.75rem] font-medium leading-tight">
                     {next.c.firstName} {next.c.lastName}
                   </p>
-                  <p className="text-sm text-[#f3d6e8]">
+                  <p className="mt-0.5 text-sm">
                     {prettyName(next.a.snapshot.serviceName)} · {fmt(next.a.startsAt, "ccc h:mm")}–{fmt(next.a.endsAt, "h:mm a")} · {next.a.snapshot.locationName}
                   </p>
                 </div>
               </div>
               <div className="relative mt-4 flex flex-wrap gap-2">
-                <Link href={`/admin/appointments/${next.a.id}`} className="rounded-xl bg-white px-4 py-2 text-sm font-medium text-stone-900 hover:bg-stone-100">
+                <Link href={`/admin/appointments/${next.a.id}`} className="rounded-full bg-rose px-4 py-2 text-sm font-medium text-oxblood hover:bg-rose-hi">
                   Open
                 </Link>
                 {next.c.phone && (
-                  <a href={`tel:${next.c.phone}`} className="inline-flex items-center gap-1.5 rounded-xl bg-white/10 px-4 py-2 text-sm hover:bg-white/20">
+                  <a href={`tel:${next.c.phone}`} className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm ring-1 ring-plaster/50 hover:bg-oxblood-2">
                     <AIPhone size={16} /> Call
                   </a>
                 )}
@@ -123,7 +125,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                     href={waLink(next.c.phone, renderTemplate(settings.whatsappTemplates[1]?.body ?? settings.whatsappReminderTemplate, templateContext(next.a, next.c, settings, base)))!}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#075e54] px-4 py-2 text-sm hover:bg-[#054c44]"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-[#075e54] px-4 py-2 text-sm text-white hover:bg-[#054c44]"
                   >
                     <WhatsAppIcon size={16} /> WhatsApp
                   </a>
@@ -132,23 +134,23 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             </section>
           )}
 
-          <Card title="Today" subtitle={now.toFormat("cccc, LLL d")} actions={<Link href="/admin/calendar" className="text-sm font-medium text-plum hover:underline">Full calendar</Link>}>
+          <Card title="Today" subtitle={now.toFormat("cccc, LLL d")} actions={<Link href="/admin/calendar" className="text-sm font-medium text-lacquer hover:underline">Full calendar</Link>}>
             {today.length === 0 ? (
-              <Empty icon={<AICalendar size={20} />}>No appointments today. Enjoy the breather ♡</Empty>
+              <Empty icon={<AICalendar size={20} />}>No appointments today.</Empty>
             ) : (
-              <ol className="relative space-y-1 border-l border-stone-200 pl-5">
+              <ol className="relative space-y-1 border-l border-line pl-5">
                 {today.map(({ a, c }) => {
                   const past = a.endsAt < now.toJSDate();
                   return (
                     <li key={a.id} className={`relative ${past ? "opacity-60" : ""}`}>
-                      <span aria-hidden="true" className={`absolute -left-[1.6rem] top-4 size-2.5 rounded-full ring-4 ring-white ${a.status === "confirmed" ? "bg-plum" : a.status === "pending" ? "bg-amber-400" : "bg-stone-300"}`} />
-                      <div className="flex flex-wrap items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-stone-50">
+                      <span aria-hidden="true" className={`absolute -left-[1.6rem] top-4 size-2.5 rounded-full ring-4 ring-panel ${a.status === "confirmed" ? "bg-lacquer" : a.status === "pending" ? "bg-[#c9932f]" : "bg-line-strong"}`} />
+                      <div className="flex flex-wrap items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-plaster">
                         <span className="w-20 text-sm font-semibold tabular-nums">{fmt(a.startsAt, "h:mm a")}</span>
                         <Link href={`/admin/appointments/${a.id}`} className="min-w-0 flex-1">
                           <span className="block truncate font-medium">
                             {c.firstName} {c.lastName}
                           </span>
-                          <span className="block truncate text-sm text-stone-500">
+                          <span className="block truncate text-sm text-ink-soft">
                             {prettyName(a.snapshot.serviceName)} · {a.snapshot.locationName}
                           </span>
                         </Link>
@@ -158,12 +160,12 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                         </span>
                         <span className="flex gap-1">
                           {c.phone && (
-                            <a href={`tel:${c.phone}`} aria-label={`Call ${c.firstName}`} className="grid size-8 place-items-center rounded-full text-stone-500 hover:bg-stone-100 hover:text-stone-900">
+                            <a href={`tel:${c.phone}`} aria-label={`Call ${c.firstName}`} className="grid size-8 place-items-center rounded-full text-ink-soft hover:bg-plaster-2 hover:text-ink">
                               <AIPhone size={16} />
                             </a>
                           )}
                           {waLink(c.phone) && (
-                            <a href={waLink(c.phone)!} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp ${c.firstName}`} className="grid size-8 place-items-center rounded-full text-[#075e54] hover:bg-emerald-50">
+                            <a href={waLink(c.phone)!} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp ${c.firstName}`} className="grid size-8 place-items-center rounded-full text-[#075e54] hover:bg-[#e3f1ea]">
                               <WhatsAppIcon size={17} />
                             </a>
                           )}
@@ -184,9 +186,9 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
             actions={<WhatsAppIcon size={20} className="text-[#075e54]" />}
           >
             {due.length === 0 ? (
-              <p className="py-3 text-sm text-stone-500">Nothing due right now. Reminders show up here when it&apos;s time.</p>
+              <p className="py-3 text-sm text-ink-soft">Nothing due right now. Reminders show up here when it&apos;s time.</p>
             ) : (
-              <ul className="divide-y divide-stone-100">
+              <ul className="divide-y divide-line">
                 {due.map(({ m, a, c }) => {
                   const text = renderTemplate(m.template, templateContext(a, c, settings, base));
                   const href = waLink(c.phone, text);
@@ -197,15 +199,15 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                         <p className="truncate text-sm font-medium">
                           {c.firstName} {c.lastName}
                         </p>
-                        <p className="truncate text-xs text-stone-500">
+                        <p className="truncate text-xs text-ink-soft">
                           {prettyName(a.snapshot.serviceName)} · {fmt(a.startsAt, "ccc h:mm a")}
-                          {m.status === "failed" && <span className="ml-1 text-rose-700">· auto-send failed</span>}
+                          {m.status === "failed" && <span className="ml-1 text-[#a61b2b]">· auto-send failed</span>}
                         </p>
                       </div>
                       {href ? (
                         <SendReminderButton href={href} id={m.id} back="/admin" action={markReminderSentAction} />
                       ) : (
-                        <span className="text-xs text-stone-500">No mobile number</span>
+                        <span className="text-xs text-ink-soft">No mobile number</span>
                       )}
                     </li>
                   );
@@ -215,10 +217,10 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           </Card>
 
           {(attention.length > 0 || flagged.length > 0) && (
-            <Card title="Needs attention" className="border-amber-200">
+            <Card title="Needs attention" className="border-[#7a4a00]/30">
               <ul className="space-y-2.5 text-sm">
                 {flagged.map(({ a, c }) => (
-                  <li key={a.id} className="rounded-xl bg-rose-50 p-3">
+                  <li key={a.id} className="rounded-xl bg-[#fbe4e6] p-3">
                     <Link href={`/admin/appointments/${a.id}`} className="font-medium underline-offset-4 hover:underline">
                       {c.firstName} {c.lastName}
                     </Link>{" "}
@@ -234,12 +236,12 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                         <Link href={`/admin/appointments/${a.id}`} className="font-medium underline-offset-4 hover:underline">
                           {c.firstName} {c.lastName}
                         </Link>
-                        <p className="truncate text-xs text-stone-500">
+                        <p className="truncate text-xs text-ink-soft">
                           Deposit {money(a.depositCents)} due · {prettyName(a.snapshot.serviceName)} {fmt(a.startsAt, "ccc LLL d")}
                         </p>
                       </div>
                       {href && (
-                        <a href={href} target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-[#075e54] hover:bg-emerald-50" aria-label={`Ask ${c.firstName} for the deposit on WhatsApp`}>
+                        <a href={href} target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium text-[#075e54] hover:bg-[#e3f1ea]" aria-label={`Ask ${c.firstName} for the deposit on WhatsApp`}>
                           <WhatsAppIcon size={14} /> Ask
                         </a>
                       )}
@@ -258,12 +260,12 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
                 ["/admin/availability", "Block off time", <AIClock key="c" size={18} />],
                 ["/", "Booking page", <AIExternal key="d" size={18} />],
               ].map(([href, label, icon]) => (
-                <Link key={href as string} href={href as string} target={href === "/" ? "_blank" : undefined} className="flex items-center gap-2.5 rounded-xl border border-stone-200 px-3 py-3 font-medium text-stone-700 transition hover:border-plum/40 hover:bg-plum/5 hover:text-plum">
-                  <span className="text-plum">{icon}</span> {label as string}
+                <Link key={href as string} href={href as string} target={href === "/" ? "_blank" : undefined} className="flex items-center gap-2.5 rounded-xl border border-line px-3 py-3 font-medium text-ink-soft transition hover:border-lacquer/40 hover:bg-lacquer/5 hover:text-lacquer">
+                  <span className="text-lacquer">{icon}</span> {label as string}
                 </Link>
               ))}
             </div>
-            {settings.phone && <p className="mt-3 text-xs text-stone-500">Studio line: {prettyPhone(settings.phone)}</p>}
+            {settings.phone && <p className="mt-3 text-xs text-ink-soft">Studio line: {prettyPhone(settings.phone)}</p>}
           </Card>
         </div>
       </div>

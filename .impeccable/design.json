@@ -1,0 +1,344 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-26T20:16:11.622156+00:00",
+  "title": "Design System: Sedosa Beauty Studio",
+  "extensions": {
+    "colorMeta": {
+      "lacquer-rose": {
+        "role": "primary",
+        "displayName": "Lacquer Rose",
+        "canonical": "#dc7096",
+        "tonalRamp": [
+          "#361622",
+          "#5e2237",
+          "#8c2b4d",
+          "#c33165",
+          "#d16188",
+          "#da95ad",
+          "#e7c5d1",
+          "#f7eef1"
+        ]
+      },
+      "deep-lacquer": {
+        "role": "secondary",
+        "displayName": "Deep Lacquer",
+        "canonical": "#9e2d5a",
+        "tonalRamp": [
+          "#351823",
+          "#5b243a",
+          "#882f53",
+          "#bd376d",
+          "#cd658e",
+          "#d798b1",
+          "#e6c6d3",
+          "#f6eef1"
+        ]
+      },
+      "brass": {
+        "role": "tertiary",
+        "displayName": "Brass",
+        "canonical": "#b08a4f",
+        "tonalRamp": [
+          "#30281c",
+          "#53442d",
+          "#7a623d",
+          "#a8844d",
+          "#bca176",
+          "#cdbca2",
+          "#e1d9cb",
+          "#f5f3ef"
+        ]
+      },
+      "brass-light": {
+        "role": "tertiary",
+        "displayName": "Brass, light",
+        "canonical": "#e2c48f",
+        "tonalRamp": [
+          "#362b17",
+          "#5d4823",
+          "#8b692d",
+          "#c18e34",
+          "#d0a862",
+          "#d9c196",
+          "#e7dbc6",
+          "#f7f3ee"
+        ]
+      },
+      "oxblood": {
+        "role": "neutral",
+        "displayName": "Oxblood",
+        "canonical": "#3a0f1c",
+        "tonalRamp": [
+          "#361720",
+          "#5d2334",
+          "#8b2d49",
+          "#c1345e",
+          "#d06283",
+          "#d996aa",
+          "#e7c6d0",
+          "#f7eef0"
+        ]
+      },
+      "blush-plaster": {
+        "role": "neutral",
+        "displayName": "Blush Plaster",
+        "canonical": "#f7d9e1",
+        "tonalRamp": [
+          "#37151e",
+          "#602031",
+          "#902743",
+          "#c92c56",
+          "#d65c7d",
+          "#dd92a6",
+          "#e9c4ce",
+          "#f7edf0"
+        ]
+      },
+      "rose-white": {
+        "role": "neutral",
+        "displayName": "Rose-white",
+        "canonical": "#fff6f8",
+        "tonalRamp": [
+          "#400c18",
+          "#710e24",
+          "#ac0c2f",
+          "#f30238",
+          "#f63c65",
+          "#f17e98",
+          "#f3bac6",
+          "#faebee"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink, soft",
+        "canonical": "#6b3445",
+        "tonalRamp": [
+          "#2f1d23",
+          "#512f39",
+          "#784051",
+          "#a4516b",
+          "#b9798d",
+          "#cba4b0",
+          "#e0ccd2",
+          "#f5f0f1"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The SEDOSA wordmark across the hero only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Room titles, booking step titles, confirmation greeting, dashboard page titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card titles that name a thing."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Prices, dates, times and headline numbers in Bodoni lining figures."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading text and all UI copy."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Tracked caps for controls, groups and fields; never an eyebrow."
+      }
+    },
+    "shadows": [
+      {
+        "name": "object",
+        "value": "0 24px 48px -24px rgba(58,15,28,0.55)",
+        "purpose": "Reservation card, framed panels, confirmation card."
+      },
+      {
+        "name": "mirror",
+        "value": "0 0 0 2px #b08a4f, 0 22px 40px -22px rgba(58,15,28,0.65)",
+        "purpose": "Brass rim plus the mirror's fall-off."
+      },
+      {
+        "name": "lacquered-button",
+        "value": "inset 0 1px 0 rgba(255,255,255,0.12), 0 6px 16px -8px rgba(58,15,28,0.6)",
+        "purpose": "Primary buttons."
+      },
+      {
+        "name": "working-panel",
+        "value": "0 1px 0 rgba(58,15,28,0.04), 0 14px 30px -24px rgba(58,15,28,0.45)",
+        "purpose": "Dashboard cards and figures."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Every transition and entrance."
+      },
+      {
+        "name": "sheen",
+        "value": "1.4s ease-out-expo",
+        "purpose": "One light pass across a mirror's glass when it is chosen; across the confirmation card on a fresh booking."
+      },
+      {
+        "name": "rise",
+        "value": "0.7s ease-out-expo",
+        "purpose": "Short entrance for step content and the confirmation greeting."
+      },
+      {
+        "name": "sheet-up",
+        "value": "0.42s ease-out-expo",
+        "purpose": "Bottom sheets on phones."
+      },
+      {
+        "name": "state",
+        "value": "160-220ms",
+        "purpose": "Hover, press and selection in the dashboard and controls."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Oxblood lacquered pill for the main action.",
+      "html": "<button class=\"ds-btn-primary\">Book now</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:.55rem;border:0;border-radius:999px;background:#3a0f1c;color:#fff6f8;font:500 .8rem/1 'Jost Variable',Jost,Futura,sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:.85rem 1.5rem;min-height:2.75rem;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 16px -8px rgba(58,15,28,.6);transition:transform 160ms cubic-bezier(.16,1,.3,1),background-color 200ms}.ds-btn-primary:hover{background:#4f1628}.ds-btn-primary:active{transform:scale(.97)}.ds-btn-primary:focus-visible{outline:2px solid #9e2d5a;outline-offset:3px}"
+    },
+    {
+      "name": "Rose Button",
+      "kind": "button",
+      "refersTo": "button-rose",
+      "description": "Lacquer rose pill for actions on oxblood grounds.",
+      "html": "<button class=\"ds-btn-rose\">Book your appointment</button>",
+      "css": ".ds-btn-rose{display:inline-flex;align-items:center;border:0;border-radius:999px;background:#dc7096;color:#3a0f1c;font:500 .8rem/1 'Jost Variable',Jost,Futura,sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:.85rem 1.5rem;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 6px 16px -8px rgba(58,15,28,.45)}.ds-btn-rose:hover{background:#e68baa}.ds-btn-rose:focus-visible{outline:2px solid #3a0f1c;outline-offset:3px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined oxblood pill.",
+      "html": "<button class=\"ds-btn-secondary\">All services</button>",
+      "css": ".ds-btn-secondary{border:0;border-radius:999px;background:transparent;color:#3a0f1c;box-shadow:inset 0 0 0 1px #3a0f1c;font:500 .8rem/1 'Jost Variable',Jost,Futura,sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:.85rem 1.5rem}.ds-btn-secondary:hover{background:rgba(58,15,28,.06)}.ds-btn-secondary:focus-visible{outline:2px solid #9e2d5a;outline-offset:3px}"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Rose-white input with a deep-lacquer focus.",
+      "html": "<input class=\"ds-field\" placeholder=\"you@example.com\">",
+      "css": ".ds-field{width:100%;background:#fff6f8;border:1px solid #9c5a70;border-radius:14px;padding:.75rem .9rem;font:400 1rem 'Jost Variable',Jost,sans-serif;color:#3a0f1c;caret-color:#9e2d5a}.ds-field::placeholder{color:#6b3445}.ds-field:hover{border-color:#9e2d5a}.ds-field:focus{outline:none;border-color:#9e2d5a;box-shadow:0 0 0 3px rgba(158,45,90,.22)}"
+    },
+    {
+      "name": "Vanity Mirror",
+      "kind": "custom",
+      "refersTo": "mirror",
+      "description": "Tall ellipse photo frame in a 2px brass rim; the signature.",
+      "html": "<figure class=\"ds-mirror\"><span></span></figure>",
+      "css": ".ds-mirror{width:160px;aspect-ratio:3/4;border-radius:50%;overflow:hidden;margin:0;background:radial-gradient(80% 60% at 35% 25%,#fbe4eb,#eeb0c4 70%,#e597b1);box-shadow:0 0 0 2px #b08a4f,0 22px 40px -22px rgba(58,15,28,.65)}"
+    },
+    {
+      "name": "Reservation Card",
+      "kind": "card",
+      "refersTo": "reservation-card",
+      "description": "Framed rose-white card with a brass rule inside its edge.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-in\"><h3>Next openings</h3><p>Brow Sculpt/Wax &middot; 30 min</p></div></div>",
+      "css": ".ds-card{background:#fff6f8;border-radius:28px;padding:6px;box-shadow:0 24px 48px -24px rgba(58,15,28,.55);max-width:22rem}.ds-card-in{border-radius:22px;box-shadow:inset 0 0 0 1px #b08a4f;padding:20px 24px;color:#3a0f1c}.ds-card-in h3{margin:0;font:500 1.6rem/1.15 'Bodoni Moda Variable','Bodoni Moda',Didot,serif}.ds-card-in p{margin:.25rem 0 0;font:400 .875rem 'Jost Variable',Jost,sans-serif;color:#6b3445}"
+    },
+    {
+      "name": "Slot",
+      "kind": "chip",
+      "refersTo": "slot",
+      "description": "Time button with Bodoni figures; selected is oxblood.",
+      "html": "<button class=\"ds-slot\">10:30 <small>AM</small></button> <button class=\"ds-slot is-on\">11:00 <small>AM</small></button>",
+      "css": ".ds-slot{border:0;border-radius:16px;background:transparent;box-shadow:inset 0 0 0 1px #9c5a70;color:#3a0f1c;padding:.6rem 1rem;font:500 1.2rem 'Bodoni Moda Variable','Bodoni Moda',Didot,serif}.ds-slot small{font:500 .65rem 'Jost Variable',Jost,sans-serif;letter-spacing:.1em}.ds-slot:hover{background:#f7d9e1;box-shadow:inset 0 0 0 1px #9e2d5a}.ds-slot.is-on{background:#3a0f1c;color:#fff6f8;box-shadow:0 10px 22px -12px rgba(58,15,28,.8)}"
+    },
+    {
+      "name": "Dashboard Nav Item",
+      "kind": "nav",
+      "refersTo": "ops-nav-active",
+      "description": "Oxblood rail link; the current section is a rose pill.",
+      "html": "<nav class=\"ds-rail\"><a class=\"is-on\">Home</a><a>Calendar</a><a>Finance</a></nav>",
+      "css": ".ds-rail{background:#3a0f1c;padding:12px;width:14rem;display:flex;flex-direction:column;gap:2px}.ds-rail a{border-radius:999px;padding:.6rem .9rem;color:#f7d9e1;font:400 .93rem 'Jost Variable',Jost,sans-serif;text-decoration:none}.ds-rail a:hover{background:#4f1628}.ds-rail a.is-on{background:#dc7096;color:#3a0f1c;font-weight:500}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Powder Room",
+    "overview": "Sedosa is a members'-club powder room you step into: lacquered rose walls, oxblood velvet, brass hardware, and the booking waiting on the vanity like a reservation card. The client site is the room itself. Rose owns whole walls, the name is set in Bodoni across the width, photographs hang in oval vanity mirrors, and the next open times sit in the first screen. Reading rooms (policies, prep, visit) step down to blush plaster, and the page closes in an oxblood room.\n\nThe owner's dashboard is the same house seen from the back office. It takes only type, palette, density and one signature move from the room: an oxblood rail, a plaster working ground with rose-white panels, standard controls, and headline figures set in Bodoni numerals like a reservation ledger.\n\nThe system refuses both category ruts: beige spa minimalism and the black-and-neon club flyer the studio's old graphics wore. Pink is the studio's binding colour; premium comes from craft and restraint, never claims.",
+    "keyCharacteristics": [
+      "Committed colour: lacquer rose carries whole regions on client surfaces; oxblood is the ink and the primary action.",
+      "One display voice (Bodoni Moda, high contrast, medium weight) against one working voice (Jost).",
+      "Oval mirrors in thin brass rims frame every photograph.",
+      "Lacquer is suggested by light, not faked: soft falloffs on the rose field, no bevels, chrome or glitter.",
+      "Motion is one authored moment: a light sheen across a mirror's glass when it is chosen."
+    ],
+    "rules": [
+      {
+        "name": "The Oxblood-on-Rose Rule",
+        "body": "Anything set on a rose wall is oxblood. White or plaster text on rose fails contrast and is not used.",
+        "section": "colors"
+      },
+      {
+        "name": "The Brass Is Hardware Rule",
+        "body": "Brass draws rims, rules and small type on oxblood. It never fills a surface and never carries text on a light ground.",
+        "section": "colors"
+      },
+      {
+        "name": "The Warm White Rule",
+        "body": "The lightest surface is rose-white. No pure #fff surfaces; the room is never sterile.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Bodoni for names, titles and numbers; Jost for everything you read at length or operate. Bodoni never sets a button, an input or a body paragraph.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Eyebrow Rule",
+        "body": "Tracked caps label controls and fields only. A heading is never introduced by a small label above it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Objects Cast, Walls Don't Rule",
+        "body": "Rooms are flat. Only things set into the room (cards, mirrors, buttons, sheets) cast a shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** set every text on lacquer rose in oxblood (5.38:1).",
+      "**Do** frame photographs in the vanity mirror with its 2px brass rim.",
+      "**Do** set prices, dates, times and headline numbers in Bodoni figures with tabular lining numerals.",
+      "**Do** use rose-white for panels and inputs, plaster for reading rooms, oxblood for the closing room.",
+      "**Do** keep motion to one authored moment per surface (the mirror sheen) and 150–250ms state transitions in the dashboard.",
+      "**Do** theme browser surfaces: rose selection with oxblood text, deep-lacquer caret, deep-lacquer scrollbar, deep-lacquer focus ring (brass-light on oxblood)."
+    ],
+    "donts": [
+      "**Don't** return to the black-satin and neon look (neon glows, sparkles, black grounds).",
+      "**Don't** use pure white surfaces or a beige spa palette.",
+      "**Don't** put a small label or eyebrow above a heading.",
+      "**Don't** draw a bar down one side of a box to mark state; use a full outline or a tint.",
+      "**Don't** use glyphs or emoji as icons; icons are drawn SVG in one stroke weight.",
+      "**Don't** fake materials with bevels, chrome gradients or glitter; lacquer is light on a flat field.",
+      "**Don't** set buttons, inputs or body copy in Bodoni."
+    ]
+  }
+}

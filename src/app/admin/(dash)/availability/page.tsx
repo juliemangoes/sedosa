@@ -32,8 +32,8 @@ function LocationForm({ loc }: { loc?: typeof t.locations.$inferSelect }) {
         </Field>
       </div>
       <div>
-        <p className="mb-1 text-sm font-medium text-stone-700">Weekly hours</p>
-        <p className="mb-2 text-xs text-stone-500">Like 09:30-20:00. Split shifts: 09:00-13:00, 15:00-20:00. Leave blank for closed.</p>
+        <p className="mb-1 text-sm font-medium text-ink-soft">Weekly hours</p>
+        <p className="mb-2 text-xs text-ink-soft">Like 09:30-20:00. Split shifts: 09:00-13:00, 15:00-20:00. Leave blank for closed.</p>
         <div className="grid gap-2 sm:grid-cols-2">
           {DAYS.map((d, i) => (
             <label key={d} className="grid grid-cols-[6.5rem_1fr] items-center gap-2 text-sm">
@@ -71,7 +71,7 @@ export default async function AvailabilityPage({ searchParams }: { searchParams:
     <>
       <PageHeader title="Hours & time off" />
       <Flash sp={sp} />
-      <p className="mb-4 text-sm text-stone-600">
+      <p className="mb-4 text-sm text-ink-soft">
         {settings.sharedStaff
           ? "Bookings at one location block the same time at every location (one person works both). Change this in Settings."
           : "Each location has its own calendar; bookings only block their own location."}
@@ -84,7 +84,7 @@ export default async function AvailabilityPage({ searchParams }: { searchParams:
         ))}
 
         <Card title="Block off time">
-          <p className="mb-3 text-sm text-stone-600">Vacations, appointments of your own, lunch: clients can&apos;t book over these.</p>
+          <p className="mb-3 text-sm text-ink-soft">Vacations, appointments of your own, lunch: clients can&apos;t book over these.</p>
           <form key={`off-${off.length}`} action={addTimeOffAction} className="grid items-end gap-3 sm:grid-cols-[1fr_1fr_12rem]">
             <Field label="From" htmlFor="off-start">
               <input id="off-start" type="datetime-local" name="start" required step={300} className={inputCls} />
@@ -108,12 +108,12 @@ export default async function AvailabilityPage({ searchParams }: { searchParams:
             <SubmitButton className={btnSecondaryCls}>Block time</SubmitButton>
           </form>
           {off.length > 0 && (
-            <ul className="mt-5 divide-y divide-stone-100 border-t border-stone-100 text-sm">
+            <ul className="mt-5 divide-y divide-line border-t border-line text-sm">
               {off.map((o) => (
                 <li key={o.id} className="flex flex-wrap items-center gap-3 py-2">
                   <span className="flex-1">
                     {DateTime.fromJSDate(o.startsAt).setZone(zone).toFormat("ccc LLL d, h:mm a")} → {DateTime.fromJSDate(o.endsAt).setZone(zone).toFormat("ccc LLL d, h:mm a")}
-                    <span className="text-stone-500">
+                    <span className="text-ink-soft">
                       {" "}
                       · {locName(o.locationId)}
                       {o.reason && ` · ${o.reason}`}
@@ -121,7 +121,7 @@ export default async function AvailabilityPage({ searchParams }: { searchParams:
                   </span>
                   <form action={deleteTimeOffAction}>
                     <input type="hidden" name="id" value={o.id} />
-                    <SubmitButton className="text-red-700 underline" pendingText="…">
+                    <SubmitButton className="text-[#a61b2b] underline" pendingText="…">
                       Remove
                     </SubmitButton>
                   </form>
@@ -132,7 +132,7 @@ export default async function AvailabilityPage({ searchParams }: { searchParams:
         </Card>
 
         <Card title="Special hours for a date">
-          <p className="mb-3 text-sm text-stone-600">Open on a Sunday, close early for a holiday, or close a whole day. Replaces the weekly hours for that date.</p>
+          <p className="mb-3 text-sm text-ink-soft">Open on a Sunday, close early for a holiday, or close a whole day. Replaces the weekly hours for that date.</p>
           <form key={`ov-${overrides.length}`} action={addOverrideAction} className="grid items-end gap-3 sm:grid-cols-[10rem_1fr_auto_12rem]">
             <Field label="Date" htmlFor="ov-date">
               <input id="ov-date" type="date" name="date" required min={today.toISODate()!} className={inputCls} />
@@ -159,12 +159,12 @@ export default async function AvailabilityPage({ searchParams }: { searchParams:
             <SubmitButton className={btnSecondaryCls}>Save</SubmitButton>
           </form>
           {overrides.length > 0 && (
-            <ul className="mt-5 divide-y divide-stone-100 border-t border-stone-100 text-sm">
+            <ul className="mt-5 divide-y divide-line border-t border-line text-sm">
               {overrides.map((o) => (
                 <li key={o.id} className="flex flex-wrap items-center gap-3 py-2">
                   <span className="flex-1">
                     {DateTime.fromISO(o.date).toFormat("ccc LLL d, yyyy")}: <strong>{o.intervals.length ? hoursText(o.intervals) : "Closed"}</strong>
-                    <span className="text-stone-500">
+                    <span className="text-ink-soft">
                       {" "}
                       · {locName(o.locationId)}
                       {o.note && ` · ${o.note}`}
@@ -172,7 +172,7 @@ export default async function AvailabilityPage({ searchParams }: { searchParams:
                   </span>
                   <form action={deleteOverrideAction}>
                     <input type="hidden" name="id" value={o.id} />
-                    <SubmitButton className="text-red-700 underline" pendingText="…">
+                    <SubmitButton className="text-[#a61b2b] underline" pendingText="…">
                       Remove
                     </SubmitButton>
                   </form>

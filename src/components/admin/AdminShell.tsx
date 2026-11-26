@@ -2,9 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
-import logo from "@/assets/brand/logo.png";
+import Wordmark from "@/components/landing/Wordmark";
 import {
   AICalendar,
   AIClipboard,
@@ -68,49 +67,47 @@ export default function AdminShell({
         <Link
           href={i.href}
           aria-current={active ? "page" : undefined}
-          className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-[0.93rem] transition ${
-            active ? "bg-white/10 font-medium text-white shadow-[inset_3px_0_0_var(--color-neon)]" : "text-[#e9c9de] hover:bg-white/5 hover:text-white"
+          className={`group flex items-center gap-3 rounded-full px-3.5 py-2.5 text-[0.93rem] transition duration-200 ${
+            active ? "bg-rose font-medium text-oxblood" : "text-plaster hover:bg-oxblood-2"
           }`}
         >
-          <i.Icon size={19} className={active ? "text-neon" : "text-[#c99bbc] group-hover:text-neon-soft"} />
+          <i.Icon size={19} className={active ? "text-oxblood" : "text-brass-light"} />
           <span className="flex-1">{i.label}</span>
-          {!!i.badge && <span className="rounded-full bg-neon px-1.5 text-xs font-semibold text-black">{i.badge}</span>}
+          {!!i.badge && <span className={`rounded-full px-1.5 text-xs font-semibold ${active ? "bg-oxblood text-plaster" : "bg-rose text-oxblood"}`}>{i.badge}</span>}
         </Link>
       </li>
     );
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f3f6] font-sans text-stone-900 [--color-stone-500:#6c655f]">
+    <div className="min-h-screen bg-plaster font-sans text-ink">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-noir lg:flex" aria-label="Dashboard">
-        <div className="flex h-20 items-center gap-2 px-5">
-          <Image src={logo} alt="" sizes="110px" className="h-11 w-auto" />
-          <span className="sr-only">{businessName}</span>
-          <span className="kicker mt-1 text-[0.65rem] text-[#c99bbc]">Studio</span>
+      <aside className="on-dark fixed inset-y-0 left-0 z-30 hidden w-64 flex-col bg-oxblood text-plaster lg:flex" aria-label="Dashboard">
+        <div className="flex h-20 items-center px-6">
+          <Wordmark businessName={businessName} tone="light" />
         </div>
         <div className="px-4">
-          <Link href="/admin/appointments/new" className="btn-neon w-full py-3">
+          <Link href="/admin/appointments/new" className="btn-rose w-full">
             <AIPlus size={17} /> New appointment
           </Link>
         </div>
         <nav className="mt-5 flex-1 space-y-6 overflow-y-auto px-3 pb-6" aria-label="Sections">
           <ul className="space-y-0.5">{main.map(sideLink)}</ul>
           <div>
-            <p className="kicker mb-1.5 px-3 text-[0.65rem] text-[#a87a9a]">Menu</p>
+            <p className="mb-1.5 px-3.5 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-brass-light">Menu</p>
             <ul className="space-y-0.5">{menu.map(sideLink)}</ul>
           </div>
           <div>
-            <p className="kicker mb-1.5 px-3 text-[0.65rem] text-[#a87a9a]">Studio</p>
+            <p className="mb-1.5 px-3.5 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-brass-light">Studio</p>
             <ul className="space-y-0.5">{studio.map(sideLink)}</ul>
           </div>
         </nav>
-        <div className="space-y-0.5 border-t border-white/10 p-3 text-sm">
-          <a href="/" target="_blank" className="flex items-center gap-3 rounded-xl px-3 py-2 text-[#e9c9de] hover:bg-white/5 hover:text-white">
+        <div className="space-y-0.5 border-t border-brass/40 p-3 text-sm">
+          <a href="/" target="_blank" className="flex items-center gap-3 rounded-full px-3.5 py-2 text-plaster hover:bg-oxblood-2">
             <AIExternal size={18} /> View booking page
           </a>
           <form action={logoutAction}>
-            <button type="submit" className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-[#e9c9de] hover:bg-white/5 hover:text-white">
+            <button type="submit" className="flex w-full items-center gap-3 rounded-full px-3.5 py-2 text-left text-plaster hover:bg-oxblood-2">
               <AILogout size={18} /> Log out
             </button>
           </form>
@@ -118,13 +115,12 @@ export default function AdminShell({
       </aside>
 
       {/* Phone top bar */}
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-noir px-4 lg:hidden">
-        <Link href="/admin" className="flex items-center gap-2" aria-label={`${businessName} dashboard home`}>
-          <Image src={logo} alt="" sizes="90px" className="h-9 w-auto" />
-          <span className="kicker mt-1 text-[0.6rem] text-[#c99bbc]">Studio</span>
+      <header className="on-dark sticky top-0 z-30 flex h-16 items-center justify-between bg-oxblood px-4 text-plaster lg:hidden">
+        <Link href="/admin" className="rounded-lg" aria-label={`${businessName} dashboard home`}>
+          <Wordmark businessName={businessName} tone="light" />
         </Link>
-        <Link href="/admin/appointments/new" className="btn-neon px-3.5 py-2" aria-label="New appointment">
-          <AIPlus size={17} /> <span className="text-[0.7rem]">New</span>
+        <Link href="/admin/appointments/new" className="btn-rose min-h-0 px-4 py-2" aria-label="New appointment">
+          <AIPlus size={17} /> New
         </Link>
       </header>
 
@@ -133,16 +129,16 @@ export default function AdminShell({
       </main>
 
       {/* Phone bottom tabs */}
-      <nav aria-label="Dashboard" className="fixed inset-x-0 bottom-0 z-30 border-t border-stone-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+      <nav aria-label="Dashboard" className="fixed inset-x-0 bottom-0 z-30 border-t border-brass bg-panel pb-[env(safe-area-inset-bottom)] lg:hidden">
         <ul className="grid grid-cols-5">
           {main.map((i) => {
             const active = isActive(i);
             return (
               <li key={i.href}>
-                <Link href={i.href} aria-current={active ? "page" : undefined} className={`relative flex flex-col items-center gap-0.5 py-2.5 text-[0.7rem] ${active ? "font-semibold text-plum" : "text-stone-500"}`}>
-                  <i.Icon size={22} className={active ? "text-plum" : ""} />
+                <Link href={i.href} aria-current={active ? "page" : undefined} className={`relative flex flex-col items-center gap-0.5 py-2.5 text-[0.7rem] ${active ? "font-semibold text-lacquer" : "text-ink-soft"}`}>
+                  <i.Icon size={22} />
                   {i.label}
-                  {!!i.badge && <span className="absolute right-[calc(50%-1.1rem)] top-1.5 grid size-4 place-items-center rounded-full bg-neon text-[0.6rem] font-bold text-black">{i.badge}</span>}
+                  {!!i.badge && <span className="absolute right-[calc(50%-1.1rem)] top-1.5 grid size-4 place-items-center rounded-full bg-lacquer text-[0.6rem] font-bold text-panel">{i.badge}</span>}
                 </Link>
               </li>
             );
@@ -151,7 +147,7 @@ export default function AdminShell({
             <button
               type="button"
               onClick={() => more.current?.showModal()}
-              className={`flex w-full flex-col items-center gap-0.5 py-2.5 text-[0.7rem] ${[...menu, ...studio].some(isActive) ? "font-semibold text-plum" : "text-stone-500"}`}
+              className={`flex w-full flex-col items-center gap-0.5 py-2.5 text-[0.7rem] ${[...menu, ...studio].some(isActive) ? "font-semibold text-lacquer" : "text-ink-soft"}`}
             >
               <AIMore size={22} /> More
             </button>
@@ -163,14 +159,14 @@ export default function AdminShell({
         ref={more}
         aria-label="More"
         onClick={(e) => e.target === more.current && more.current?.close()}
-        className="m-0 mt-auto w-full max-w-none rounded-t-3xl bg-white p-0 backdrop:bg-black/40 open:animate-sheet-up lg:hidden"
+        className="m-0 mt-auto w-full max-w-none rounded-t-[2rem] bg-plaster p-0 text-ink backdrop:bg-oxblood/50 open:animate-sheet-up lg:hidden"
       >
         <div className="p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-          <div aria-hidden="true" className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-stone-200" />
+          <div aria-hidden="true" className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-line-strong/40" />
           <ul className="grid grid-cols-3 gap-2">
             {[...menu, ...studio].map((i) => (
               <li key={i.href}>
-                <Link href={i.href} className={`flex flex-col items-center gap-1.5 rounded-2xl px-2 py-4 text-center text-xs ${isActive(i) ? "bg-plum/10 font-semibold text-plum" : "bg-stone-50 text-stone-700"}`}>
+                <Link href={i.href} className={`flex flex-col items-center gap-1.5 rounded-2xl px-2 py-4 text-center text-xs ${isActive(i) ? "bg-rose font-semibold text-oxblood" : "bg-panel ring-1 ring-line"}`}>
                   <i.Icon size={22} />
                   {i.label}
                 </Link>
@@ -178,11 +174,11 @@ export default function AdminShell({
             ))}
           </ul>
           <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
-            <a href="/" target="_blank" className="flex items-center justify-center gap-2 rounded-2xl bg-stone-50 py-3 text-stone-700">
+            <a href="/" target="_blank" className="flex items-center justify-center gap-2 rounded-2xl bg-panel py-3 ring-1 ring-line">
               <AIExternal size={17} /> Booking page
             </a>
             <form action={logoutAction}>
-              <button type="submit" className="flex w-full items-center justify-center gap-2 rounded-2xl bg-stone-50 py-3 text-stone-700">
+              <button type="submit" className="flex w-full items-center justify-center gap-2 rounded-2xl bg-panel py-3 ring-1 ring-line">
                 <AILogout size={17} /> Log out
               </button>
             </form>

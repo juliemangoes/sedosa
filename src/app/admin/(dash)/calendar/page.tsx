@@ -17,12 +17,12 @@ export const dynamic = "force-dynamic";
 const HOUR_PX = 64;
 
 const BLOCK: Record<t.AppointmentStatus, string> = {
-  confirmed: "bg-plum/10 border-plum text-stone-900 hover:bg-plum/15",
-  pending: "bg-amber-50 border-amber-400 text-amber-950 hover:bg-amber-100",
-  completed: "bg-stone-100 border-stone-400 text-stone-700 hover:bg-stone-200",
-  no_show: "bg-rose-50 border-rose-400 text-rose-900 hover:bg-rose-100",
-  cancelled: "bg-white border-stone-300 text-stone-500 line-through",
-  expired: "bg-white border-stone-300 text-stone-500",
+  confirmed: "bg-rose/25 border-lacquer/60 text-ink hover:bg-rose/40",
+  pending: "bg-[#fbe9c8] border-[#7a4a00]/30 text-[#7a4a00] hover:bg-[#fbe9c8]",
+  completed: "bg-plaster-2 border-line-strong text-ink-soft hover:bg-plaster-2",
+  no_show: "bg-[#fbe4e6] border-[#a61b2b]/30 text-[#a61b2b] hover:bg-[#fbe4e6]",
+  cancelled: "bg-panel border-line-strong text-ink-soft line-through",
+  expired: "bg-panel border-line-strong text-ink-soft",
 };
 
 type Item = { id: string; start: number; end: number };
@@ -128,18 +128,18 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
       <Flash sp={sp} />
 
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <div className="flex items-center rounded-xl border border-stone-300 bg-white">
-          <Link className="grid size-10 place-items-center rounded-l-xl hover:bg-stone-50" href={q({ week: weekStart.minus({ weeks: 1 }).toISODate()! })} aria-label="Previous week">
+        <div className="flex items-center rounded-xl border border-line-strong bg-panel">
+          <Link className="grid size-10 place-items-center rounded-l-xl hover:bg-plaster" href={q({ week: weekStart.minus({ weeks: 1 }).toISODate()! })} aria-label="Previous week">
             <AIChevronL />
           </Link>
-          <Link className="border-x border-stone-200 px-3 py-2 text-sm font-medium hover:bg-stone-50" href={q({ week: undefined })}>
+          <Link className="border-x border-line px-3 py-2 text-sm font-medium hover:bg-plaster" href={q({ week: undefined })}>
             Today
           </Link>
-          <Link className="grid size-10 place-items-center rounded-r-xl hover:bg-stone-50" href={q({ week: weekStart.plus({ weeks: 1 }).toISODate()! })} aria-label="Next week">
+          <Link className="grid size-10 place-items-center rounded-r-xl hover:bg-plaster" href={q({ week: weekStart.plus({ weeks: 1 }).toISODate()! })} aria-label="Next week">
             <AIChevronR />
           </Link>
         </div>
-        <span className="ml-1 font-serif text-lg font-semibold">
+        <span className="font-display ml-1 text-xl font-medium">
           {weekStart.toFormat("LLL d")} – {weekEnd.minus({ days: 1 }).toFormat(weekStart.month === weekEnd.minus({ days: 1 }).month ? "d, yyyy" : "LLL d, yyyy")}
         </span>
         <form className="ml-auto flex flex-wrap items-center gap-2" action="/admin/calendar">
@@ -163,23 +163,23 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
       </div>
 
       {/* Desktop: week grid */}
-      <div className="hidden overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-[0_1px_2px_rgba(28,16,24,0.04)] lg:block">
-        <div className="grid grid-cols-[4rem_repeat(7,minmax(0,1fr))] border-b border-stone-200">
+      <div className="hidden overflow-hidden rounded-2xl border border-line bg-panel shadow-[0_1px_2px_rgba(58,15,28,0.04)] lg:block">
+        <div className="grid grid-cols-[4rem_repeat(7,minmax(0,1fr))] border-b border-line">
           <div />
           {days.map((d) => {
             const isToday = d.hasSame(now, "day");
             return (
-              <div key={d.toISODate()} className="border-l border-stone-100 px-2 py-3 text-center">
-                <p className={`text-xs font-medium uppercase tracking-wider ${isToday ? "text-plum" : "text-stone-500"}`}>{d.toFormat("ccc")}</p>
-                <p className={`mx-auto mt-1 grid size-8 place-items-center rounded-full text-lg font-semibold ${isToday ? "bg-plum text-white" : ""}`}>{d.day}</p>
+              <div key={d.toISODate()} className="border-l border-line px-2 py-3 text-center">
+                <p className={`text-xs font-medium uppercase tracking-wider ${isToday ? "text-lacquer" : "text-ink-soft"}`}>{d.toFormat("ccc")}</p>
+                <p className={`mx-auto mt-1 grid size-8 place-items-center rounded-full text-lg font-semibold ${isToday ? "bg-oxblood text-panel" : ""}`}>{d.day}</p>
               </div>
             );
           })}
         </div>
-        <div tabIndex={0} role="region" aria-label="Week schedule" className="grid max-h-[70vh] grid-cols-[4rem_repeat(7,minmax(0,1fr))] overflow-y-auto focus-visible:outline-2 focus-visible:outline-plum">
+        <div tabIndex={0} role="region" aria-label="Week schedule" className="grid max-h-[70vh] grid-cols-[4rem_repeat(7,minmax(0,1fr))] overflow-y-auto focus-visible:outline-2 focus-visible:outline-lacquer">
           <div className="relative" style={{ height: gridH }}>
             {hours.map((h) => (
-              <span key={h} className="absolute right-2 -translate-y-1/2 text-[0.7rem] text-stone-500" style={{ top: (h - startHour) * HOUR_PX }}>
+              <span key={h} className="absolute right-2 -translate-y-1/2 text-[0.7rem] text-ink-soft" style={{ top: (h - startHour) * HOUR_PX }}>
                 {h === startHour ? "" : DateTime.fromObject({ hour: h }).toFormat("h a")}
               </span>
             ))}
@@ -195,7 +195,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
             return (
               <div
                 key={d.toISODate()}
-                className={`relative border-l border-stone-100 ${isToday ? "bg-plum/[0.025]" : ""}`}
+                className={`relative border-l border-line ${isToday ? "bg-oxblood/[0.025]" : ""}`}
                 style={{ height: gridH, backgroundImage: `repeating-linear-gradient(to bottom, #f1edf0 0, #f1edf0 1px, transparent 1px, transparent ${HOUR_PX}px)` }}
               >
                 {blocks.map((o) => {
@@ -205,7 +205,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                   return (
                     <div
                       key={o.id}
-                      className="absolute inset-x-1 rounded-lg border border-dashed border-stone-300 p-1.5 text-[0.7rem] text-stone-500"
+                      className="absolute inset-x-1 rounded-lg border border-dashed border-line-strong p-1.5 text-[0.7rem] text-ink-soft"
                       style={{ top: top(s), height: top(e) - top(s), backgroundImage: "repeating-linear-gradient(135deg, #f5f3f4 0 6px, #ffffff 6px 12px)" }}
                       title={o.reason || "Blocked"}
                     >
@@ -219,7 +219,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                     <Link
                       key={a.id}
                       href={`/admin/appointments/${a.id}`}
-                      className={`absolute overflow-hidden rounded-lg border-l-[3px] px-2 py-1 text-xs shadow-sm transition ${BLOCK[a.status]}`}
+                      className={`absolute overflow-hidden rounded-lg border px-2 py-1 text-xs shadow-[0_4px_10px_-6px_rgba(58,15,28,0.5)] transition ${BLOCK[a.status]}`}
                       style={{ top: top(start) + 1, height: h, left: `calc(${(lane / n) * 100}% + 3px)`, width: `calc(${100 / n}% - 6px)` }}
                       title={`${c.firstName} ${c.lastName} · ${prettyName(a.snapshot.serviceName)}`}
                     >
@@ -237,15 +237,15 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                           <p className="truncate font-medium">
                             {c.firstName} {c.lastName.slice(0, 1)}.
                           </p>
-                          {h > 52 && <p className="truncate text-stone-600">{prettyName(a.snapshot.serviceName)}</p>}
+                          {h > 52 && <p className="truncate text-ink-soft">{prettyName(a.snapshot.serviceName)}</p>}
                         </>
                       )}
                     </Link>
                   );
                 })}
                 {isToday && nowMin >= startHour * 60 && nowMin <= endHour * 60 && (
-                  <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 z-10 h-0.5 bg-neon" style={{ top: top(nowMin) }}>
-                    <span className="absolute -left-1 -top-1 size-2.5 rounded-full bg-neon" />
+                  <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 z-10 h-0.5 bg-rose" style={{ top: top(nowMin) }}>
+                    <span className="absolute -left-1 -top-1 size-2.5 rounded-full bg-rose" />
                   </div>
                 )}
               </div>
@@ -260,16 +260,16 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
           const list = rows.filter(({ a }) => DateTime.fromJSDate(a.startsAt).setZone(zone).hasSame(d, "day"));
           const isToday = d.hasSame(now, "day");
           return (
-            <section key={d.toISODate()} className={`rounded-2xl border bg-white p-4 ${isToday ? "border-plum/40 shadow-[0_8px_24px_-16px_rgba(109,43,103,0.5)]" : "border-stone-200/80"}`}>
+            <section key={d.toISODate()} className={`rounded-2xl border bg-panel p-4 ${isToday ? "border-lacquer/40 shadow-[0_8px_24px_-16px_rgba(58,15,28,0.5)]" : "border-line"}`}>
               <h2 className="mb-1 flex items-center gap-2 font-semibold">
-                <span className={`grid size-8 place-items-center rounded-full text-sm ${isToday ? "bg-plum text-white" : "bg-stone-100"}`}>{d.day}</span>
+                <span className={`grid size-8 place-items-center rounded-full text-sm ${isToday ? "bg-oxblood text-panel" : "bg-plaster-2"}`}>{d.day}</span>
                 {d.toFormat("cccc")}
-                {isToday && <span className="text-xs font-normal text-plum">Today</span>}
+                {isToday && <span className="text-xs font-normal text-lacquer">Today</span>}
               </h2>
               {list.length === 0 ? (
-                <p className="py-1 pl-10 text-sm text-stone-500">Free</p>
+                <p className="py-1 pl-10 text-sm text-ink-soft">Free</p>
               ) : (
-                <ul className="divide-y divide-stone-100">
+                <ul className="divide-y divide-line">
                   {list.map(({ a, c }) => (
                     <li key={a.id}>
                       <Link href={`/admin/appointments/${a.id}`} className="flex items-center gap-3 py-2.5">
@@ -278,7 +278,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                           <span className="block truncate font-medium">
                             {c.firstName} {c.lastName}
                           </span>
-                          <span className="block truncate text-sm text-stone-500">{prettyName(a.snapshot.serviceName)}</span>
+                          <span className="block truncate text-sm text-ink-soft">{prettyName(a.snapshot.serviceName)}</span>
                         </span>
                         <span className="flex flex-col items-end gap-1">
                           <StatusBadge status={a.status} />

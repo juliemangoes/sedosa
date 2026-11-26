@@ -67,38 +67,38 @@ export default function ImageUpload({ kind, categoryId, currentUrl, label, onUpl
       <button
         type="button"
         onClick={() => input.current?.click()}
-        className={`group relative grid shrink-0 place-items-center overflow-hidden rounded-2xl bg-stone-100 ring-1 ring-stone-200 transition hover:ring-plum ${kind === "category" ? "h-20 w-28" : "size-16"}`}
+        className={`group relative grid shrink-0 place-items-center overflow-hidden rounded-2xl bg-plaster-2 ring-1 ring-line transition hover:ring-lacquer ${kind === "category" ? "h-20 w-28" : "size-16"}`}
         aria-label={preview ? `Replace ${label}` : `Upload ${label}`}
       >
         {preview ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={preview} alt="" className={`size-full object-cover transition ${busy ? "opacity-50" : "group-hover:scale-105"}`} />
         ) : (
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="text-stone-400" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="text-ink-soft" aria-hidden="true">
             <rect x="3" y="5" width="18" height="14" rx="3" />
             <circle cx="9" cy="10" r="1.8" />
             <path d="m21 16-5-5-8 8" />
           </svg>
         )}
-        {busy && <span className="absolute inset-0 m-auto size-6 animate-spin rounded-full border-2 border-white/60 border-t-plum" aria-hidden="true" />}
+        {busy && <span className="absolute inset-0 m-auto size-6 animate-spin rounded-full border-2 border-panel/60 border-t-lacquer" aria-hidden="true" />}
       </button>
       <div className="min-w-0 text-sm">
         <div className="flex flex-wrap gap-x-3 gap-y-1">
-          <button type="button" className="font-medium text-plum hover:underline" onClick={() => input.current?.click()} disabled={busy}>
+          <button type="button" className="font-medium text-lacquer hover:underline" onClick={() => input.current?.click()} disabled={busy}>
             {busy ? "Uploading…" : preview ? "Replace photo" : "Upload photo"}
           </button>
           {preview && removeAction && categoryId && (
             <form action={removeAction}>
               <input type="hidden" name="id" value={categoryId} />
-              <button type="submit" className="text-stone-500 hover:text-red-700 hover:underline">
+              <button type="submit" className="text-ink-soft hover:text-[#a61b2b] hover:underline">
                 Remove
               </button>
             </form>
           )}
         </div>
-        <p className="mt-0.5 text-xs text-stone-500">{kind === "category" ? "Landscape works best; it's cropped to 4:3." : "Photo of the receipt."}</p>
+        <p className="mt-0.5 text-xs text-ink-soft">{kind === "category" ? "Landscape works best; it's cropped to 4:3." : "Photo of the receipt."}</p>
         {error && (
-          <p role="alert" className="mt-1 text-xs font-medium text-red-700">
+          <p role="alert" className="mt-1 text-xs font-medium text-[#a61b2b]">
             {error}
           </p>
         )}

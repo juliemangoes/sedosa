@@ -5,7 +5,7 @@ import { requireAdmin } from "@/lib/auth";
 import { loadCatalog } from "@/lib/catalog";
 import { deleteFieldAction, deleteFormAction, saveFieldAction, saveFormAction } from "../../../actions";
 import SubmitButton from "@/components/admin/SubmitButton";
-import { Card, Field, Flash, PageHeader, btnCls, btnDangerCls, btnSecondaryCls, inputCls } from "@/components/admin/ui";
+import { BackLink, Card, Field, Flash, PageHeader, btnCls, btnDangerCls, btnSecondaryCls, inputCls } from "@/components/admin/ui";
 import type { FieldType } from "@/db/schema";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +23,7 @@ type FieldRow = { id: number; type: FieldType; label: string; options: string[];
 
 function FieldForm({ formId, f, order }: { formId: number; f?: FieldRow; order: number }) {
   return (
-    <form action={saveFieldAction} className="grid gap-3 border-b border-stone-100 py-4 last:border-0 md:grid-cols-[1fr_14rem]">
+    <form action={saveFieldAction} className="grid gap-3 border-b border-line py-4 last:border-0 md:grid-cols-[1fr_14rem]">
       <input type="hidden" name="formId" value={formId} />
       <input type="hidden" name="id" value={f?.id ?? ""} />
       <div className="space-y-2">
@@ -47,7 +47,7 @@ function FieldForm({ formId, f, order }: { formId: number; f?: FieldRow; order: 
         <div className="flex gap-2">
           <SubmitButton className={f ? btnSecondaryCls : btnCls}>{f ? "Save" : "Add question"}</SubmitButton>
           {f && (
-            <SubmitButton className="px-2 text-sm text-red-700 underline" formAction={deleteFieldAction} confirm="Delete this question?" pendingText="…">
+            <SubmitButton className="px-2 text-sm text-[#a61b2b] underline" formAction={deleteFieldAction} confirm="Delete this question?" pendingText="…">
               Delete
             </SubmitButton>
           )}
@@ -67,9 +67,7 @@ export default async function FormEdit({ params, searchParams }: { params: Promi
   const sortOrder = catalog.forms.findIndex((f) => f.id === form.id);
   return (
     <>
-      <Link href="/admin/forms" className="text-sm text-stone-600 hover:text-plum">
-        ‹ Forms
-      </Link>
+      <BackLink href="/admin/forms" label="Forms" />
       <PageHeader title={form.name} />
       <Flash sp={sp} />
       <div className="space-y-6">

@@ -45,23 +45,23 @@ export default function ManageBooking({ token, timezone, canReschedule, canCance
   };
 
   return (
-    <section aria-labelledby="manage-title" className="rounded-3xl bg-white/80 p-5 ring-1 ring-petal-line sm:p-7">
+    <section aria-labelledby="manage-title" className="rounded-[1.75rem] bg-panel p-6 ring-1 ring-line sm:p-8">
       {mode === "idle" && (
         <>
-          <h2 id="manage-title" className="text-xl font-semibold">
+          <h2 id="manage-title" className="font-display text-[1.75rem] font-medium leading-tight">
             Need to make a change?
           </h2>
           {done && (
-            <p role="status" className="mt-3 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-900 ring-1 ring-emerald-200">
+            <p role="status" className="mt-3 rounded-2xl bg-panel px-4 py-3 text-sm font-medium text-[#1f6b4a] ring-1 ring-[#1f6b4a]/40">
               {done}
             </p>
           )}
-          <p className="mt-1 text-sm text-ink/70">{canReschedule ?? canCancel ?? "Reschedule or cancel online, no call needed."}</p>
+          <p className="mt-1 text-sm text-ink-soft">{canReschedule ?? canCancel ?? "Reschedule or cancel online, no call needed."}</p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-            <button type="button" className="btn-black px-6 py-3" disabled={!!canReschedule} onClick={() => setMode("reschedule")}>
+            <button type="button" className="btn-primary px-6 py-3" disabled={!!canReschedule} onClick={() => setMode("reschedule")}>
               Reschedule
             </button>
-            <button type="button" className="btn-outline px-6 py-3" disabled={!!canCancel} onClick={() => setMode("cancel")}>
+            <button type="button" className="btn-secondary px-6 py-3" disabled={!!canCancel} onClick={() => setMode("cancel")}>
               Cancel appointment
             </button>
           </div>
@@ -71,22 +71,22 @@ export default function ManageBooking({ token, timezone, canReschedule, canCance
       {mode === "reschedule" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
-            <h2 id="manage-title" className="text-xl font-semibold">
+            <h2 id="manage-title" className="font-display text-[1.75rem] font-medium leading-tight">
               Pick a new time
             </h2>
-            <button type="button" className="text-sm font-semibold text-plum underline-offset-4 hover:underline" onClick={() => setMode("idle")}>
+            <button type="button" className="text-sm font-medium text-lacquer underline-offset-4 hover:underline" onClick={() => setMode("idle")}>
               Keep current time
             </button>
           </div>
           <SlotPicker query={`token=${encodeURIComponent(token)}&locationId=any`} timezone={timezone} selected={slot} onSelect={setSlot} />
           {slot && (
-            <div className="flex flex-col items-center gap-3 rounded-2xl bg-black p-5 text-center text-white sm:flex-row sm:justify-between sm:text-left">
+            <div className="on-dark flex flex-col items-center gap-3 rounded-2xl bg-oxblood p-5 text-center text-plaster sm:flex-row sm:justify-between sm:text-left">
               <p>
                 Move to <strong>{DateTime.fromISO(slot.start).setZone(timezone).toFormat("cccc, LLL d 'at' h:mm a")}</strong>?
               </p>
               <button
                 type="button"
-                className="btn-neon px-6 py-3"
+                className="btn-rose"
                 disabled={busy}
                 onClick={async () => {
                   if (await post("reschedule", { startsAt: slot.start, locationId: "any" })) {
@@ -106,16 +106,16 @@ export default function ManageBooking({ token, timezone, canReschedule, canCance
 
       {mode === "cancel" && (
         <div className="text-center">
-          <h2 id="manage-title" className="text-xl font-semibold">
+          <h2 id="manage-title" className="font-display text-[1.75rem] font-medium leading-tight">
             Cancel this appointment?
           </h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-ink/70">
+          <p className="mx-auto mt-2 max-w-md text-sm text-ink-soft">
             {depositNote ? `${depositNote} ` : ""}If you&apos;d rather keep your spot, you can pick a new time instead.
           </p>
           <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
             <button
               type="button"
-              className="btn-black px-6 py-3"
+              className="btn-primary px-6 py-3"
               disabled={busy}
               onClick={async () => {
                 if (await post("cancel")) router.refresh();
@@ -123,10 +123,10 @@ export default function ManageBooking({ token, timezone, canReschedule, canCance
             >
               {busy ? "Canceling…" : "Yes, cancel"}
             </button>
-            <button type="button" className="btn-outline px-6 py-3" onClick={() => setMode("reschedule")}>
+            <button type="button" className="btn-secondary px-6 py-3" onClick={() => setMode("reschedule")}>
               Reschedule instead
             </button>
-            <button type="button" className="px-4 py-3 text-sm font-semibold text-plum" onClick={() => setMode("idle")}>
+            <button type="button" className="px-4 py-3 text-sm font-medium text-lacquer" onClick={() => setMode("idle")}>
               Keep it
             </button>
           </div>
@@ -134,7 +134,7 @@ export default function ManageBooking({ token, timezone, canReschedule, canCance
       )}
 
       {msg && (
-        <p role="alert" className="mt-4 rounded-2xl bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-900">
+        <p role="alert" className="mt-4 rounded-2xl bg-panel px-4 py-3 text-center text-sm font-medium text-[#a61b2b] ring-1 ring-[#a61b2b]/50">
           {msg}
         </p>
       )}

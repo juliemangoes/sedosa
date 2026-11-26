@@ -5,7 +5,7 @@ import IntakeForm from "./IntakeForm";
 import type { PublicData, PublicService, Slot } from "./types";
 import { computeTotals } from "./flow";
 import { money } from "@/lib/format";
-import { IconCard, IconCheck, IconHeart } from "@/components/landing/icons";
+import { IconCard, IconCheck } from "@/components/landing/icons";
 import SignInPanel, { type AccountProfile, type SignInResult } from "@/components/account/SignInPanel";
 
 export const DETAILS_FORM_ID = "booking-details";
@@ -175,7 +175,7 @@ export default function DetailsStep(props: {
   };
   const fieldErr = (k: string) =>
     errors[k] ? (
-      <p id={`${k}-err`} className="mt-1.5 text-sm font-medium text-red-800" data-error>
+      <p id={`${k}-err`} className="mt-1.5 text-sm font-medium text-[#a61b2b]" data-error>
         {errors[k]}
       </p>
     ) : null;
@@ -191,15 +191,15 @@ export default function DetailsStep(props: {
 
   return (
     <form id={DETAILS_FORM_ID} onSubmit={submit} noValidate className="mt-6 space-y-5">
-      <section aria-labelledby="you-title" className="rounded-3xl bg-white/80 p-5 ring-1 ring-petal-line sm:p-7">
+      <section aria-labelledby="you-title" className="rounded-[1.75rem] bg-panel p-5 ring-1 ring-line sm:p-7">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="you-title" className="text-xl font-semibold">
-            {account ? `Booking as ${account.firstName || "you"} ♡` : returning && client.firstName ? `Welcome back, ${client.firstName} ♡` : "Your details"}
+          <h2 id="you-title" className="font-display text-[1.65rem] font-medium leading-tight">
+            {account ? `Booking as ${account.firstName || "you"}` : returning && client.firstName ? `Welcome back, ${client.firstName}` : "Your details"}
           </h2>
           {account && (
             <button
               type="button"
-              className="text-sm font-semibold text-plum underline-offset-4 hover:underline"
+              className="text-sm font-medium text-lacquer underline-offset-4 hover:underline"
               onClick={async () => {
                 await fetch("/api/account/logout", { method: "POST" }).catch(() => undefined);
                 setClient(EMPTY);
@@ -214,7 +214,7 @@ export default function DetailsStep(props: {
           {!account && returning && (
             <button
               type="button"
-              className="text-sm font-semibold text-plum underline-offset-4 hover:underline"
+              className="text-sm font-medium text-lacquer underline-offset-4 hover:underline"
               onClick={() => {
                 writeSaved(null);
                 setReturning(false);
@@ -226,7 +226,7 @@ export default function DetailsStep(props: {
           )}
         </div>
         {!account && props.accountsEnabled && (
-          <div className="mt-4 rounded-2xl bg-blush/70 p-4 ring-1 ring-petal-line">
+          <div className="mt-4 rounded-2xl bg-plaster p-4 ring-1 ring-line">
             {showSignIn ? (
               <SignInPanel compact initialEmail={client.email} onSignedIn={props.onSignedIn} />
             ) : (
@@ -234,7 +234,7 @@ export default function DetailsStep(props: {
                 <p className="text-sm">
                   <strong>Been here before?</strong> Sign in and I&apos;ll fill this in for you.
                 </p>
-                <button type="button" className="btn-outline px-4 py-2" onClick={() => setShowSignIn(true)}>
+                <button type="button" className="btn-secondary px-4 py-2" onClick={() => setShowSignIn(true)}>
                   Sign in
                 </button>
               </div>
@@ -260,43 +260,43 @@ export default function DetailsStep(props: {
           {account ? (
             <div>
               <span className="block">Email</span>
-              <p className="mt-1.5 flex items-center justify-between gap-2 rounded-xl bg-blush/70 px-3.5 py-3">
+              <p className="mt-1.5 flex items-center justify-between gap-2 rounded-[14px] bg-plaster px-3.5 py-3">
                 <span className="truncate">{account.email}</span>
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-900 ring-1 ring-emerald-200">
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-panel px-2 py-0.5 text-xs font-medium text-[#1f6b4a] ring-1 ring-[#1f6b4a]/40">
                   <IconCheck size={12} strokeWidth={2.6} /> Signed in
                 </span>
               </p>
-              <p className="mt-1 text-xs text-ink/70">This booking will appear in your account.</p>
+              <p className="mt-1 text-xs text-ink-soft">This booking will appear in your account.</p>
             </div>
           ) : (
             <div>
               <label htmlFor="email">Email</label>
               <input type="email" inputMode="email" autoComplete="email" placeholder="you@example.com" {...inputProps("email")} />
               {fieldErr("email")}
-              <p className="mt-1 text-xs text-ink/70">Your confirmation and reschedule link go here.</p>
+              <p className="mt-1 text-xs text-ink-soft">Your confirmation and reschedule link go here.</p>
             </div>
           )}
         </div>
         <div className="mt-5 space-y-3 text-sm">
           <label className="flex cursor-pointer items-start gap-3">
-            <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-black" checked={client.smsOptIn} onChange={(e) => setClient((c) => ({ ...c, smsOptIn: e.target.checked }))} />
+            <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-[#9e2d5a]" checked={client.smsOptIn} onChange={(e) => setClient((c) => ({ ...c, smsOptIn: e.target.checked }))} />
             <span>
-              Text me my confirmation and reminders. <span className="text-ink/70">Message frequency varies; msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</span>
+              Text me my confirmation and reminders. <span className="text-ink-soft">Message frequency varies; msg &amp; data rates may apply. Reply STOP to opt out, HELP for help.</span>
             </span>
           </label>
           {data.whatsappReminders && (
             <label className="flex cursor-pointer items-start gap-3">
-              <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-black" checked={client.whatsappOptIn} onChange={(e) => setClient((c) => ({ ...c, whatsappOptIn: e.target.checked }))} />
+              <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-[#9e2d5a]" checked={client.whatsappOptIn} onChange={(e) => setClient((c) => ({ ...c, whatsappOptIn: e.target.checked }))} />
               <span>
-                Send my reminder on WhatsApp <span className="text-ink/70">(same number)</span>
+                Send my reminder on WhatsApp <span className="text-ink-soft">(same number)</span>
               </span>
             </label>
           )}
           {!account && (
             <label className="flex cursor-pointer items-start gap-3">
-              <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-black" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+              <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-[#9e2d5a]" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
               <span>
-                Remember my details on this device <span className="text-ink/70">(name, phone and email only)</span>
+                Remember my details on this device <span className="text-ink-soft">(name, phone and email only)</span>
               </span>
             </label>
           )}
@@ -306,12 +306,12 @@ export default function DetailsStep(props: {
       {forms.length > 0 && (
         <div className="space-y-5">
           {prefilled ? (
-            <p role="status" className="flex items-start gap-2.5 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-950 ring-1 ring-emerald-200">
+            <p role="status" className="flex items-start gap-2.5 rounded-2xl bg-panel px-4 py-3 text-sm ring-1 ring-[#1f6b4a]/40">
               <IconCheck size={16} strokeWidth={2.4} className="mt-0.5 shrink-0" />
               <span>I filled in your answers from last time. Please check they&apos;re still right, and tick the consent boxes again.</span>
             </p>
           ) : (
-            <p className="px-1 text-sm text-ink/70">
+            <p className="px-1 text-sm text-ink-soft">
               Quick consent {forms.length === 1 ? "form" : "forms"} for this service. It helps me keep you safe and get you the best results.
             </p>
           )}
@@ -327,9 +327,9 @@ export default function DetailsStep(props: {
         </div>
       )}
 
-      <section aria-labelledby="notes-title" data-reveal className="rounded-3xl bg-white/80 p-5 ring-1 ring-petal-line sm:p-7">
-        <h2 id="notes-title" className="text-xl font-semibold">
-          Anything I should know? <span className="text-sm font-normal text-ink/70">Optional</span>
+      <section aria-labelledby="notes-title" className="rounded-[1.75rem] bg-panel p-5 ring-1 ring-line sm:p-7">
+        <h2 id="notes-title" className="font-display text-[1.65rem] font-medium leading-tight">
+          Anything I should know? <span className="text-sm font-normal text-ink-soft">Optional</span>
         </h2>
         <label htmlFor="notes" className="sr-only">
           Notes for the artist
@@ -345,30 +345,30 @@ export default function DetailsStep(props: {
         />
       </section>
 
-      <section aria-labelledby="policy-title" data-reveal="scale" className="rounded-3xl bg-black p-5 text-[#fde7f5] sm:p-7">
-        <h2 id="policy-title" className="flex items-center gap-2 text-lg font-semibold">
-          <IconHeart className="text-neon" /> Before you confirm
+      <section aria-labelledby="policy-title" className="on-dark rounded-[1.75rem] bg-oxblood p-5 text-plaster sm:p-7">
+        <h2 id="policy-title" className="font-display text-[1.65rem] font-medium leading-tight">
+          Before you confirm
         </h2>
-        <ul className="mt-3 space-y-2 text-sm leading-relaxed text-[#f3d6e8]">
+        <ul className="mt-4 space-y-2.5 text-[0.95rem] leading-relaxed">
           {data.policies.map((p) => (
             <li key={p.title}>
-              <strong className="text-white">{p.title}:</strong> {p.body}
+              <strong className="font-medium text-brass-light">{p.title}:</strong> {p.body}
             </li>
           ))}
         </ul>
-        {deposit > 0 && !payOnline && <p className="mt-4 rounded-2xl bg-white/10 p-4 text-sm text-white">{data.manualDepositInstructions}</p>}
+        {deposit > 0 && !payOnline && <p className="mt-5 rounded-2xl p-4 text-sm ring-1 ring-brass-light/50">{data.manualDepositInstructions}</p>}
       </section>
 
       {formError && (
-        <p role="alert" className="rounded-2xl bg-red-50 px-4 py-3 text-center font-medium text-red-900 ring-1 ring-red-200">
+        <p role="alert" className="rounded-2xl bg-panel px-4 py-3 text-center font-medium text-[#a61b2b] ring-1 ring-[#a61b2b]/50">
           {formError}
         </p>
       )}
       <div className="flex flex-col items-center gap-3 pt-1">
-        <button type="submit" className="btn-black w-full max-w-md py-4 text-sm" disabled={submitting} aria-busy={submitting}>
+        <button type="submit" className="btn-primary w-full max-w-md py-4 text-sm" disabled={submitting} aria-busy={submitting}>
           {submitting ? (
             <>
-              <span className="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" aria-hidden="true" /> Booking…
+              <span className="size-4 animate-spin rounded-full border-2 border-plaster/40 border-t-plaster" aria-hidden="true" /> Booking…
             </>
           ) : payOnline ? (
             <>
@@ -378,7 +378,7 @@ export default function DetailsStep(props: {
             "Confirm booking"
           )}
         </button>
-        <p className="max-w-md text-center text-xs text-ink/70">
+        <p className="max-w-md text-center text-xs text-ink-soft">
           {payOnline
             ? `You'll pay securely with Stripe. Your card is kept on file for the no-show fee in the waiver. ${money(totalPrice - deposit)} is due at your appointment.`
             : `By confirming you agree to the booking policies above. ${money(totalPrice)} total${deposit > 0 ? `, including the ${money(deposit)} deposit` : ""}.`}

@@ -13,10 +13,10 @@ export const dynamic = "force-dynamic";
 function Status({ on, label, hint }: { on: boolean; label: string; hint: string }) {
   return (
     <li className="flex items-start gap-3 py-2">
-      <span className={`mt-1 inline-block size-2.5 shrink-0 rounded-full ${on ? "bg-emerald-500" : "bg-stone-300"}`} aria-hidden="true" />
+      <span className={`mt-1 inline-block size-2.5 shrink-0 rounded-full ${on ? "bg-[#1f6b4a]" : "bg-line-strong"}`} aria-hidden="true" />
       <span>
-        <span className="font-medium">{label}</span> <span className={on ? "text-emerald-700" : "text-stone-500"}>{on ? "connected" : "not set up"}</span>
-        {!on && <span className="block text-xs text-stone-500">{hint}</span>}
+        <span className="font-medium">{label}</span> <span className={on ? "text-[#1f6b4a]" : "text-ink-soft"}>{on ? "connected" : "not set up"}</span>
+        {!on && <span className="block text-xs text-ink-soft">{hint}</span>}
       </span>
     </li>
   );
@@ -96,13 +96,13 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
               <input type="checkbox" name="sharedStaff" defaultChecked={s.sharedStaff} className="mt-0.5" />
               <span>
                 One person works both locations: a booking at either location blocks that time everywhere.
-                <span className="block text-xs text-stone-500">Untick if each location has its own staff.</span>
+                <span className="block text-xs text-ink-soft">Untick if each location has its own staff.</span>
               </span>
             </label>
           </Card>
 
           <Card title="Deposits">
-            <p className="mb-3 text-sm text-stone-600">
+            <p className="mb-3 text-sm text-ink-soft">
               {stripeEnabled()
                 ? "Stripe is connected: clients pay the deposit by card when they book, and the card is saved for no-show fees."
                 : "Stripe isn't connected, so clients see these instructions and you mark deposits paid from each appointment."}
@@ -131,11 +131,11 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
                 <input id="whatsappReminderHours" name="whatsappReminderHours" type="number" min={1} max={168} defaultValue={s.whatsappReminderHours} className={inputCls} />
               </Field>
             </div>
-            <label className="mt-4 flex items-start gap-2.5 rounded-xl bg-stone-50 p-3 text-sm">
-              <input type="checkbox" name="whatsappReminders" defaultChecked={s.whatsappReminders} className="mt-0.5 size-4 accent-[#6d2b67]" />
+            <label className="mt-4 flex items-start gap-2.5 rounded-xl bg-plaster p-3 text-sm">
+              <input type="checkbox" name="whatsappReminders" defaultChecked={s.whatsappReminders} className="mt-0.5 size-4 accent-[#9e2d5a]" />
               <span>
                 <span className="font-medium">Offer WhatsApp reminders when clients book</span>
-                <span className="block text-xs text-stone-500">
+                <span className="block text-xs text-ink-soft">
                   Clients who tick the box get a reminder queued automatically.{" "}
                   {whatsappApiConfigured() ? "Your WhatsApp Business number sends it for you." : "When one is due it shows on Home, ready to send in one tap."}
                 </span>
@@ -145,15 +145,15 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
               <Field label="Reminder message" htmlFor="whatsappReminderTemplate">
                 <textarea id="whatsappReminderTemplate" name="whatsappReminderTemplate" rows={3} defaultValue={s.whatsappReminderTemplate} className={inputCls} />
               </Field>
-              <p className="mt-1.5 text-xs text-stone-500">
+              <p className="mt-1.5 text-xs text-ink-soft">
                 Filled in for you:{" "}
                 {PLACEHOLDERS.map((k) => (
-                  <code key={k} className="mr-1 rounded bg-stone-100 px-1 py-0.5 text-[0.7rem] text-stone-700">{`{${k}}`}</code>
+                  <code key={k} className="mr-1 rounded bg-plaster-2 px-1 py-0.5 text-[0.7rem] text-ink-soft">{`{${k}}`}</code>
                 ))}
               </p>
             </div>
-            <h3 className="mb-2 mt-6 text-sm font-semibold text-stone-900">Quick messages</h3>
-            <p className="mb-3 text-sm text-stone-600">These appear in the WhatsApp menu on each appointment and client.</p>
+            <h3 className="mb-2 mt-6 text-sm font-semibold text-ink">Quick messages</h3>
+            <p className="mb-3 text-sm text-ink-soft">These appear in the WhatsApp menu on each appointment and client.</p>
             <div className="space-y-3">
               {waTemplates.map((m, i) => (
                 <div key={i} className="grid gap-2 sm:grid-cols-[10rem_1fr]">
@@ -165,7 +165,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
           </Card>
 
           <Card title="Policies & wording">
-            <p className="mb-3 text-sm text-stone-600">Shown before clients book, on their confirmation page, and in emails.</p>
+            <p className="mb-3 text-sm text-ink-soft">Shown before clients book, on their confirmation page, and in emails.</p>
             <div className="space-y-3">
               {policies.map((p, i) => (
                 <div key={i} className="grid gap-2 sm:grid-cols-[10rem_1fr]">
@@ -197,7 +197,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
             </ul>
           </Card>
           <Card title="Calendar on your phone">
-            <p className="text-sm text-stone-600">Subscribe to this private link in Google Calendar (Other calendars → From URL) or on iPhone (Settings → Calendar → Accounts → Add Subscribed Calendar).</p>
+            <p className="text-sm text-ink-soft">Subscribe to this private link in Google Calendar (Other calendars → From URL) or on iPhone (Settings → Calendar → Accounts → Add Subscribed Calendar).</p>
             <input readOnly value={feed} className={`${inputCls} mt-3 text-xs`} aria-label="Calendar feed link" />
             <form action={rotateFeedKeyAction} className="mt-3">
               <SubmitButton className={btnSecondaryCls} confirm="Create a new link? The old one stops working.">
@@ -206,7 +206,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
             </form>
           </Card>
           <Card title="Booking link">
-            <p className="text-sm text-stone-600">Put this in your Instagram bio:</p>
+            <p className="text-sm text-ink-soft">Put this in your Instagram bio:</p>
             <input readOnly value={base} className={`${inputCls} mt-2 text-xs`} aria-label="Booking page link" />
           </Card>
         </div>

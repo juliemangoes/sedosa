@@ -62,16 +62,16 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
 
       <div className="-mx-4 mb-5 flex items-center gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0" role="group" aria-label="Period">
         {PERIODS.map(([k, label]) => (
-          <Link key={k} href={qs({ period: k, from: undefined, to: undefined })} aria-current={period.key === k ? "page" : undefined} className={`shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm transition ${period.key === k ? "bg-stone-900 text-white" : "bg-white text-stone-700 ring-1 ring-stone-200 hover:ring-stone-400"}`}>
+          <Link key={k} href={qs({ period: k, from: undefined, to: undefined })} aria-current={period.key === k ? "page" : undefined} className={`shrink-0 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm transition ${period.key === k ? "bg-oxblood text-panel" : "bg-panel text-ink-soft ring-1 ring-line hover:ring-line-strong"}`}>
             {label}
           </Link>
         ))}
         <form action="/admin/finance" className="flex shrink-0 items-center gap-1.5 text-sm">
           <input type="hidden" name="period" value="custom" />
-          <input type="date" name="from" defaultValue={period.key === "custom" ? period.from : ""} aria-label="From" className="rounded-full border border-stone-200 bg-white px-3 py-1.5" />
-          <span className="text-stone-500" aria-hidden="true">–</span>
-          <input type="date" name="to" defaultValue={period.key === "custom" ? period.to : ""} aria-label="To" className="rounded-full border border-stone-200 bg-white px-3 py-1.5" />
-          <button type="submit" className="rounded-full bg-white px-3 py-1.5 ring-1 ring-stone-200 hover:ring-stone-400">
+          <input type="date" name="from" defaultValue={period.key === "custom" ? period.from : ""} aria-label="From" className="rounded-full border border-line bg-panel px-3 py-1.5" />
+          <span className="text-ink-soft" aria-hidden="true">–</span>
+          <input type="date" name="to" defaultValue={period.key === "custom" ? period.to : ""} aria-label="To" className="rounded-full border border-line bg-panel px-3 py-1.5" />
+          <button type="submit" className="rounded-full bg-panel px-3 py-1.5 ring-1 ring-line hover:ring-line-strong">
             Go
           </button>
         </form>
@@ -93,23 +93,23 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
             <ShareBars rows={s.incomeByMethod} total={s.incomeCents} />
           </Card>
           <Card title="Where the money goes" subtitle={`Expenses · ${period.label}`}>
-            <ShareBars rows={s.expenseByCategory} total={s.expenseCents} color="#eb6834" />
+            <ShareBars rows={s.expenseByCategory} total={s.expenseCents} color="#b8862c" />
           </Card>
         </div>
       </div>
 
       {recurring.length > 0 && (
         <Card title="Monthly expenses" subtitle={`Log ${today.toFormat("LLLL")}'s with one tap`} className="mt-6">
-          <ul className="divide-y divide-stone-100">
+          <ul className="divide-y divide-line">
             {recurring.map((r) => (
               <li key={r.id} className="flex flex-wrap items-center gap-3 py-2.5 text-sm">
                 <span className="min-w-0 flex-1">
                   <span className="font-medium">{r.description || r.category}</span>
-                  <span className="ml-2 text-stone-500">{r.category}</span>
+                  <span className="ml-2 text-ink-soft">{r.category}</span>
                 </span>
                 <span className="font-semibold tabular-nums">{money(r.amountCents)}</span>
                 {r.loggedThisMonth ? (
-                  <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800 ring-1 ring-emerald-200">Logged ✓</span>
+                  <span className="rounded-full bg-[#e3f1ea] px-2.5 py-1 text-xs font-medium text-[#1f6b4a] ring-1 ring-[#1f6b4a]/30">Logged</span>
                 ) : (
                   <form action={logRecurringAction}>
                     <input type="hidden" name="id" value={r.id} />
@@ -119,7 +119,7 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
                     </SubmitButton>
                   </form>
                 )}
-                <TransactionDialog {...dialogCommon} draft={{ ...r, kind: "expense" }} triggerClassName="text-xs text-stone-500 underline-offset-4 hover:underline" trigger="Edit" triggerLabel={`Edit recurring ${r.description || r.category}`} />
+                <TransactionDialog {...dialogCommon} draft={{ ...r, kind: "expense" }} triggerClassName="text-xs text-ink-soft underline-offset-4 hover:underline" trigger="Edit" triggerLabel={`Edit recurring ${r.description || r.category}`} />
               </li>
             ))}
           </ul>
@@ -131,9 +131,9 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
         title="Transactions"
         subtitle={`${shown.length} in ${period.label}`}
         actions={
-          <div className="flex rounded-full bg-stone-100 p-0.5 text-sm" role="group" aria-label="Show">
+          <div className="flex rounded-full bg-plaster-2 p-0.5 text-sm" role="group" aria-label="Show">
             {(["all", "income", "expense"] as const).map((k) => (
-              <Link key={k} href={qs({ type: k === "all" ? undefined : k })} aria-current={type === k ? "page" : undefined} className={`rounded-full px-3 py-1 ${type === k ? "bg-white font-medium shadow-sm" : "text-stone-600"}`}>
+              <Link key={k} href={qs({ type: k === "all" ? undefined : k })} aria-current={type === k ? "page" : undefined} className={`rounded-full px-3 py-1 ${type === k ? "bg-panel font-medium shadow-sm" : "text-ink-soft"}`}>
                 {k === "expense" ? "Expenses" : k === "income" ? "Income" : "All"}
               </Link>
             ))}
@@ -147,8 +147,8 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
         ) : (
           <div className="-mx-5 overflow-x-auto">
             <table className="w-full min-w-[40rem] text-sm">
-              <thead className="text-left text-xs uppercase tracking-wider text-stone-500">
-                <tr className="border-b border-stone-100">
+              <thead className="text-left text-xs uppercase tracking-wider text-ink-soft">
+                <tr className="border-b border-line">
                   <th className="px-5 py-2 font-medium">Date</th>
                   <th className="py-2 font-medium">Description</th>
                   <th className="py-2 font-medium">Category</th>
@@ -156,34 +156,34 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
                   <th className="px-5 py-2 text-right font-medium">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-line">
                 {shown.slice(0, 300).map((e) => (
-                  <tr key={e.key} className="hover:bg-stone-50">
-                    <td className="whitespace-nowrap px-5 py-2.5 text-stone-500">{DateTime.fromISO(e.date).toFormat("LLL d")}</td>
+                  <tr key={e.key} className="hover:bg-plaster">
+                    <td className="whitespace-nowrap px-5 py-2.5 text-ink-soft">{DateTime.fromISO(e.date).toFormat("LLL d")}</td>
                     <td className="py-2.5">
                       {e.appointmentId ? (
-                        <Link href={`/admin/appointments/${e.appointmentId}`} className="hover:text-plum hover:underline">
+                        <Link href={`/admin/appointments/${e.appointmentId}`} className="hover:text-lacquer hover:underline">
                           {e.description}
                         </Link>
                       ) : (
                         <TransactionDialog
                           {...dialogCommon}
                           draft={{ id: e.txId, kind: e.kind, date: e.date, amountCents: e.amountCents, category: e.category, method: e.method, description: e.description, receiptMediaId: e.receiptMediaId }}
-                          triggerClassName="text-left hover:text-plum hover:underline"
+                          triggerClassName="text-left hover:text-lacquer hover:underline"
                           trigger={
                             <>
                               {e.description || e.category}
-                              {e.recurring && <span className="ml-1.5 text-xs text-stone-500">monthly</span>}
-                              {e.receiptMediaId && <span className="ml-1.5 text-xs text-stone-500">receipt</span>}
+                              {e.recurring && <span className="ml-1.5 text-xs text-ink-soft">monthly</span>}
+                              {e.receiptMediaId && <span className="ml-1.5 text-xs text-ink-soft">receipt</span>}
                             </>
                           }
                           triggerLabel={`Edit ${e.description || e.category}`}
                         />
                       )}
                     </td>
-                    <td className="py-2.5 text-stone-600">{e.category}</td>
-                    <td className="py-2.5 text-stone-600">{METHODS[e.method] ?? e.method}</td>
-                    <td className={`whitespace-nowrap px-5 py-2.5 text-right font-semibold tabular-nums ${e.kind === "income" ? "text-emerald-700" : "text-stone-900"}`}>
+                    <td className="py-2.5 text-ink-soft">{e.category}</td>
+                    <td className="py-2.5 text-ink-soft">{METHODS[e.method] ?? e.method}</td>
+                    <td className={`whitespace-nowrap px-5 py-2.5 text-right font-semibold tabular-nums ${e.kind === "income" ? "text-[#1f6b4a]" : "text-ink"}`}>
                       {e.kind === "income" ? "+" : "−"}
                       {money(e.amountCents)}
                     </td>

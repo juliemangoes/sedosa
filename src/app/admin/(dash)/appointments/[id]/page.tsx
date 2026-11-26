@@ -28,7 +28,7 @@ import {
 import SubmitButton from "@/components/admin/SubmitButton";
 import { SendReminderButton, WhatsAppMenu } from "@/components/admin/WhatsAppButtons";
 import { AIClock, AIMail, AIMessage, AIPhone } from "@/components/admin/icons";
-import { Avatar, Card, DepositBadge, Field, Flash, StatusBadge, btnCls, btnDangerCls, btnSecondaryCls, inputCls } from "@/components/admin/ui";
+import { BackLink, Avatar, Card, DepositBadge, Field, Flash, StatusBadge, btnCls, btnDangerCls, btnSecondaryCls, inputCls } from "@/components/admin/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -42,7 +42,7 @@ const METHODS = [
 
 const CHANNEL: Record<string, string> = { email: "Email", sms: "SMS", whatsapp: "WhatsApp" };
 
-const contactCls = "inline-flex items-center gap-2 rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-sm font-medium text-stone-800 shadow-sm transition hover:border-plum/40 hover:text-plum";
+const contactCls = "inline-flex items-center gap-2 rounded-full border border-line-strong bg-panel px-4 py-2.5 text-sm font-medium text-ink transition hover:border-lacquer hover:text-lacquer";
 
 export default async function AppointmentDetail({
   params,
@@ -89,22 +89,20 @@ export default async function AppointmentDetail({
 
   return (
     <>
-      <Link href="/admin/calendar" className="text-sm text-stone-600 hover:text-plum">
-        ‹ Calendar
-      </Link>
+      <BackLink href="/admin/calendar" label="Calendar" />
       <div className="mb-6 mt-3 flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-center gap-4">
           <Avatar first={c.firstName} last={c.lastName} size="lg" />
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="font-serif text-[1.8rem] font-semibold leading-tight text-stone-900">
+              <h1 className="font-display text-[2.1rem] font-medium leading-[1.05] text-ink">
                 {c.firstName} {c.lastName}
               </h1>
               <StatusBadge status={a.status} />
               <DepositBadge status={a.depositStatus} cents={a.depositCents} />
             </div>
-            <p className="mt-1 text-stone-600">
-              <span className="font-medium text-stone-900">{prettyName(s.serviceName)}</span> · {start.toFormat("cccc, LLL d")} at {start.toFormat("h:mm a")}
+            <p className="mt-1 text-ink-soft">
+              <span className="font-medium text-ink">{prettyName(s.serviceName)}</span> · {start.toFormat("cccc, LLL d")} at {start.toFormat("h:mm a")}
             </p>
           </div>
         </div>
@@ -133,48 +131,48 @@ export default async function AppointmentDetail({
         <div className="space-y-6">
           <Card title="Appointment">
             <dl className="grid grid-cols-[6.5rem_1fr] gap-y-3 text-sm">
-              <dt className="text-stone-500">Service</dt>
+              <dt className="text-ink-soft">Service</dt>
               <dd>
-                <span className="font-medium">{prettyName(s.serviceName)}</span> <span className="text-stone-500">({money(s.servicePriceCents)})</span>
+                <span className="font-medium">{prettyName(s.serviceName)}</span> <span className="text-ink-soft">({money(s.servicePriceCents)})</span>
                 {s.addons.map((x) => (
-                  <div key={x.id} className="text-stone-700">
-                    + {prettyName(x.name)} <span className="text-stone-500">({money(x.priceCents)}, {x.durationMin} min)</span>
+                  <div key={x.id} className="text-ink-soft">
+                    + {prettyName(x.name)} <span className="text-ink-soft">({money(x.priceCents)}, {x.durationMin} min)</span>
                   </div>
                 ))}
               </dd>
-              <dt className="text-stone-500">When</dt>
+              <dt className="text-ink-soft">When</dt>
               <dd className="font-medium">
-                {start.toFormat("cccc, LLLL d, yyyy · h:mm a")} <span className="font-normal text-stone-500">· {duration(Math.round((a.endsAt.getTime() - a.startsAt.getTime()) / 60000))}</span>
+                {start.toFormat("cccc, LLLL d, yyyy · h:mm a")} <span className="font-normal text-ink-soft">· {duration(Math.round((a.endsAt.getTime() - a.startsAt.getTime()) / 60000))}</span>
               </dd>
-              <dt className="text-stone-500">Where</dt>
+              <dt className="text-ink-soft">Where</dt>
               <dd>
-                {s.locationName} <span className="block text-stone-500">{s.locationAddress}</span>
+                {s.locationName} <span className="block text-ink-soft">{s.locationAddress}</span>
               </dd>
-              <dt className="text-stone-500">Price</dt>
+              <dt className="text-ink-soft">Price</dt>
               <dd>
                 {money(a.priceCents)} · paid {money(a.amountPaidCents)} ·{" "}
-                <strong className={balance > 0 ? "text-amber-800" : "text-emerald-700"}>{balance > 0 ? `${money(balance)} due` : balance < 0 ? `${money(-balance)} over` : "paid in full"}</strong>
+                <strong className={balance > 0 ? "text-[#7a4a00]" : "text-[#1f6b4a]"}>{balance > 0 ? `${money(balance)} due` : balance < 0 ? `${money(-balance)} over` : "paid in full"}</strong>
               </dd>
-              <dt className="text-stone-500">Booked</dt>
-              <dd className="text-stone-700">
+              <dt className="text-ink-soft">Booked</dt>
+              <dd className="text-ink-soft">
                 {DateTime.fromJSDate(a.createdAt).setZone(zone).toFormat("LLL d, yyyy h:mm a")} by {a.bookedBy === "admin" ? "you" : "client online"}
                 {a.rescheduleCount > 0 && ` · rescheduled ${a.rescheduleCount}×`}
                 {a.cancelledAt && ` · canceled ${DateTime.fromJSDate(a.cancelledAt).setZone(zone).toFormat("LLL d h:mm a")} by ${a.cancelledBy}`}
               </dd>
               {a.status === "pending" && a.holdExpiresAt && (
                 <>
-                  <dt className="text-stone-500">Hold</dt>
+                  <dt className="text-ink-soft">Hold</dt>
                   <dd>Waiting for online deposit until {DateTime.fromJSDate(a.holdExpiresAt).setZone(zone).toFormat("h:mm a")}</dd>
                 </>
               )}
             </dl>
             {a.clientNotes && (
-              <div className="mt-4 rounded-xl bg-blush/50 p-3 text-sm">
+              <div className="mt-4 rounded-xl bg-plaster p-3 text-sm">
                 <p className="mb-1 font-medium">Client note</p>
                 <p className="whitespace-pre-line">{a.clientNotes}</p>
               </div>
             )}
-            <p className="mt-4 text-xs text-stone-500">
+            <p className="mt-4 text-xs text-ink-soft">
               Client&apos;s manage link:{" "}
               <a className="underline" href={manageLink} target="_blank">
                 {manageLink.slice(0, 22)}…
@@ -184,18 +182,18 @@ export default async function AppointmentDetail({
 
           <Card title="Intake & consent answers">
             {a.answers.length === 0 ? (
-              <p className="text-sm text-stone-500">No form answers for this booking.</p>
+              <p className="text-sm text-ink-soft">No form answers for this booking.</p>
             ) : (
               forms.map((f) => (
                 <div key={f} className="mb-5 last:mb-0">
-                  <h3 className="mb-2 text-sm font-semibold text-plum">{f}</h3>
+                  <h3 className="mb-2 text-sm font-semibold text-lacquer">{f}</h3>
                   <dl className="space-y-2 text-sm">
                     {a.answers
                       .filter((x) => x.formName === f)
                       .map((x) => (
                         <div key={x.fieldId} className="grid gap-1 sm:grid-cols-[1fr_12rem] sm:gap-4">
-                          <dt className="text-stone-600">{x.label}</dt>
-                          <dd className={`font-medium ${x.value === "yes" ? "text-amber-800" : ""}`}>{answerText(x)}</dd>
+                          <dt className="text-ink-soft">{x.label}</dt>
+                          <dd className={`font-medium ${x.value === "yes" ? "text-[#7a4a00]" : ""}`}>{answerText(x)}</dd>
                         </div>
                       ))}
                   </dl>
@@ -206,10 +204,10 @@ export default async function AppointmentDetail({
 
           <Card title="Payments" subtitle="Every payment here also shows up in Finance.">
             {payments.length === 0 ? (
-              <p className="text-sm text-stone-500">No payments recorded.</p>
+              <p className="text-sm text-ink-soft">No payments recorded.</p>
             ) : (
               <table className="w-full text-sm">
-                <tbody className="divide-y divide-stone-100">
+                <tbody className="divide-y divide-line">
                   {payments.map((p) => (
                     <tr key={p.id}>
                       <td className="py-2">{DateTime.fromJSDate(p.createdAt).setZone(zone).toFormat("LLL d h:mm a")}</td>
@@ -221,7 +219,7 @@ export default async function AppointmentDetail({
                 </tbody>
               </table>
             )}
-            <form key={`pay-${a.amountPaidCents}-${a.priceCents}`} action={recordPaymentAction} className="mt-4 grid gap-3 border-t border-stone-100 pt-4 sm:grid-cols-4">
+            <form key={`pay-${a.amountPaidCents}-${a.priceCents}`} action={recordPaymentAction} className="mt-4 grid gap-3 border-t border-line pt-4 sm:grid-cols-4">
               <input type="hidden" name="id" value={a.id} />
               <Field label="Amount" htmlFor="amount">
                 <input id="amount" name="amount" className={inputCls} defaultValue={balance > 0 ? (balance / 100).toFixed(2) : ""} inputMode="decimal" />
@@ -252,15 +250,15 @@ export default async function AppointmentDetail({
 
           <Card title="Messages sent">
             {messages.length === 0 ? (
-              <p className="text-sm text-stone-500">None yet.</p>
+              <p className="text-sm text-ink-soft">None yet.</p>
             ) : (
-              <ul className="divide-y divide-stone-100 text-sm">
+              <ul className="divide-y divide-line text-sm">
                 {messages.map((m) => (
                   <li key={m.id} className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 py-2">
-                    <span className="w-28 shrink-0 text-stone-500">{DateTime.fromJSDate(m.createdAt).setZone(zone).toFormat("LLL d h:mm a")}</span>
-                    <span className={`rounded-full px-2 py-0.5 text-[0.7rem] font-medium ${m.channel === "whatsapp" ? "bg-emerald-50 text-[#075e54]" : "bg-stone-100 text-stone-600"}`}>{CHANNEL[m.channel] ?? m.channel}</span>
+                    <span className="w-28 shrink-0 text-ink-soft">{DateTime.fromJSDate(m.createdAt).setZone(zone).toFormat("LLL d h:mm a")}</span>
+                    <span className={`rounded-full px-2 py-0.5 text-[0.7rem] font-medium ${m.channel === "whatsapp" ? "bg-[#e3f1ea] text-[#075e54]" : "bg-plaster-2 text-ink-soft"}`}>{CHANNEL[m.channel] ?? m.channel}</span>
                     <span className="min-w-0 flex-1 truncate">{m.subject || m.body.slice(0, 90)}</span>
-                    <span className={m.status === "failed" ? "text-rose-700" : m.status === "logged" ? "text-amber-800" : "text-emerald-700"}>
+                    <span className={m.status === "failed" ? "text-[#a61b2b]" : m.status === "logged" ? "text-[#7a4a00]" : "text-[#1f6b4a]"}>
                       {m.status === "logged" ? "not sent (provider not set up)" : m.status}
                     </span>
                   </li>
@@ -272,20 +270,20 @@ export default async function AppointmentDetail({
 
         <div className="space-y-6">
           <Card title="Client">
-            <Link href={`/admin/clients/${c.id}`} className="font-medium text-stone-900 underline decoration-stone-300 underline-offset-4 hover:text-plum">
+            <Link href={`/admin/clients/${c.id}`} className="font-medium text-ink underline decoration-line underline-offset-4 hover:text-lacquer">
               {c.firstName} {c.lastName}
             </Link>
-            <p className="mt-1 text-sm text-stone-700">{prettyPhone(c.phone) || "No phone"}</p>
-            <p className="text-sm text-stone-700">{c.email}</p>
+            <p className="mt-1 text-sm text-ink-soft">{prettyPhone(c.phone) || "No phone"}</p>
+            <p className="text-sm text-ink-soft">{c.email}</p>
             <div className="mt-3 flex flex-wrap gap-1.5 text-xs">
-              <span className="rounded-full bg-stone-100 px-2 py-0.5 text-stone-700">
+              <span className="rounded-full bg-plaster-2 px-2 py-0.5 text-ink-soft">
                 {history.length} visit{history.length === 1 ? "" : "s"}
               </span>
-              <span className={`rounded-full px-2 py-0.5 ${c.whatsappOptIn ? "bg-emerald-50 text-[#075e54]" : "bg-stone-100 text-stone-600"}`}>WhatsApp {c.whatsappOptIn ? "reminders on" : "not opted in"}</span>
-              <span className="rounded-full bg-stone-100 px-2 py-0.5 text-stone-600">SMS {c.smsOptIn ? "on" : "off"}</span>
-              {hasCard && <span className="rounded-full bg-stone-100 px-2 py-0.5 text-stone-600">Card on file</span>}
+              <span className={`rounded-full px-2 py-0.5 ${c.whatsappOptIn ? "bg-[#e3f1ea] text-[#075e54]" : "bg-plaster-2 text-ink-soft"}`}>WhatsApp {c.whatsappOptIn ? "reminders on" : "not opted in"}</span>
+              <span className="rounded-full bg-plaster-2 px-2 py-0.5 text-ink-soft">SMS {c.smsOptIn ? "on" : "off"}</span>
+              {hasCard && <span className="rounded-full bg-plaster-2 px-2 py-0.5 text-ink-soft">Card on file</span>}
             </div>
-            {c.notes && <p className="mt-3 whitespace-pre-line rounded-xl bg-stone-50 p-3 text-sm">{c.notes}</p>}
+            {c.notes && <p className="mt-3 whitespace-pre-line rounded-xl bg-plaster p-3 text-sm">{c.notes}</p>}
           </Card>
 
           {active && (
@@ -310,13 +308,13 @@ export default async function AppointmentDetail({
                   </SubmitButton>
                 </form>
               </div>
-              <details className="group mt-4 border-t border-stone-100 pt-3">
-                <summary className="cursor-pointer text-sm font-medium text-rose-700">Cancel appointment…</summary>
+              <details className="group mt-4 border-t border-line pt-3">
+                <summary className="cursor-pointer text-sm font-medium text-[#a61b2b]">Cancel appointment…</summary>
                 <form action={cancelAppointmentAction} className="mt-3 space-y-2">
                   <input type="hidden" name="id" value={a.id} />
                   <input name="reason" placeholder="Reason (optional, internal)" className={inputCls} aria-label="Cancellation reason" />
                   <label className="flex items-center gap-2 text-sm">
-                    <input type="checkbox" name="notify" defaultChecked className="size-4 accent-[#6d2b67]" /> Email/text the client
+                    <input type="checkbox" name="notify" defaultChecked className="size-4 accent-[#9e2d5a]" /> Email/text the client
                   </label>
                   <SubmitButton className={btnDangerCls} confirm="Cancel this appointment?" pendingText="Canceling…">
                     Cancel appointment
@@ -341,7 +339,7 @@ export default async function AppointmentDetail({
             subtitle={viaApi ? "Sent automatically through your WhatsApp Business number." : "When one is due it appears on Home, ready to send in one tap."}
           >
             {queued.length === 0 ? (
-              <p className="text-sm text-stone-500">
+              <p className="text-sm text-ink-soft">
                 {!wa ? "Add a mobile number to this client to use WhatsApp." : c.whatsappOptIn || !upcoming ? "Nothing scheduled." : "Nothing scheduled. This client hasn't opted in to automatic reminders, but you can still schedule one."}
               </p>
             ) : (
@@ -350,7 +348,7 @@ export default async function AppointmentDetail({
                   const due = (m.status === "scheduled" || m.status === "failed") && m.sendAt <= now;
                   const text = renderTemplate(m.template, ctx);
                   return (
-                    <li key={m.id} className="rounded-xl border border-stone-200 p-3">
+                    <li key={m.id} className="rounded-xl border border-line p-3">
                       <div className="flex items-start justify-between gap-2">
                         <p className="flex items-center gap-1.5 text-sm font-medium">
                           <AIClock size={15} />
@@ -358,21 +356,21 @@ export default async function AppointmentDetail({
                         </p>
                         <span
                           className={`rounded-full px-2 py-0.5 text-[0.7rem] font-medium ${
-                            m.status === "sent" ? "bg-emerald-50 text-emerald-800" : m.status === "failed" ? "bg-rose-50 text-rose-800" : m.status === "canceled" ? "bg-stone-100 text-stone-500" : due ? "bg-amber-50 text-amber-900" : "bg-plum/10 text-plum"
+                            m.status === "sent" ? "bg-[#e3f1ea] text-[#1f6b4a]" : m.status === "failed" ? "bg-[#fbe4e6] text-[#a61b2b]" : m.status === "canceled" ? "bg-plaster-2 text-ink-soft" : due ? "bg-[#fbe9c8] text-[#7a4a00]" : "bg-lacquer/10 text-lacquer"
                           }`}
                         >
                           {m.status === "sent" ? (m.sentVia === "manual" ? "Sent by you" : "Sent") : m.status === "failed" ? "Didn't send" : m.status === "canceled" ? "Canceled" : due ? "Due now" : m.origin === "auto" ? "Automatic" : "Scheduled"}
                         </span>
                       </div>
-                      <p className="mt-1.5 line-clamp-3 text-xs text-stone-600">{text}</p>
-                      {m.error && <p className="mt-1 text-xs text-rose-700">{m.error}</p>}
+                      <p className="mt-1.5 line-clamp-3 text-xs text-ink-soft">{text}</p>
+                      {m.error && <p className="mt-1 text-xs text-[#a61b2b]">{m.error}</p>}
                       {(m.status === "scheduled" || m.status === "failed") && (
                         <div className="mt-2 flex items-center gap-2">
                           {due && wa && <SendReminderButton href={waLink(c.phone, text)!} id={m.id} back={back} action={markReminderSentAction} />}
                           <form action={cancelScheduledAction}>
                             <input type="hidden" name="id" value={m.id} />
                             <input type="hidden" name="back" value={back} />
-                            <SubmitButton className="rounded-lg px-2 py-1.5 text-xs font-medium text-stone-600 hover:bg-stone-100 hover:text-rose-700">Cancel</SubmitButton>
+                            <SubmitButton className="rounded-lg px-2 py-1.5 text-xs font-medium text-ink-soft hover:bg-plaster-2 hover:text-[#a61b2b]">Cancel</SubmitButton>
                           </form>
                         </div>
                       )}
@@ -382,12 +380,12 @@ export default async function AppointmentDetail({
               </ul>
             )}
             {upcoming && wa && (
-              <details className="mt-4 border-t border-stone-100 pt-3" open={queued.every((m) => m.status !== "scheduled")}>
-                <summary className="cursor-pointer text-sm font-medium text-plum">Schedule a reminder</summary>
+              <details className="mt-4 border-t border-line pt-3" open={queued.every((m) => m.status !== "scheduled")}>
+                <summary className="cursor-pointer text-sm font-medium text-lacquer">Schedule a reminder</summary>
                 <form key={`wa-${queued.length}`} action={scheduleWhatsAppAction} className="group/wa mt-3 space-y-3">
                   <input type="hidden" name="appointmentId" value={a.id} />
                   <fieldset>
-                    <legend className="mb-1.5 text-sm font-medium text-stone-700">Send it</legend>
+                    <legend className="mb-1.5 text-sm font-medium text-ink-soft">Send it</legend>
                     <div className="grid grid-cols-2 gap-1.5 text-sm">
                       {(
                         [
@@ -399,8 +397,8 @@ export default async function AppointmentDetail({
                       )
                         .filter(([, , ok]) => ok)
                         .map(([v, l], i) => (
-                          <label key={v} className="flex cursor-pointer items-center gap-2 rounded-xl border border-stone-200 px-3 py-2 has-[:checked]:border-plum has-[:checked]:bg-plum/5 has-[:checked]:font-medium">
-                            <input type="radio" name="when" value={v} defaultChecked={i === 0} className="accent-[#6d2b67]" />
+                          <label key={v} className="flex cursor-pointer items-center gap-2 rounded-xl border border-line px-3 py-2 has-[:checked]:border-lacquer has-[:checked]:bg-lacquer/5 has-[:checked]:font-medium">
+                            <input type="radio" name="when" value={v} defaultChecked={i === 0} className="accent-[#9e2d5a]" />
                             {l}
                           </label>
                         ))}
@@ -436,7 +434,7 @@ export default async function AppointmentDetail({
               <form action={markDepositAction} className="mt-2">
                 <input type="hidden" name="id" value={a.id} />
                 <input type="hidden" name="mode" value="waive" />
-                <SubmitButton className="text-sm text-stone-600 underline">Waive deposit</SubmitButton>
+                <SubmitButton className="text-sm text-ink-soft underline">Waive deposit</SubmitButton>
               </form>
             </Card>
           )}
@@ -475,10 +473,10 @@ export default async function AppointmentDetail({
                   </select>
                 </Field>
                 <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" name="force" className="size-4 accent-[#6d2b67]" /> Allow outside hours / overlapping
+                  <input type="checkbox" name="force" className="size-4 accent-[#9e2d5a]" /> Allow outside hours / overlapping
                 </label>
                 <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" name="notify" defaultChecked className="size-4 accent-[#6d2b67]" /> Email/text the client
+                  <input type="checkbox" name="notify" defaultChecked className="size-4 accent-[#9e2d5a]" /> Email/text the client
                 </label>
                 <SubmitButton className={btnCls}>Move appointment</SubmitButton>
               </form>

@@ -11,7 +11,7 @@ export function SendReminderButton({ href, id, back, action }: { href: string; i
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="back" value={back} />
       <span onClickCapture={() => window.open(href, "_blank", "noopener")}>
-        <SubmitButton className="inline-flex items-center gap-1.5 rounded-xl bg-[#075e54] px-3 py-2 text-xs font-medium text-white hover:bg-[#054c44]" pendingText="Opening…">
+        <SubmitButton className="inline-flex items-center gap-1.5 rounded-full bg-[#075e54] px-3 py-2 text-xs font-medium text-panel hover:bg-[#054c44]" pendingText="Opening…">
           <WhatsAppIcon size={15} /> Send
         </SubmitButton>
       </span>
@@ -42,19 +42,19 @@ export function WhatsAppMenu({ templates, className = "", label = "WhatsApp", co
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className={className || "inline-flex items-center gap-2 rounded-xl bg-[#075e54] px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#054c44]"}
+        className={className || "inline-flex items-center gap-2 rounded-full bg-[#075e54] px-4 py-2.5 text-sm font-medium text-panel shadow-sm transition hover:bg-[#054c44]"}
       >
         <WhatsAppIcon size={compact ? 16 : 18} /> {label}
       </button>
       {open && (
-        <div role="menu" className="absolute right-0 z-40 mt-2 w-80 max-w-[calc(100vw-2rem)] animate-dialog-in overflow-hidden rounded-2xl border border-stone-200 bg-white text-left shadow-xl">
-          <p className="border-b border-stone-100 px-4 py-2.5 text-xs font-medium uppercase tracking-wider text-stone-500">Send a message</p>
+        <div role="menu" className="absolute right-0 z-40 mt-2 w-80 max-w-[calc(100vw-2rem)] animate-dialog-in overflow-hidden rounded-2xl border border-line bg-panel text-left shadow-xl">
+          <p className="border-b border-line px-4 py-2.5 text-xs font-medium uppercase tracking-wider text-ink-soft">Send a message</p>
           <ul className="max-h-80 overflow-y-auto py-1">
             {templates.map((t) => (
               <li key={t.label}>
-                <a role="menuitem" href={t.href} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="block px-4 py-2.5 hover:bg-stone-50">
-                  <span className="text-sm font-medium text-stone-900">{t.label}</span>
-                  <span className="mt-0.5 line-clamp-2 text-xs text-stone-500 [overflow-wrap:anywhere]">{t.text}</span>
+                <a role="menuitem" href={t.href} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="block px-4 py-2.5 hover:bg-plaster">
+                  <span className="text-sm font-medium text-ink">{t.label}</span>
+                  <span className="mt-0.5 line-clamp-2 text-xs text-ink-soft [overflow-wrap:anywhere]">{t.text}</span>
                 </a>
               </li>
             ))}

@@ -54,20 +54,20 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
             <Empty icon={<AIUsers size={22} />}>{q ? "No clients match that search." : "Clients appear here after their first booking."}</Empty>
           </div>
         ) : (
-          <ul className="divide-y divide-stone-100">
+          <ul className="divide-y divide-line">
             {rows.map(({ c, visits, noShows, last }) => {
               const wa = waLink(c.phone);
               return (
-                <li key={c.id} className="flex items-center gap-3 px-4 py-3 transition hover:bg-stone-50/70 sm:px-5">
+                <li key={c.id} className="flex items-center gap-3 px-4 py-3 transition hover:bg-plaster sm:px-5">
                   <Link href={`/admin/clients/${c.id}`} className="flex min-w-0 flex-1 items-center gap-3">
                     <Avatar first={c.firstName} last={c.lastName} />
                     <span className="min-w-0">
-                      <span className="flex flex-wrap items-center gap-x-2 font-medium text-stone-900">
+                      <span className="flex flex-wrap items-center gap-x-2 font-medium text-ink">
                         {c.firstName} {c.lastName}
-                        {noShows > 0 && <span className="rounded-full bg-rose-50 px-2 text-xs font-normal text-rose-800">{noShows} no-show</span>}
-                        {c.whatsappOptIn && <span className="rounded-full bg-emerald-50 px-2 text-xs font-normal text-[#075e54]">WhatsApp</span>}
+                        {noShows > 0 && <span className="rounded-full bg-[#fbe4e6] px-2 text-xs font-normal text-[#a61b2b]">{noShows} no-show</span>}
+                        {c.whatsappOptIn && <span className="rounded-full bg-[#e3f1ea] px-2 text-xs font-normal text-[#075e54]">WhatsApp</span>}
                       </span>
-                      <span className="block truncate text-sm text-stone-500">
+                      <span className="block truncate text-sm text-ink-soft">
                         {prettyPhone(c.phone) || c.email}
                         <span className="hidden md:inline"> · {c.email}</span>
                       </span>
@@ -75,17 +75,17 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
                   </Link>
                   <span className="hidden w-24 text-right text-sm sm:block">
                     <span className="block font-medium tabular-nums">{visits}</span>
-                    <span className="text-xs text-stone-500">visit{visits === 1 ? "" : "s"}</span>
+                    <span className="text-xs text-ink-soft">visit{visits === 1 ? "" : "s"}</span>
                   </span>
-                  <span className="hidden w-28 text-right text-sm text-stone-600 lg:block">{fmt(last) ?? "—"}</span>
+                  <span className="hidden w-28 text-right text-sm text-ink-soft lg:block">{fmt(last) ?? "—"}</span>
                   <span className="flex items-center gap-1">
                     {c.phone && (
-                      <a href={`tel:${c.phone}`} aria-label={`Call ${c.firstName}`} className="grid size-9 place-items-center rounded-full text-stone-600 hover:bg-stone-100 hover:text-plum">
+                      <a href={`tel:${c.phone}`} aria-label={`Call ${c.firstName}`} className="grid size-9 place-items-center rounded-full text-ink-soft hover:bg-plaster-2 hover:text-lacquer">
                         <AIPhone size={17} />
                       </a>
                     )}
                     {wa && (
-                      <a href={wa} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp ${c.firstName}`} className="grid size-9 place-items-center rounded-full text-[#075e54] hover:bg-emerald-50">
+                      <a href={wa} target="_blank" rel="noopener noreferrer" aria-label={`WhatsApp ${c.firstName}`} className="grid size-9 place-items-center rounded-full text-[#075e54] hover:bg-[#e3f1ea]">
                         <WhatsAppIcon size={18} />
                       </a>
                     )}

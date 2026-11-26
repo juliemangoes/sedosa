@@ -10,3 +10,7 @@ next-env.d.ts
 test-results/
 playwright-report/
 .vercel
+
+# Impeccable: engine binary (downloaded on demand) and review captures
+.claude/skills/impeccable/scripts/bin/
+.impeccable/review/

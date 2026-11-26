@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import type { PublicData, PublicService } from "./types";
 import { categoryLabel, placesLabel, prettyName, priceLabel, shortDuration } from "@/lib/display";
 import { guidesFor } from "@/content/prep";
-import CategoryIcon from "@/components/landing/CategoryIcon";
 import { IconCheck, IconClock, IconDeposit, IconPin, IconX } from "@/components/landing/icons";
 
 type Props = {
@@ -51,50 +50,48 @@ export default function ServiceSheet({ data, service, popular, onClose, onBook }
         if (e.target === ref.current) ref.current?.close();
       }}
       aria-labelledby="sheet-title"
-      className="m-0 mt-auto max-h-[90svh] w-full max-w-none overflow-hidden rounded-t-[2rem] bg-blush p-0 text-ink shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.5)] backdrop:bg-noir/60 backdrop:backdrop-blur-sm open:animate-sheet-up sm:m-auto sm:max-h-[86vh] sm:max-w-xl sm:rounded-[2rem] sm:open:animate-dialog-in"
+      className="m-0 mt-auto max-h-[90svh] w-full max-w-none overflow-hidden rounded-t-[2rem] bg-plaster p-0 text-ink shadow-[0_-20px_60px_-20px_rgba(58,15,28,0.6)] backdrop:bg-oxblood/60 open:animate-sheet-up sm:m-auto sm:max-h-[86vh] sm:max-w-xl sm:rounded-[2rem] sm:open:animate-dialog-in"
     >
       {s && (
         <div className="flex max-h-[inherit] flex-col">
           <div className="relative overflow-y-auto overscroll-contain px-6 pb-6 pt-3 sm:px-8 sm:pt-8">
-            <div aria-hidden="true" className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-ink/15 sm:hidden" />
+            <div aria-hidden="true" className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-line-strong/40 sm:hidden" />
             <button
               type="button"
               onClick={() => ref.current?.close()}
               aria-label="Close"
-              className="absolute right-4 top-4 grid size-10 place-items-center rounded-full bg-white/80 ring-1 ring-petal-line transition hover:rotate-90 hover:bg-white"
+              className="absolute right-4 top-4 grid size-10 place-items-center rounded-full bg-panel ring-1 ring-line-strong transition hover:bg-white"
             >
               <IconX size={18} />
             </button>
 
-            <p className="kicker flex items-center gap-2 pr-12 text-xs text-plum">
-              <CategoryIcon name={s.categoryName} size={16} /> {categoryLabel(s.categoryName)}
-            </p>
-            <h2 id="sheet-title" className="mt-2 pr-10 text-[1.7rem] font-semibold leading-tight tracking-tight">
+            <h2 id="sheet-title" className="font-display pr-12 text-[2rem] font-medium leading-[1.05]">
               {prettyName(s.name)}
             </h2>
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
-              <span className="rounded-full bg-black px-3.5 py-1.5 font-semibold text-white">{priceLabel(s.priceCents)}</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3.5 py-1.5 ring-1 ring-petal-line">
+            <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-b border-oxblood pb-4">
+              <span className="font-display text-[1.9rem] font-medium leading-none tabular-nums">{priceLabel(s.priceCents)}</span>
+              <span className="inline-flex items-center gap-1.5 text-ink-soft">
                 <IconClock size={15} /> {shortDuration(s.durationMin)}
               </span>
-              {popular && <span className="rounded-full bg-neon/20 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-plum">Popular</span>}
+              <span className="text-ink-soft">{categoryLabel(s.categoryName)}</span>
+              {popular && <span className="rounded-full px-2.5 py-0.5 text-[0.65rem] font-medium uppercase tracking-[0.14em] text-lacquer ring-1 ring-lacquer">Popular</span>}
             </div>
 
-            {s.description && <p className="mt-5 whitespace-pre-line leading-relaxed text-ink/85">{s.description}</p>}
+            {s.description && <p className="mt-5 whitespace-pre-line leading-relaxed">{s.description}</p>}
 
-            <ul className="mt-6 space-y-2.5 rounded-2xl bg-white/70 p-4 text-[0.95rem] ring-1 ring-petal-line">
+            <ul className="mt-6 space-y-2.5 rounded-2xl bg-panel p-4 text-[0.95rem] ring-1 ring-line">
               <li className="flex items-start gap-3">
-                <IconDeposit size={18} className="mt-0.5 shrink-0 text-plum" />
+                <IconDeposit size={18} className="mt-0.5 shrink-0 text-lacquer" />
                 {s.depositCents > 0 ? `${priceLabel(s.depositCents)} non-refundable deposit to book; the rest is paid at your appointment.` : "No deposit needed."}
               </li>
               {places && (
                 <li className="flex items-start gap-3">
-                  <IconPin size={18} className="mt-0.5 shrink-0 text-plum" /> Available in {places}
+                  <IconPin size={18} className="mt-0.5 shrink-0 text-lacquer" /> Available in {places}
                 </li>
               )}
               {forms.length > 0 && (
                 <li className="flex items-start gap-3">
-                  <IconCheck size={18} className="mt-0.5 shrink-0 text-plum" />
+                  <IconCheck size={18} className="mt-0.5 shrink-0 text-lacquer" />
                   Includes {forms.length === 1 ? "a quick consent form" : `${forms.length} quick consent forms`} when you book
                 </li>
               )}
@@ -102,15 +99,15 @@ export default function ServiceSheet({ data, service, popular, onClose, onBook }
 
             {addons.length > 0 && (
               <div className="mt-6">
-                <h3 className="font-semibold">Add-ons you can include</h3>
+                <h3 className="font-display text-[1.3rem] font-medium">Add-ons you can include</h3>
                 <ul className="mt-2 grid gap-2 sm:grid-cols-2">
                   {addons.map((a) => (
-                    <li key={a.id} className="flex items-center justify-between gap-3 rounded-xl bg-white/70 px-3.5 py-2.5 text-sm ring-1 ring-petal-line">
+                    <li key={a.id} className="flex items-center justify-between gap-3 rounded-2xl bg-panel px-3.5 py-2.5 text-sm ring-1 ring-line">
                       <span>
                         {a.name}
-                        <span className="block text-xs text-ink/70">+ {shortDuration(a.durationMin)}</span>
+                        <span className="block text-xs text-ink-soft">+ {shortDuration(a.durationMin)}</span>
                       </span>
-                      <span className="font-semibold">+{priceLabel(a.priceCents)}</span>
+                      <span className="font-display text-base font-medium tabular-nums">+{priceLabel(a.priceCents)}</span>
                     </li>
                   ))}
                 </ul>
@@ -119,13 +116,11 @@ export default function ServiceSheet({ data, service, popular, onClose, onBook }
 
             {prep && (
               <div className="mt-6">
-                <h3 className="font-semibold">How to prepare</h3>
+                <h3 className="font-display text-[1.3rem] font-medium">How to prepare</h3>
                 <ul className="mt-2 space-y-2 text-[0.95rem]">
                   {prep.items.slice(0, 4).map((it) => (
                     <li key={it} className="flex gap-2.5">
-                      <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-plum text-white">
-                        <IconCheck size={12} strokeWidth={2.8} />
-                      </span>
+                      <IconCheck size={17} strokeWidth={2} className="mt-0.5 shrink-0 text-lacquer" />
                       {it}
                     </li>
                   ))}
@@ -134,14 +129,14 @@ export default function ServiceSheet({ data, service, popular, onClose, onBook }
             )}
           </div>
 
-          <div className="flex items-center gap-4 border-t border-petal-line bg-white/80 px-6 py-4 backdrop-blur sm:px-8">
+          <div className="flex items-center gap-4 border-t border-brass bg-panel px-6 py-4 sm:px-8">
             <div className="min-w-0 flex-1 text-sm leading-tight">
-              <p className="font-semibold">{priceLabel(s.priceCents)}</p>
-              <p className="truncate text-ink/70">{shortDuration(s.durationMin)}</p>
+              <p className="font-display text-xl font-medium">{priceLabel(s.priceCents)}</p>
+              <p className="truncate text-ink-soft">{shortDuration(s.durationMin)}</p>
             </div>
             <button
               type="button"
-              className="btn-black px-7 py-3.5"
+              className="btn-primary px-7 py-3.5"
               onClick={() => {
                 document.documentElement.style.overflow = "";
                 ref.current?.close();

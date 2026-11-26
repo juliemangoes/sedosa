@@ -10,7 +10,7 @@ type Props = {
   onChange: (fieldId: number, value: unknown) => void;
 };
 
-const pill = "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-plum has-[:focus-visible]:ring-offset-2";
+const pill = "has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-lacquer has-[:focus-visible]:ring-offset-2";
 
 export default function IntakeForm({ forms, answers, errors, onChange }: Props) {
   return (
@@ -22,18 +22,24 @@ export default function IntakeForm({ forms, answers, errors, onChange }: Props) 
           return f.type === "checkbox" ? v === true : f.type === "checkboxlist" ? Array.isArray(v) && v.length > 0 : !!v;
         }).length;
         return (
-          <fieldset key={form.id} data-reveal className="rounded-3xl bg-white/80 p-5 ring-1 ring-petal-line sm:p-7">
+          <fieldset key={form.id} className="rounded-[1.75rem] bg-panel p-5 ring-1 ring-line sm:p-7">
             <legend className="sr-only">{form.name}</legend>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="text-xl font-semibold">{form.name}</h3>
+              <h3 className="font-display text-[1.5rem] font-medium leading-tight">{form.name}</h3>
               {required.length > 0 && (
-                <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${answered === required.length ? "bg-emerald-100 text-emerald-900" : "bg-blush text-plum"}`}>
-                  {answered === required.length ? "Complete ✓" : `${answered} of ${required.length} answered`}
+                <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${answered === required.length ? "text-[#1f6b4a] ring-1 ring-[#1f6b4a]/40" : "text-lacquer ring-1 ring-lacquer/50"}`}>
+                  {answered === required.length ? (
+                    <span className="inline-flex items-center gap-1">
+                      Complete <IconCheck size={13} strokeWidth={2.4} />
+                    </span>
+                  ) : (
+                    `${answered} of ${required.length} answered`
+                  )}
                 </span>
               )}
             </div>
             {form.description && (
-              <div className="mt-3 max-h-64 overflow-y-auto whitespace-pre-line rounded-2xl bg-blush/70 p-4 text-sm leading-relaxed" tabIndex={0} aria-label={`${form.name} terms`}>
+              <div className="mt-3 max-h-64 overflow-y-auto whitespace-pre-line rounded-2xl bg-plaster p-4 text-sm leading-relaxed" tabIndex={0} aria-label={`${form.name} terms`}>
                 {form.description}
               </div>
             )}
@@ -42,9 +48,9 @@ export default function IntakeForm({ forms, answers, errors, onChange }: Props) 
                 const key = String(f.id);
                 const err = errors[key];
                 const id = `f-${f.id}`;
-                const req = f.required ? <span aria-hidden="true" className="text-plum"> *</span> : null;
+                const req = f.required ? <span aria-hidden="true" className="text-lacquer"> *</span> : null;
                 const errEl = err ? (
-                  <p id={`${id}-err`} className="mt-1.5 text-sm font-medium text-red-800" data-error>
+                  <p id={`${id}-err`} className="mt-1.5 text-sm font-medium text-[#a61b2b]" data-error>
                     {err}
                   </p>
                 ) : null;
@@ -54,7 +60,7 @@ export default function IntakeForm({ forms, answers, errors, onChange }: Props) 
                   const on = answers[key] === true;
                   return (
                     <div key={f.id}>
-                      <label className={`flex cursor-pointer items-start gap-3 rounded-2xl p-3 transition ${on ? "bg-blush" : err ? "bg-red-50" : "bg-blush/40 hover:bg-blush/70"} ${pill}`}>
+                      <label className={`flex cursor-pointer items-start gap-3 rounded-2xl p-3 transition ${on ? "bg-plaster-2" : err ? "bg-plaster ring-1 ring-[#a61b2b]/50" : "bg-plaster hover:bg-plaster-2"} ${pill}`}>
                         <input
                           type="checkbox"
                           className="peer sr-only"
@@ -63,7 +69,7 @@ export default function IntakeForm({ forms, answers, errors, onChange }: Props) 
                           aria-invalid={!!err}
                           aria-describedby={describedBy}
                         />
-                        <span className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-md ring-1 ${on ? "bg-black text-white ring-black" : "bg-white ring-ink/30"}`}>
+                        <span className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-md ring-1 ${on ? "bg-oxblood text-plaster ring-oxblood" : "bg-panel ring-line-strong"}`}>
                           {on && <IconCheck size={13} strokeWidth={3} />}
                         </span>
                         <span className="text-[0.95rem] leading-snug">
@@ -88,7 +94,7 @@ export default function IntakeForm({ forms, answers, errors, onChange }: Props) 
                           return (
                             <label
                               key={v}
-                              className={`min-w-20 cursor-pointer rounded-full px-5 py-2 text-center text-sm font-medium transition ${on ? "bg-black text-white" : "bg-white ring-1 ring-petal-line hover:ring-plum"} ${pill}`}
+                              className={`min-w-20 cursor-pointer rounded-full px-5 py-2 text-center text-sm font-medium transition ${on ? "bg-oxblood text-plaster" : "bg-panel ring-1 ring-line-strong hover:ring-lacquer"} ${pill}`}
                             >
                               <input type="radio" name={id} className="sr-only" checked={on} onChange={() => onChange(f.id, v)} />
                               {v === "yes" ? "Yes" : "No"}
@@ -107,7 +113,7 @@ export default function IntakeForm({ forms, answers, errors, onChange }: Props) 
                       <p id={`${id}-l`} className="text-[0.95rem] leading-snug">
                         {f.label}
                         {req}
-                        <span className="ml-1 text-sm text-ink/70">(choose any)</span>
+                        <span className="ml-1 text-sm text-ink-soft">(choose any)</span>
                       </p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {f.options.map((o) => {
@@ -115,7 +121,7 @@ export default function IntakeForm({ forms, answers, errors, onChange }: Props) 
                           return (
                             <label
                               key={o}
-                              className={`cursor-pointer rounded-full px-4 py-2 text-sm transition ${on ? "bg-black text-white" : "bg-white ring-1 ring-petal-line hover:ring-plum"} ${pill}`}
+                              className={`cursor-pointer rounded-full px-4 py-2 text-sm transition ${on ? "bg-oxblood text-plaster" : "bg-panel ring-1 ring-line-strong hover:ring-lacquer"} ${pill}`}
                             >
                               <input
                                 type="checkbox"
@@ -123,7 +129,7 @@ export default function IntakeForm({ forms, answers, errors, onChange }: Props) 
                                 checked={on}
                                 onChange={(e) => onChange(f.id, e.target.checked ? [...cur, o] : cur.filter((x) => x !== o))}
                               />
-                              {on && "✓ "}
+                              {on && <IconCheck size={14} strokeWidth={2.4} className="-ml-0.5 mr-1 inline-block align-[-2px]" />}
                               {o}
                             </label>
                           );

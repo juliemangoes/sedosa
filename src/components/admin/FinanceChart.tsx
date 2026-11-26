@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 
 type Month = { key: string; label: string; long: string; incomeCents: number; expenseCents: number };
 
-// Validated pair (light surface): ΔE CVD 24, normal-vision 25.7, both ≥ 3:1 contrast.
-const INCOME = "#8f3a87";
-const EXPENSE = "#eb6834";
+// Validated pair on the panel surface #fff6f8 (dataviz validator): CVD ΔE 20.2, normal-vision 24.3, both ≥ 3:1.
+const INCOME = "#9e2d5a"; // lacquer
+const EXPENSE = "#b8862c"; // burnished brass
 
 const usd = (c: number) => `${c < 0 ? "−" : ""}$${(Math.abs(c) / 100).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
 const compact = (c: number) => {
@@ -63,7 +63,7 @@ export default function FinanceChart({ months }: { months: Month[] }) {
 
   return (
     <div>
-      <div className="mb-3 flex flex-wrap items-center gap-4 text-sm text-stone-600">
+      <div className="mb-3 flex flex-wrap items-center gap-4 text-sm text-ink-soft">
         <span className="inline-flex items-center gap-2">
           <span aria-hidden="true" className="size-3 rounded-[3px]" style={{ background: INCOME }} /> Income
         </span>
@@ -75,8 +75,8 @@ export default function FinanceChart({ months }: { months: Month[] }) {
         <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} className="block h-auto w-full" role="group" aria-label="Income and expenses by month. Focus a month for its totals, or use the table below.">
           {ticks.map((tk) => (
             <g key={tk}>
-              <line x1={pad.left} x2={W - pad.right} y1={y(tk)} y2={y(tk)} stroke="#e7e2e6" strokeWidth={1} />
-              <text x={pad.left - 8} y={y(tk)} dy="0.32em" textAnchor="end" fontSize={11} fill="#78716c">
+              <line x1={pad.left} x2={W - pad.right} y1={y(tk)} y2={y(tk)} stroke="#f0d3dc" strokeWidth={1} />
+              <text x={pad.left - 8} y={y(tk)} dy="0.32em" textAnchor="end" fontSize={11} fill="#6b3445">
                 {compact(tk)}
               </text>
             </g>
@@ -88,7 +88,7 @@ export default function FinanceChart({ months }: { months: Month[] }) {
               <g key={m.key}>
                 {bar(x0, m.incomeCents, INCOME, dim)}
                 {bar(x0 + barW + 2, m.expenseCents, EXPENSE, dim)}
-                <text x={pad.left + band * i + band / 2} y={H - 8} textAnchor="middle" fontSize={11} fill={hover === i ? "#1c1917" : "#78716c"} fontWeight={hover === i ? 600 : 400}>
+                <text x={pad.left + band * i + band / 2} y={H - 8} textAnchor="middle" fontSize={11} fill={hover === i ? "#3a0f1c" : "#6b3445"} fontWeight={hover === i ? 600 : 400}>
                   {m.label}
                 </text>
                 {/* Hit target: the whole month band, bigger than the bars. */}
@@ -110,35 +110,35 @@ export default function FinanceChart({ months }: { months: Month[] }) {
               </g>
             );
           })}
-          <line x1={pad.left} x2={W - pad.right} y1={pad.top + plotH} y2={pad.top + plotH} stroke="#d6d0d4" strokeWidth={1} />
+          <line x1={pad.left} x2={W - pad.right} y1={pad.top + plotH} y2={pad.top + plotH} stroke="#d9a7b8" strokeWidth={1} />
         </svg>
         {h && (
           <div
             role="status"
-            className="pointer-events-none absolute top-0 z-10 w-44 -translate-x-1/2 rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-xs shadow-lg"
+            className="pointer-events-none absolute top-0 z-10 w-44 -translate-x-1/2 rounded-xl border border-line bg-panel px-3 py-2.5 text-xs shadow-lg"
             style={{ left: `clamp(5.5rem, ${tipLeft}%, calc(100% - 5.5rem))` }}
           >
-            <p className="mb-1.5 font-medium text-stone-500">{h.long}</p>
+            <p className="mb-1.5 font-medium text-ink-soft">{h.long}</p>
             {[
               ["Income", h.incomeCents, INCOME],
               ["Expenses", h.expenseCents, EXPENSE],
             ].map(([label, v, c]) => (
               <p key={label as string} className="flex items-center gap-2">
                 <span aria-hidden="true" className="h-0.5 w-3 rounded" style={{ background: c as string }} />
-                <strong className="text-sm tabular-nums text-stone-900">{usd(v as number)}</strong>
-                <span className="text-stone-500">{label as string}</span>
+                <strong className="text-sm tabular-nums text-ink">{usd(v as number)}</strong>
+                <span className="text-ink-soft">{label as string}</span>
               </p>
             ))}
-            <p className="mt-1.5 border-t border-stone-100 pt-1.5">
-              <strong className="text-sm tabular-nums text-stone-900">{usd(h.incomeCents - h.expenseCents)}</strong> <span className="text-stone-500">net</span>
+            <p className="mt-1.5 border-t border-line pt-1.5">
+              <strong className="text-sm tabular-nums text-ink">{usd(h.incomeCents - h.expenseCents)}</strong> <span className="text-ink-soft">net</span>
             </p>
           </div>
         )}
       </div>
       <details className="mt-3 text-sm">
-        <summary className="cursor-pointer text-stone-500 hover:text-stone-800">Show as table</summary>
+        <summary className="cursor-pointer text-ink-soft hover:text-ink">Show as table</summary>
         <table className="mt-2 w-full text-left tabular-nums">
-          <thead className="text-xs text-stone-500">
+          <thead className="text-xs text-ink-soft">
             <tr>
               <th className="py-1 font-medium">Month</th>
               <th className="py-1 text-right font-medium">Income</th>
@@ -146,7 +146,7 @@ export default function FinanceChart({ months }: { months: Month[] }) {
               <th className="py-1 text-right font-medium">Net</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-stone-100">
+          <tbody className="divide-y divide-line">
             {months.map((m) => (
               <tr key={m.key}>
                 <td className="py-1.5">{m.long}</td>
@@ -164,19 +164,19 @@ export default function FinanceChart({ months }: { months: Month[] }) {
 
 /** Thin horizontal share bars for a breakdown (single series, so no legend). */
 export function ShareBars({ rows, total, color = INCOME }: { rows: { label: string; cents: number }[]; total: number; color?: string }) {
-  if (!rows.length) return <p className="py-4 text-center text-sm text-stone-500">Nothing in this period yet.</p>;
+  if (!rows.length) return <p className="py-4 text-center text-sm text-ink-soft">Nothing in this period yet.</p>;
   return (
     <ul className="space-y-3">
       {rows.map((r) => (
         <li key={r.label}>
           <div className="mb-1 flex items-baseline justify-between gap-3 text-sm">
-            <span className="truncate text-stone-700">{r.label}</span>
+            <span className="truncate text-ink-soft">{r.label}</span>
             <span className="shrink-0 tabular-nums">
-              <strong className="font-semibold text-stone-900">{usd(r.cents)}</strong>
-              <span className="ml-1.5 text-xs text-stone-500">{total ? Math.round((r.cents / total) * 100) : 0}%</span>
+              <strong className="font-semibold text-ink">{usd(r.cents)}</strong>
+              <span className="ml-1.5 text-xs text-ink-soft">{total ? Math.round((r.cents / total) * 100) : 0}%</span>
             </span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-stone-100">
+          <div className="h-2 overflow-hidden rounded-full bg-plaster-2">
             <div className="h-full rounded-full" style={{ width: `${total ? Math.max(2, (r.cents / total) * 100) : 0}%`, background: color }} />
           </div>
         </li>

@@ -15,11 +15,11 @@ import { updateClientAction } from "../../../actions";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { WhatsAppMenu } from "@/components/admin/WhatsAppButtons";
 import { AIMail, AIMessage, AIPhone, AIPlus } from "@/components/admin/icons";
-import { Avatar, Card, DepositBadge, Field, Flash, Stat, StatusBadge, btnCls, inputCls } from "@/components/admin/ui";
+import { BackLink, Avatar, Card, DepositBadge, Field, Flash, Stat, StatusBadge, btnCls, inputCls } from "@/components/admin/ui";
 
 export const dynamic = "force-dynamic";
 
-const contactCls = "inline-flex items-center gap-2 rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-sm font-medium text-stone-800 shadow-sm transition hover:border-plum/40 hover:text-plum";
+const contactCls = "inline-flex items-center gap-2 rounded-full border border-line-strong bg-panel px-4 py-2.5 text-sm font-medium text-ink transition hover:border-lacquer hover:text-lacquer";
 
 export default async function ClientPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | undefined>> }) {
   await requireAdmin();
@@ -48,17 +48,15 @@ export default async function ClientPage({ params, searchParams }: { params: Pro
 
   return (
     <>
-      <Link href="/admin/clients" className="text-sm text-stone-600 hover:text-plum">
-        ‹ Clients
-      </Link>
+      <BackLink href="/admin/clients" label="Clients" />
       <div className="mb-6 mt-3 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <Avatar first={c.firstName} last={c.lastName} size="lg" />
           <div>
-            <h1 className="font-serif text-[1.8rem] font-semibold leading-tight text-stone-900">
+            <h1 className="font-display text-[2.1rem] font-medium leading-[1.05] text-ink">
               {c.firstName} {c.lastName}
             </h1>
-            <p className="mt-0.5 text-sm text-stone-500">
+            <p className="mt-0.5 text-sm text-ink-soft">
               Client since {DateTime.fromJSDate(c.createdAt).setZone(zone).toFormat("LLLL yyyy")}
               {c.lastLoginAt && ` · signed in ${DateTime.fromJSDate(c.lastLoginAt).setZone(zone).toRelative()}`}
             </p>
@@ -96,15 +94,15 @@ export default async function ClientPage({ params, searchParams }: { params: Pro
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_22rem]">
         <Card title={`Appointments (${appts.length})`}>
           {appts.length === 0 ? (
-            <p className="text-sm text-stone-500">No appointments yet.</p>
+            <p className="text-sm text-ink-soft">No appointments yet.</p>
           ) : (
-            <ul className="-mx-2 divide-y divide-stone-100">
+            <ul className="-mx-2 divide-y divide-line">
               {appts.map((a) => (
                 <li key={a.id}>
-                  <Link href={`/admin/appointments/${a.id}`} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl px-2 py-3 text-sm hover:bg-stone-50">
-                    <span className="w-40 tabular-nums text-stone-600">{DateTime.fromJSDate(a.startsAt).setZone(zone).toFormat("ccc LLL d, yyyy")}</span>
+                  <Link href={`/admin/appointments/${a.id}`} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl px-2 py-3 text-sm hover:bg-plaster">
+                    <span className="w-40 tabular-nums text-ink-soft">{DateTime.fromJSDate(a.startsAt).setZone(zone).toFormat("ccc LLL d, yyyy")}</span>
                     <span className="min-w-0 flex-1 font-medium">{prettyName(a.snapshot.serviceName)}</span>
-                    <span className="tabular-nums text-stone-600">{money(a.priceCents)}</span>
+                    <span className="tabular-nums text-ink-soft">{money(a.priceCents)}</span>
                     <StatusBadge status={a.status} />
                     <DepositBadge status={a.depositStatus} cents={a.depositCents} />
                   </Link>
@@ -130,17 +128,17 @@ export default async function ClientPage({ params, searchParams }: { params: Pro
             <Field label="Phone" htmlFor="phone">
               <input id="phone" name="phone" type="tel" defaultValue={c.phone} className={inputCls} />
             </Field>
-            <fieldset className="space-y-2 rounded-xl bg-stone-50 p-3">
+            <fieldset className="space-y-2 rounded-xl bg-plaster p-3">
               <legend className="sr-only">Reminders</legend>
               <label className="flex items-start gap-2.5 text-sm">
-                <input type="checkbox" name="whatsappOptIn" defaultChecked={c.whatsappOptIn} className="mt-0.5 size-4 accent-[#6d2b67]" />
+                <input type="checkbox" name="whatsappOptIn" defaultChecked={c.whatsappOptIn} className="mt-0.5 size-4 accent-[#9e2d5a]" />
                 <span>
                   <span className="font-medium">WhatsApp reminders</span>
-                  <span className="block text-xs text-stone-500">Queues a reminder {settings.whatsappReminderHours}h before each visit.</span>
+                  <span className="block text-xs text-ink-soft">Queues a reminder {settings.whatsappReminderHours}h before each visit.</span>
                 </span>
               </label>
               <label className="flex items-start gap-2.5 text-sm">
-                <input type="checkbox" name="smsOptIn" defaultChecked={c.smsOptIn} className="mt-0.5 size-4 accent-[#6d2b67]" />
+                <input type="checkbox" name="smsOptIn" defaultChecked={c.smsOptIn} className="mt-0.5 size-4 accent-[#9e2d5a]" />
                 <span className="font-medium">Text message reminders</span>
               </label>
             </fieldset>
@@ -148,7 +146,7 @@ export default async function ClientPage({ params, searchParams }: { params: Pro
               <textarea id="notes" name="notes" rows={4} defaultValue={c.notes} className={inputCls} />
             </Field>
             <SubmitButton className={btnCls}>Save</SubmitButton>
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-ink-soft">
               {c.stripePaymentMethodId ? "Card on file · " : ""}
               {c.lastLoginAt ? "Has a client account" : "Hasn't signed in to an account yet"}
             </p>

@@ -9,7 +9,7 @@ export default function PayDepositButton({ token, label }: { token: string; labe
     <>
       <button
         type="button"
-        className="btn-black px-6 py-3"
+        className="btn-primary px-6 py-3"
         disabled={busy}
         onClick={async () => {
           setBusy(true);
@@ -25,7 +25,7 @@ export default function PayDepositButton({ token, label }: { token: string; labe
       >
         {busy ? "Opening…" : label}
       </button>
-      {err && <p className="mt-2 text-sm text-red-800">{err}</p>}
+      {err && <p className="mt-2 text-sm font-medium text-[#a61b2b]">{err}</p>}
     </>
   );
 }

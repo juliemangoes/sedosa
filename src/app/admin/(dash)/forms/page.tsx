@@ -17,17 +17,17 @@ export default async function FormsPage({ searchParams }: { searchParams: Promis
     <>
       <PageHeader title="Intake & consent forms" />
       <Flash sp={sp} />
-      <p className="mb-4 text-sm text-stone-600">Clients fill these in while booking. Attach forms to services on each service&apos;s page.</p>
+      <p className="mb-4 text-sm text-ink-soft">Clients fill these in while booking. Attach forms to services on each service&apos;s page.</p>
       <Card>
-        <ul className="divide-y divide-stone-100">
+        <ul className="divide-y divide-line">
           {catalog.forms.map((f) => {
             const used = catalog.services.filter((s) => s.formIds.includes(f.id)).length;
             return (
               <li key={f.id}>
-                <Link href={`/admin/forms/${f.id}`} className="flex flex-wrap items-center gap-3 py-3 hover:bg-stone-50">
+                <Link href={`/admin/forms/${f.id}`} className="flex flex-wrap items-center gap-3 py-3 hover:bg-plaster">
                   <span className="flex-1 font-medium">{f.name}</span>
-                  <span className="text-sm text-stone-500">{f.fields.length} questions</span>
-                  <span className="text-sm text-stone-500">used by {used} service{used === 1 ? "" : "s"}</span>
+                  <span className="text-sm text-ink-soft">{f.fields.length} questions</span>
+                  <span className="text-sm text-ink-soft">used by {used} service{used === 1 ? "" : "s"}</span>
                 </Link>
               </li>
             );

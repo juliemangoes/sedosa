@@ -63,11 +63,11 @@ export function ProfileForm({ profile, incomplete, whatsapp }: { profile: Accoun
         const j = res ? await res.json().catch(() => ({})) : {};
         setBusy(false);
         if (!res?.ok) return setMsg({ ok: false, text: j.error ?? "Couldn't save. Please try again." });
-        setMsg({ ok: true, text: "Saved ♡" });
+        setMsg({ ok: true, text: "Saved" });
         router.refresh();
       }}
     >
-      {incomplete && <p className="rounded-2xl bg-blush px-4 py-3 text-sm">Add your name and number so they&apos;re ready next time you book.</p>}
+      {incomplete && <p className="rounded-2xl bg-plaster px-4 py-3 text-sm">Add your name and number so they&apos;re ready next time you book.</p>}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="acc-first">First name</label>
@@ -83,27 +83,27 @@ export function ProfileForm({ profile, incomplete, whatsapp }: { profile: Accoun
         </div>
         <div>
           <span className="block">Email</span>
-          <p className="mt-1.5 truncate rounded-xl bg-blush/70 px-3.5 py-3 text-ink/80" title={profile.email}>
+          <p className="mt-1.5 truncate rounded-[14px] bg-plaster px-3.5 py-3 text-ink-soft" title={profile.email}>
             {profile.email}
           </p>
         </div>
       </div>
       <label className="flex cursor-pointer items-start gap-3 text-sm">
-        <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-black" checked={form.smsOptIn} onChange={(e) => setForm((f) => ({ ...f, smsOptIn: e.target.checked }))} />
+        <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-[#9e2d5a]" checked={form.smsOptIn} onChange={(e) => setForm((f) => ({ ...f, smsOptIn: e.target.checked }))} />
         <span>Text me confirmations and reminders. Msg &amp; data rates may apply; reply STOP to opt out.</span>
       </label>
       {whatsapp && (
         <label className="flex cursor-pointer items-start gap-3 text-sm">
-          <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-black" checked={form.whatsappOptIn} onChange={(e) => setForm((f) => ({ ...f, whatsappOptIn: e.target.checked }))} />
+          <input type="checkbox" className="mt-0.5 size-4 shrink-0 accent-[#9e2d5a]" checked={form.whatsappOptIn} onChange={(e) => setForm((f) => ({ ...f, whatsappOptIn: e.target.checked }))} />
           <span>Send my appointment reminders on WhatsApp.</span>
         </label>
       )}
       <div className="flex items-center gap-3">
-        <button type="submit" className="btn-black px-6 py-3" disabled={busy}>
+        <button type="submit" className="btn-primary px-6 py-3" disabled={busy}>
           {busy ? "Saving…" : "Save details"}
         </button>
         {msg && (
-          <p role="status" className={`text-sm font-medium ${msg.ok ? "text-emerald-800" : "text-red-800"}`}>
+          <p role="status" className={`text-sm font-medium ${msg.ok ? "text-[#1f6b4a]" : "text-[#a61b2b]"}`}>
             {msg.text}
           </p>
         )}

@@ -13,10 +13,10 @@ export default function LoginForm({ devHint }: { devHint: boolean }) {
           Password
         </label>
         <input id="password" name="password" type="password" autoComplete="current-password" required className={inputCls} autoFocus />
-        {devHint && <p className="mt-1 text-xs text-stone-500">Local development password: admin</p>}
+        {devHint && <p className="mt-1.5 text-xs text-ink-soft">Local development password: admin</p>}
       </div>
       {state?.error && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm font-medium text-[#a61b2b]">
           {state.error}
         </p>
       )}

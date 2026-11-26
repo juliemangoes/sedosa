@@ -11,7 +11,9 @@ import BookingApp from "@/components/booking/BookingApp";
 import { mediaUrl } from "@/lib/media";
 import { accountsEnabled, currentClient } from "@/lib/client-session";
 import { profileOf, savedAnswers } from "@/lib/account";
-import Hero from "@/components/landing/Hero";
+import Hero, { type Openings } from "@/components/landing/Hero";
+import { DateTime } from "luxon";
+import { getAvailability } from "@/lib/booking";
 import InfoSections, { SiteFooter } from "@/components/landing/InfoSections";
 import type { PublicData } from "@/components/booking/types";
 
@@ -38,6 +40,28 @@ async function popularServiceIds(): Promise<number[]> {
   return rows.filter((r) => r.n >= 3).map((r) => r.serviceId);
 }
 
+/** The next three open times for one featured service (the most booked, else the first on the menu). */
+async function nextOpenings(catalog: Awaited<ReturnType<typeof loadCatalog>>, zone: string, popular: number[]): Promise<Openings | null> {
+  const svc = catalog.services.find((s) => s.id === popular[0]) ?? catalog.services.find((s) => s.priceCents > 0) ?? catalog.services[0];
+  if (!svc) return null;
+  try {
+    const db = await getDb();
+    const res = await getAvailability(db, { serviceId: svc.id, locationId: "any", addonIds: [], days: 7 });
+    const slots = res.dates.flatMap((d) => d.slots).slice(0, 3);
+    return {
+      serviceId: svc.id,
+      serviceName: svc.name,
+      durationMin: res.durationMin,
+      slots: slots.map((sl) => {
+        const t = DateTime.fromISO(sl.start).setZone(zone);
+        return { start: sl.start, locationIds: sl.locationIds, day: t.toFormat("ccc d LLL"), time: t.toFormat("h:mm"), meridiem: t.toFormat("a") };
+      }),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const { catalog, settings } = await load();
   const where = placesLabel(catalog.locations.map((l) => cityFromAddress(l.address)));
@@ -56,7 +80,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const db = await getDb();
   const [{ catalog, settings }, sp, popularIds, me] = await Promise.all([load(), searchParams, popularServiceIds(), currentClient(db)]);
-  const answers = me ? await savedAnswers(db, me.id) : {};
+  const [answers, openings] = await Promise.all([me ? savedAnswers(db, me.id) : Promise.resolve({}), nextOpenings(catalog, settings.timezone, popularIds)]);
 
   // Hours: one table when every studio keeps the same hours, otherwise one per studio.
   const hourGroups = catalog.locations.map((l) => ({ label: l.name, rows: hoursRows(l.weeklyHours) }));
@@ -135,7 +159,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
       <BookingApp
         data={data}
         initialServiceId={sp.service ? Number(sp.service) : undefined}
-        hero={<Hero data={data} />}
+        initialSlot={sp.slot ? { start: sp.slot, locationIds: (sp.loc ?? "").split(",").map(Number).filter(Boolean) } : undefined}
+        hero={<Hero data={data} openings={openings} />}
         sections={<InfoSections data={data} />}
         footer={<SiteFooter data={data} />}
         initialAccount={me ? profileOf(me) : null}

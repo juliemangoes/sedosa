@@ -1,112 +1,133 @@
 import Image from "next/image";
-import logo from "@/assets/brand/logo.png";
-import logoMask from "@/assets/brand/logo-mask.png";
-import portrait from "@/assets/brand/portrait.png";
+import portrait from "@/assets/brand/portrait-mirror.jpg";
 import type { PublicData } from "@/components/booking/types";
-import { categoryLabel, placesLabel } from "@/lib/display";
-import CategoryIcon from "./CategoryIcon";
-import { IconArrowRight, IconChevronDown, IconClock, IconPin, Sparkle } from "./icons";
+import { categoryLabel, placesLabel, prettyName, shortDuration } from "@/lib/display";
+import { IconArrowRight } from "./icons";
+
+export type Openings = {
+  serviceId: number;
+  serviceName: string;
+  durationMin: number;
+  slots: { start: string; locationIds: number[]; day: string; time: string; meridiem: string }[];
+};
 
 /**
- * Phones & tablets: a "poster" — portrait with the chrome logo overlapping it,
- * one line, a full-width Book button and category shortcuts, sized to fit the
- * first screen. Desktop: two columns at viewport height with a scroll cue.
+ * The powder room's front wall: lacquered rose, the name set in Bodoni across
+ * the width, the portrait in an oval vanity mirror over it, and the next open
+ * times waiting on a reservation card.
  */
-export default function Hero({ data }: { data: PublicData }) {
+export default function Hero({ data, openings }: { data: PublicData; openings: Openings | null }) {
   const where = placesLabel(data.locations.map((l) => l.city)) || "Georgia";
-  const mask = `url(${logoMask.src})`;
+  const slotHref = (s: Openings["slots"][number]) => `/?service=${openings!.serviceId}&slot=${encodeURIComponent(s.start)}&loc=${s.locationIds.join(",")}`;
+
   return (
-    <section aria-labelledby="hero-title" className="on-dark relative isolate overflow-hidden bg-noir text-[#fde7f5]">
-      {/* Drifting glow + satin backdrop */}
-      <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <div className="absolute -left-40 -top-40 size-[34rem] animate-drift rounded-full bg-neon/25 blur-[120px]" />
-        <div className="absolute -bottom-48 right-[-10rem] size-[38rem] animate-drift rounded-full bg-[#9b2f86]/30 blur-[140px] [animation-delay:-8s] [animation-duration:20s]" />
-        <div className="absolute left-1/3 top-1/2 size-[18rem] animate-drift rounded-full bg-neon/10 blur-[100px] [animation-delay:-4s] [animation-duration:24s]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.06),transparent_60%)]" />
-      </div>
+    <section aria-labelledby="hero-title" className="on-rose lacquer relative isolate overflow-hidden text-oxblood">
+      <div className="mx-auto max-w-7xl px-4 pb-8 pt-5 sm:px-6 sm:pt-8 lg:pb-12">
+        <h1 id="hero-title" className="text-center">
+          <span className="sr-only">{data.businessName}</span>
+          <span aria-hidden="true" className="font-display block select-none text-[clamp(4.4rem,22.5vw,15rem)] font-medium leading-[0.78] tracking-[0.015em]">
+            SEDOSA
+          </span>
+        </h1>
 
-      <div className="mx-auto flex min-h-[calc(100svh-4rem)] max-w-6xl flex-col justify-center px-4 pb-14 pt-5 sm:px-6 sm:pb-20 lg:min-h-[min(calc(100svh-4rem),54rem)] lg:pb-24 lg:pt-10">
-        <div className="grid grid-cols-1 justify-items-center [grid-template-areas:'kicker''portrait''logo''text'] lg:grid-cols-[1.1fr_0.9fr] lg:content-center lg:justify-items-start lg:gap-x-12 lg:[grid-template-areas:'kicker_portrait''logo_portrait''text_portrait']">
-          <p className="kicker animate-rise text-center text-[0.78rem] text-neon-soft [grid-area:kicker] sm:text-sm lg:self-end lg:text-left">Welcome to my booking site ♡</p>
-
-          <div className="relative mt-3 w-[min(62vw,16rem)] animate-settle [grid-area:portrait] sm:w-72 lg:mt-0 lg:w-full lg:max-w-[30rem] lg:self-center lg:justify-self-end">
-            <div className="relative animate-float">
-              <div aria-hidden="true" className="absolute inset-[8%] -z-10 animate-breathe rounded-full bg-neon/40 blur-3xl" />
+        <div className="relative z-10 -mt-[clamp(1.6rem,8.4vw,5.6rem)] grid grid-cols-[auto_1fr] items-end gap-x-5 gap-y-6 sm:grid-cols-1 sm:gap-x-10 lg:grid-cols-[1fr_auto_1fr]">
+          {/* The mirror */}
+          <figure className="w-[44vw] max-w-[11.5rem] sm:mx-auto sm:w-64 sm:max-w-none lg:order-2 lg:w-[18.5rem]">
+            <div className="mirror aspect-[490/710] bg-plaster-2">
               <Image
                 src={portrait}
-                alt={`Your artist at ${data.businessName}`}
+                alt={`A styled portrait at ${data.businessName}`}
                 loading="eager"
                 fetchPriority="high"
-                sizes="(min-width: 1024px) 30rem, (min-width: 640px) 18rem, 62vw"
-                className="h-auto w-full drop-shadow-[0_0_40px_rgba(255,92,191,0.35)]"
+                sizes="(min-width: 1024px) 18.5rem, (min-width: 640px) 16rem, 44vw"
                 placeholder="blur"
+                className="size-full object-cover"
               />
             </div>
-            <Sparkle className="absolute left-[6%] top-[8%] animate-twinkle text-white drop-shadow-[0_0_8px_#fff]" size={22} />
-            <Sparkle className="absolute bottom-[12%] right-[4%] animate-twinkle text-white drop-shadow-[0_0_8px_#fff] [animation-delay:900ms]" size={18} />
-            <Sparkle className="absolute right-[14%] top-[2%] animate-twinkle text-neon-soft [animation-delay:1.5s]" size={12} />
-            <Sparkle className="absolute bottom-[28%] left-[-2%] animate-twinkle text-neon-soft [animation-delay:2.1s]" size={10} />
+          </figure>
+
+          {/* What, where, when */}
+          <div className="pb-1 sm:text-center lg:order-1 lg:pb-3 lg:text-left">
+            <p className="max-w-[22rem] text-[1.05rem] leading-snug sm:mx-auto sm:text-xl lg:mx-0">Brows, Korean lash lifts, PMU and waxing in {where}.</p>
+            <p className="mt-3 text-[0.9rem] sm:text-[0.95rem]">
+              {data.hoursHeadline.split(" · ").map((part, i) => (
+                <span key={part} className="block sm:inline">
+                  {i > 0 && <span className="hidden sm:inline"> · </span>}
+                  {part}
+                </span>
+              ))}
+            </p>
+            <a href="#services" className="btn-primary mt-6 hidden lg:inline-flex">
+              Book an appointment <IconArrowRight size={17} />
+            </a>
           </div>
 
-          <h1 id="hero-title" className="relative z-10 -mt-[14%] w-[min(92vw,23rem)] animate-settle [animation-delay:90ms] [grid-area:logo] sm:-mt-20 sm:w-[30rem] lg:-ml-3 lg:mt-3 lg:w-[min(100%,34rem)]">
-            <span className="sr-only">{data.businessName}</span>
-            <span className="relative block">
-              <Image src={logo} alt="" loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 34rem, (min-width: 640px) 30rem, 92vw" className="h-auto w-full" />
-              <span aria-hidden="true" className="logo-shine pointer-events-none absolute inset-0 animate-shine" style={{ maskImage: mask, WebkitMaskImage: mask }} />
-              <Sparkle className="absolute -right-1 top-[18%] animate-twinkle text-white drop-shadow-[0_0_8px_#fff] [animation-delay:400ms]" size={14} />
-            </span>
-          </h1>
-
-          <div className="flex w-full flex-col items-center text-center [grid-area:text] lg:items-start lg:text-left">
-            <p className="mt-2 max-w-md animate-rise text-[1.08rem] leading-relaxed text-[#f6d9ec] [animation-delay:160ms] sm:mt-4 sm:max-w-xl sm:text-xl">
-              Brows, Korean lash lifts, PMU &amp; waxing in {where}.<span className="hidden sm:inline"> Pick a service, choose a time and you&apos;re booked in minutes.</span>
-            </p>
-
-            <a href="#services" className="group btn-neon mt-6 w-full max-w-sm animate-rise animate-cta-glow px-8 py-4 text-sm [animation-delay:240ms] sm:w-auto">
-              Book an appointment <IconArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-1" />
-            </a>
-
-            <nav aria-label="Jump to a category" className="mt-6 w-full animate-rise [animation-delay:320ms]">
-              <ul className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [mask-image:linear-gradient(to_right,transparent,#000_16px,#000_calc(100%-24px),transparent)] sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0 sm:[mask-image:none] lg:justify-start">
-                {data.categories.map((c) => (
-                  <li key={c.id} className="shrink-0">
-                    <a
-                      href={`#cat-${c.id}`}
-                      className="flex items-center gap-2 rounded-full bg-white/[0.07] px-3.5 py-2 text-sm ring-1 ring-white/12 transition hover:bg-white/[0.14] hover:ring-neon/50"
-                    >
-                      <CategoryIcon name={c.name} size={17} className="text-neon" />
-                      {categoryLabel(c.name)}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <p className="mt-5 flex animate-rise flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-[#e9c9de] [animation-delay:400ms] lg:justify-start">
-              <span className="inline-flex items-center gap-1.5">
-                <IconClock size={16} className="text-neon" /> {data.hoursHeadline}
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <IconPin size={16} className="text-neon" /> {where}
-              </span>
-            </p>
+          {/* The reservation card */}
+          <div className="col-span-2 sm:col-span-1 lg:order-3 lg:pb-3">
+            <ReservationCard data={data} openings={openings} slotHref={slotHref} />
           </div>
         </div>
+
+        <nav aria-label="Jump to a category" className="mt-8 lg:mt-12">
+          <ul className="no-scrollbar -mx-4 flex snap-x gap-x-6 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:justify-center sm:gap-y-2 sm:overflow-visible sm:px-0">
+            {data.categories.map((c) => (
+              <li key={c.id} className="shrink-0 snap-start">
+                <a href={`#cat-${c.id}`} className="caps inline-block py-2 text-oxblood underline-offset-[0.45em] hover:underline">
+                  {categoryLabel(c.name)}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
-
-      <a
-        href="#services"
-        className="absolute bottom-20 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-[#e9c9de] transition hover:text-white lg:flex"
-        aria-label="Scroll to the menu"
-      >
-        <span className="kicker text-xs">Explore the menu</span>
-        <IconChevronDown className="animate-bounce [animation-duration:2s]" />
-      </a>
-
-      {/* Soft curve into the menu */}
-      <svg aria-hidden="true" viewBox="0 0 1440 64" preserveAspectRatio="none" className="absolute inset-x-0 -bottom-px h-8 w-full text-blush sm:h-12 lg:h-16">
-        <path d="M0 64V40C240 8 480 0 720 0s480 8 720 40v24H0Z" fill="currentColor" />
-      </svg>
     </section>
+  );
+}
+
+function ReservationCard({ data, openings, slotHref }: { data: PublicData; openings: Openings | null; slotHref: (s: Openings["slots"][number]) => string }) {
+  const has = !!openings && openings.slots.length > 0;
+  return (
+    <div className="mx-auto max-w-sm rounded-[1.75rem] bg-panel p-1.5 shadow-[0_24px_48px_-24px_rgba(58,15,28,0.55)] lg:mr-0">
+      <div className="rounded-[1.4rem] p-5 ring-1 ring-brass sm:p-6">
+        <h2 className="font-display text-[1.6rem] font-medium leading-tight">{has ? "Next openings" : "Reserve your time"}</h2>
+        {has ? (
+          <>
+            <p className="mt-1 text-sm text-ink-soft">
+              {prettyName(openings!.serviceName)} · {shortDuration(openings!.durationMin)}
+            </p>
+            <ul className="mt-4 grid grid-cols-3 gap-2">
+              {openings!.slots.map((s) => (
+                <li key={s.start}>
+                  <a
+                    href={slotHref(s)}
+                    className="flex h-full flex-col items-center rounded-2xl px-1 py-3 text-center ring-1 ring-line-strong transition duration-200 hover:bg-plaster hover:ring-lacquer"
+                    aria-label={`Book ${prettyName(openings!.serviceName)} on ${s.day} at ${s.time} ${s.meridiem}`}
+                  >
+                    <span className="text-[0.7rem] font-medium uppercase tracking-[0.12em] text-ink-soft">{s.day}</span>
+                    <span className="font-display mt-1 text-[1.45rem] font-medium leading-none tabular-nums">{s.time}</span>
+                    <span className="mt-1 text-[0.7rem] font-medium uppercase tracking-[0.12em]">{s.meridiem}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-4 flex items-center justify-between gap-3 text-sm">
+              <a href={`/?service=${openings!.serviceId}`} className="font-medium text-lacquer underline decoration-line underline-offset-4 hover:decoration-lacquer">
+                See all times
+              </a>
+              <a href="#services" className="text-ink-soft hover:text-lacquer">
+                Another service
+              </a>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="mt-2 text-ink-soft">Choose a service from the menu to see every open time across {data.locations.length > 1 ? "both studios" : "the studio"}.</p>
+            <a href="#services" className="btn-primary mt-5 w-full">
+              See the menu <IconArrowRight size={17} />
+            </a>
+          </>
+        )}
+      </div>
+    </div>
   );
 }

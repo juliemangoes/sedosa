@@ -56,12 +56,12 @@ export default function NewAppointmentForm({ services, addons, locations, client
           </Field>
           {svcAddons.length > 0 && (
             <fieldset>
-              <legend className="mb-1 text-sm font-medium text-stone-700">Add-ons</legend>
+              <legend className="mb-1 text-sm font-medium text-ink-soft">Add-ons</legend>
               <div className="grid gap-1.5 sm:grid-cols-2">
                 {svcAddons.map((a) => (
                   <label key={a.id} className="flex items-center gap-2 text-sm">
                     <input type="checkbox" name="addonIds" value={a.id} />
-                    {a.name} <span className="text-stone-500">+{a.durationMin}m {money(a.priceCents)}</span>
+                    {a.name} <span className="text-ink-soft">+{a.durationMin}m {money(a.priceCents)}</span>
                   </label>
                 ))}
               </div>
@@ -122,12 +122,12 @@ export default function NewAppointmentForm({ services, addons, locations, client
           <Field label="Phone" htmlFor="phone">
             <input id="phone" name="phone" type="tel" className={inputCls} value={client.phone} onChange={(e) => setClient({ ...client, phone: e.target.value })} />
           </Field>
-          <div className="space-y-2 rounded-xl bg-stone-50 p-3">
+          <div className="space-y-2 rounded-xl bg-plaster p-3">
             <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" name="whatsappOptIn" className="size-4 accent-[#6d2b67]" checked={client.whatsappOptIn} onChange={(e) => setClient({ ...client, whatsappOptIn: e.target.checked })} /> Client agreed to WhatsApp reminders
+              <input type="checkbox" name="whatsappOptIn" className="size-4 accent-[#9e2d5a]" checked={client.whatsappOptIn} onChange={(e) => setClient({ ...client, whatsappOptIn: e.target.checked })} /> Client agreed to WhatsApp reminders
             </label>
             <label className="flex items-center gap-2 text-sm">
-              <input type="checkbox" name="smsOptIn" className="size-4 accent-[#6d2b67]" checked={client.smsOptIn} onChange={(e) => setClient({ ...client, smsOptIn: e.target.checked })} /> Client agreed to text messages
+              <input type="checkbox" name="smsOptIn" className="size-4 accent-[#9e2d5a]" checked={client.smsOptIn} onChange={(e) => setClient({ ...client, smsOptIn: e.target.checked })} /> Client agreed to text messages
             </label>
           </div>
           <Field label="Note" htmlFor="clientNotes">
@@ -139,7 +139,7 @@ export default function NewAppointmentForm({ services, addons, locations, client
           <SubmitButton className={`${btnCls} w-full`} pendingText="Booking…">
             Book appointment
           </SubmitButton>
-          <p className="text-xs text-stone-500">Intake forms aren&apos;t required for bookings you enter yourself.</p>
+          <p className="text-xs text-ink-soft">Intake forms aren&apos;t required for bookings you enter yourself.</p>
         </div>
       </Card>
     </form>

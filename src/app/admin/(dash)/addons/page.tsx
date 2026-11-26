@@ -10,21 +10,21 @@ export const dynamic = "force-dynamic";
 
 function Row({ a }: { a?: typeof t.addons.$inferSelect }) {
   return (
-    <form action={saveAddonAction} className="grid items-end gap-2 border-b border-stone-100 py-3 last:border-0 sm:grid-cols-[1fr_6rem_6rem_5rem_auto_auto]">
+    <form action={saveAddonAction} className="grid items-end gap-2 border-b border-line py-3 last:border-0 sm:grid-cols-[1fr_6rem_6rem_5rem_auto_auto]">
       <input type="hidden" name="id" value={a?.id ?? ""} />
-      <label className="text-xs text-stone-500">
+      <label className="text-xs text-ink-soft">
         Name
         <input name="name" defaultValue={a?.name} required className={inputCls} />
       </label>
-      <label className="text-xs text-stone-500">
+      <label className="text-xs text-ink-soft">
         Minutes
         <input name="durationMin" type="number" min={0} step={5} defaultValue={a?.durationMin ?? 10} className={inputCls} />
       </label>
-      <label className="text-xs text-stone-500">
+      <label className="text-xs text-ink-soft">
         Price ($)
         <input name="price" inputMode="decimal" defaultValue={a ? (a.priceCents / 100).toFixed(2) : ""} className={inputCls} />
       </label>
-      <label className="text-xs text-stone-500">
+      <label className="text-xs text-ink-soft">
         Order
         <input name="sortOrder" type="number" defaultValue={a?.sortOrder ?? 0} className={inputCls} />
       </label>
@@ -34,7 +34,7 @@ function Row({ a }: { a?: typeof t.addons.$inferSelect }) {
       <div className="flex gap-2">
         <SubmitButton className={a ? btnSecondaryCls : btnCls}>{a ? "Save" : "Add"}</SubmitButton>
         {a && (
-          <SubmitButton className="px-2 text-sm text-red-700 underline" confirm={`Delete "${a.name}"?`} pendingText="…" formAction={deleteAddonAction}>
+          <SubmitButton className="px-2 text-sm text-[#a61b2b] underline" confirm={`Delete "${a.name}"?`} pendingText="…" formAction={deleteAddonAction}>
             Delete
           </SubmitButton>
         )}
@@ -52,7 +52,7 @@ export default async function AddonsPage({ searchParams }: { searchParams: Promi
     <>
       <PageHeader title="Add-ons" />
       <Flash sp={sp} />
-      <p className="mb-4 text-sm text-stone-600">Extras clients can tick on the date &amp; time step. Choose which services offer each add-on on the service&apos;s page.</p>
+      <p className="mb-4 text-sm text-ink-soft">Extras clients can tick on the date &amp; time step. Choose which services offer each add-on on the service&apos;s page.</p>
       <Card>
         {addons.map((a) => (
           <Row key={a.id} a={a} />

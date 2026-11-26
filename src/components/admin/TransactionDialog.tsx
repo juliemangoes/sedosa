@@ -46,13 +46,15 @@ export default function TransactionDialog({ draft, expenseCategories, incomeCate
         ref={ref}
         aria-label={title}
         onClick={(e) => e.target === ref.current && ref.current?.close()}
-        className="m-0 mt-auto max-h-[92svh] w-full max-w-none overflow-y-auto rounded-t-3xl bg-white p-0 font-sans text-stone-900 shadow-2xl backdrop:bg-black/40 open:animate-sheet-up sm:m-auto sm:max-w-lg sm:rounded-3xl sm:open:animate-dialog-in"
+        className="m-0 mt-auto max-h-[92svh] w-full max-w-none overflow-y-auto rounded-t-[2rem] bg-panel p-0 font-sans text-ink shadow-2xl backdrop:bg-oxblood/50 open:animate-sheet-up sm:m-auto sm:max-w-lg sm:rounded-[2rem] sm:open:animate-dialog-in"
       >
         <form action={saveTransactionAction} className="space-y-4 p-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-serif text-xl font-semibold">{title}</h2>
-            <button type="button" onClick={() => ref.current?.close()} aria-label="Close" className="grid size-9 place-items-center rounded-full hover:bg-stone-100">
-              ✕
+            <h2 className="font-display text-[1.6rem] font-medium">{title}</h2>
+            <button type="button" onClick={() => ref.current?.close()} aria-label="Close" className="grid size-9 place-items-center rounded-full hover:bg-plaster-2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+                <path d="M6 6l12 12M18 6 6 18" />
+              </svg>
             </button>
           </div>
           <input type="hidden" name="id" value={draft.id ?? ""} />
@@ -108,11 +110,11 @@ export default function TransactionDialog({ draft, expenseCategories, incomeCate
           {isExpense && (
             <>
               {!draft.id && (
-                <label className="flex items-start gap-2.5 rounded-xl bg-stone-50 p-3 text-sm">
-                  <input type="checkbox" name="recurringMonthly" defaultChecked={draft.recurringMonthly} className="mt-0.5 size-4 accent-[#6d2b67]" />
+                <label className="flex items-start gap-2.5 rounded-xl bg-plaster p-3 text-sm">
+                  <input type="checkbox" name="recurringMonthly" defaultChecked={draft.recurringMonthly} className="mt-0.5 size-4 accent-[#9e2d5a]" />
                   <span>
                     <span className="font-medium">Repeats every month</span>
-                    <span className="block text-xs text-stone-500">Rent, software, phone… Log it again each month with one tap.</span>
+                    <span className="block text-xs text-ink-soft">Rent, software, phone… Log it again each month with one tap.</span>
                   </span>
                 </label>
               )}
