@@ -256,6 +256,11 @@ describe("media", () => {
     expect((await sharp(out.bytes).metadata()).format).toBe("webp");
   });
 
+  it("keeps landing-page photos whole, never enlarged", async () => {
+    expect(await processImage(await photo(3000, 2000), "gallery")).toMatchObject({ width: 1600, height: 1067, mime: "image/webp" });
+    expect(await processImage(await photo(640, 800), "gallery")).toMatchObject({ width: 640, height: 800 });
+  });
+
   it("keeps receipts whole, never enlarged", async () => {
     expect(await processImage(await photo(2400, 3200), "receipt")).toMatchObject({ width: 1200, height: 1600 });
     expect(await processImage(await photo(500, 300), "receipt")).toMatchObject({ width: 500, height: 300 });

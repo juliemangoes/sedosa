@@ -33,8 +33,58 @@ export default function InfoSections({ data }: { data: PublicData }) {
   const visitTitle = !where ? "Visit the studio" : n > 1 ? `${n === 2 ? "Two" : n} studios, ${where}` : `Find us in ${where}`;
   const contactLink = "flex items-center gap-2 border-b border-line py-3 hover:border-lacquer hover:text-lacquer";
 
+  // Photo wall: the owner's photos first, then the studio's real results.
+  const wall = [
+    ...data.gallery.map((g) => ({ key: g.url, src: g.url, alt: g.alt, builtIn: null as null | typeof resultOne })),
+    { key: "result-1", src: resultOne.src, alt: "A client's freshly shaped and tinted brows, close up", builtIn: resultOne },
+    { key: "result-2", src: resultTwo.src, alt: "Another client's fresh brow result, close up", builtIn: resultTwo },
+  ];
+  const FRAMES = [
+    { frame: "aspect-[3/4] rounded-[50%]", width: "w-[58vw] sm:w-56 lg:w-60" },
+    { frame: "aspect-[3/4] rounded-t-full rounded-b-[1.5rem]", width: "w-[54vw] sm:w-52 lg:w-56" },
+    { frame: "aspect-square rounded-full", width: "w-[46vw] sm:w-44 lg:w-48" },
+  ];
+
   return (
     <>
+      {/* The photo wall */}
+      <section aria-labelledby="results-title" className="on-dark overflow-hidden bg-oxblood py-20 text-plaster sm:py-28">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6 px-4 sm:px-6">
+          <div>
+            <h2 id="results-title" className="font-display text-[clamp(2.4rem,6vw,3.6rem)] font-medium leading-[1.02]">
+              Fresh from the chair
+            </h2>
+            <p className="mt-4 max-w-md text-lg">
+              Real work from the studio. Show yours off and tag {handle ? <span className="text-brass-light">@{handle}</span> : "the studio"} in your selfies.
+            </p>
+          </div>
+          {igUrl && (
+            <a href={igUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost-light">
+              <IconInstagram size={18} /> See more on Instagram
+            </a>
+          )}
+        </div>
+        <ul className="no-scrollbar mt-14 flex snap-x snap-mandatory items-center gap-6 overflow-x-auto px-4 pb-10 pt-2 sm:gap-8 sm:px-6 [&>li:first-child]:ms-auto [&>li:last-child]:me-auto">
+          {wall.map((w, i) => {
+            const f = FRAMES[i % FRAMES.length];
+            return (
+              <li key={w.key} className={`shrink-0 snap-center ${f.width} ${i % 2 ? "translate-y-8" : ""}`}>
+                <figure data-reveal style={revealDelay(Math.min(i, 5) * 110)}>
+                  <div className={`mirror ${f.frame} shadow-[0_0_0_2px_var(--color-brass),0_30px_50px_-24px_rgba(0,0,0,0.8)]`}>
+                    {w.builtIn ? (
+                      <Image src={w.builtIn} alt={w.alt} sizes="(min-width: 1024px) 15rem, 58vw" placeholder="blur" className="size-full object-cover" />
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={w.src} alt={w.alt} loading="lazy" decoding="async" className="size-full object-cover" />
+                    )}
+                  </div>
+                </figure>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
       {/* Policies */}
       <section aria-labelledby="policies-title" id="policies" className="scroll-mt-20 bg-plaster-2 py-20 sm:py-28">
         <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[5fr_7fr] lg:gap-16">
@@ -191,39 +241,16 @@ export default function InfoSections({ data }: { data: PublicData }) {
         </div>
       </section>
 
-      {/* The closing room */}
-      <section aria-labelledby="results-title" className="on-dark relative overflow-hidden bg-oxblood text-plaster">
-        <div className="mx-auto grid max-w-6xl items-center gap-14 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[1fr_1.1fr]">
-          <div className="text-center lg:text-left">
-            <h2 id="results-title" className="font-display text-[clamp(2.6rem,7vw,4.4rem)] font-medium leading-[1.02]">
-              Fresh from the chair
-            </h2>
-            <p className="mx-auto mt-5 max-w-md text-lg lg:mx-0">
-              Real brows from the studio. Show yours off and tag {handle ? <span className="text-brass-light">@{handle}</span> : "the studio"} in your selfies.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
-              <a href="#services" className="btn-rose">
-                Book your appointment <IconArrowRight size={17} />
-              </a>
-              {igUrl && (
-                <a href={igUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost-light">
-                  <IconInstagram size={18} /> See more on Instagram
-                </a>
-              )}
-            </div>
-          </div>
-          <div className="mx-auto flex w-full max-w-md items-end justify-center gap-5 sm:gap-7 lg:max-w-none">
-            {[
-              { img: resultOne, alt: "A client's freshly shaped and tinted brows, close up", cls: "w-[46%] max-w-[15rem]", delay: 0 },
-              { img: resultTwo, alt: "Another client's fresh brow result, close up", cls: "mb-10 w-[42%] max-w-[13.5rem]", delay: 140 },
-            ].map((r) => (
-              <figure key={r.alt} data-reveal style={revealDelay(r.delay)} className={r.cls}>
-                <div className="mirror aspect-[3/4] shadow-[0_0_0_2px_var(--color-brass),0_30px_50px_-24px_rgba(0,0,0,0.8)]">
-                  <Image src={r.img} alt={r.alt} sizes="(min-width: 1024px) 15rem, 46vw" placeholder="blur" className="size-full object-cover" />
-                </div>
-              </figure>
-            ))}
-          </div>
+      {/* The closing wall */}
+      <section aria-labelledby="closing-title" className="on-rose lacquer text-oxblood">
+        <div className="mx-auto max-w-3xl px-4 py-20 text-center sm:py-24">
+          <h2 id="closing-title" className="font-display text-[clamp(2.4rem,6vw,3.6rem)] font-medium leading-[1.02]">
+            Ready when you are
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-lg">Pick a service and an open time. Booking takes about a minute.</p>
+          <a href="#services" className="btn-primary mt-8">
+            Book your appointment <IconArrowRight size={17} />
+          </a>
         </div>
       </section>
     </>

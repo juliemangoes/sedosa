@@ -11,6 +11,7 @@ import {
   AIExternal,
   AIHome,
   AILayers,
+  AIPhoto,
   AILogout,
   AIMessage,
   AIMore,
@@ -47,6 +48,7 @@ export default function AdminShell({
     { href: "/admin/services", label: "Services", Icon: AISparkles },
     { href: "/admin/addons", label: "Add-ons", Icon: AILayers },
     { href: "/admin/forms", label: "Forms", Icon: AIClipboard },
+    { href: "/admin/photos", label: "Photos", Icon: AIPhoto },
   ];
   const studio: Item[] = [
     { href: "/admin/availability", label: "Hours & time off", Icon: AIClock },

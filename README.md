@@ -11,9 +11,9 @@ It ships with the studio's real menu, copied from the old Acuity page:
 ## What clients get
 
 - **A landing page designed as "The Powder Room"**: lacquered rose walls,
-  blush plaster, oxblood and brass, with Bodoni Moda and Jost (see
+  blush plaster, oxblood and brass, set in Jost throughout (see
   [DESIGN.md](DESIGN.md)). It includes:
-  - A hero that fits the first screen on any phone: the name set in Bodoni
+  - A hero that fits the first screen on any phone: the name set in spaced capitals
     across the width, the studio portrait in an oval vanity mirror, one line,
     and a reservation card with the **next three open times**. Tapping one
     opens booking with that time already selected.
@@ -109,6 +109,9 @@ and a "New" button on phones.
 - **Clients**: search, avatars, one-tap Call and WhatsApp, visit history,
   total paid, no-shows, next visit, private notes and their reminder
   preferences.
+- **Photos**: add up to 12 photos (several at once, straight from a phone) to
+  the landing page's photo wall, describe them for screen readers, reorder or
+  remove them. They hang after the menu, followed by the studio's real results.
 - **Services, add-ons, forms**: edit names, prices, durations, deposits,
   buffers, which add-ons and forms each service uses, and the questions on
   each form. **Upload a photo and a one-line description for each category**

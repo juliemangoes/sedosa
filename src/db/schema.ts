@@ -103,7 +103,7 @@ export const timeOff = pgTable("time_off", {
 /** Uploaded images (category photos, receipts), stored as re-encoded WebP. */
 export const media = pgTable("media", {
   id: serial("id").primaryKey(),
-  kind: text("kind").$type<"category" | "receipt">().notNull(),
+  kind: text("kind").$type<"category" | "receipt" | "gallery">().notNull(),
   mime: text("mime").notNull(),
   width: integer("width").notNull(),
   height: integer("height").notNull(),

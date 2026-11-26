@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import { and, desc, gte, inArray, sql } from "drizzle-orm";
+import type { Settings } from "@/lib/settings";
 import { getDb } from "@/db";
 import * as t from "@/db/schema";
 import { loadCatalog } from "@/lib/catalog";
@@ -62,6 +63,18 @@ async function nextOpenings(catalog: Awaited<ReturnType<typeof loadCatalog>>, zo
   }
 }
 
+/** The owner's photo-wall photos, in order, with their real dimensions. */
+async function galleryPhotos(settings: Settings, businessName: string): Promise<PublicData["gallery"]> {
+  const ids = settings.galleryPhotos.map((p) => p.mediaId);
+  if (!ids.length) return [];
+  const db = await getDb();
+  const rows = await db.select({ id: t.media.id, width: t.media.width, height: t.media.height }).from(t.media).where(inArray(t.media.id, ids));
+  const dims = new Map(rows.map((r) => [r.id, r]));
+  return settings.galleryPhotos
+    .filter((p) => dims.has(p.mediaId))
+    .map((p) => ({ url: mediaUrl(p.mediaId)!, alt: p.alt || `A photo from ${businessName}`, width: dims.get(p.mediaId)!.width, height: dims.get(p.mediaId)!.height }));
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const { catalog, settings } = await load();
   const where = placesLabel(catalog.locations.map((l) => cityFromAddress(l.address)));
@@ -80,7 +93,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const db = await getDb();
   const [{ catalog, settings }, sp, popularIds, me] = await Promise.all([load(), searchParams, popularServiceIds(), currentClient(db)]);
-  const [answers, openings] = await Promise.all([me ? savedAnswers(db, me.id) : Promise.resolve({}), nextOpenings(catalog, settings.timezone, popularIds)]);
+  const [answers, openings, gallery] = await Promise.all([
+    me ? savedAnswers(db, me.id) : Promise.resolve({}),
+    nextOpenings(catalog, settings.timezone, popularIds),
+    galleryPhotos(settings, settings.businessName),
+  ]);
 
   // Hours: one table when every studio keeps the same hours, otherwise one per studio.
   const hourGroups = catalog.locations.map((l) => ({ label: l.name, rows: hoursRows(l.weeklyHours) }));
@@ -113,6 +130,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     hours,
     categories: catalog.categories.map((c) => ({ id: c.id, name: c.name, description: c.description, imageUrl: mediaUrl(c.imageId) })),
     popularIds: popularIds.filter((id) => catalog.services.some((s) => s.id === id)),
+    gallery,
     services: catalog.services.map((s) => ({
       id: s.id,
       categoryId: s.categoryId,

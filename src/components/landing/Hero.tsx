@@ -12,7 +12,7 @@ export type Openings = {
 };
 
 /**
- * The powder room's front wall: lacquered rose, the name set in Bodoni across
+ * The powder room's front wall: lacquered rose, the name set in spaced capitals across
  * the width, the portrait in an oval vanity mirror over it, and the next open
  * times waiting on a reservation card.
  */
@@ -25,7 +25,7 @@ export default function Hero({ data, openings }: { data: PublicData; openings: O
       <div className="mx-auto max-w-7xl px-4 pb-8 pt-5 sm:px-6 sm:pt-8 lg:pb-12">
         <h1 id="hero-title" className="text-center">
           <span className="sr-only">{data.businessName}</span>
-          <span aria-hidden="true" className="font-display block select-none text-[clamp(4.4rem,22.5vw,15rem)] font-medium leading-[0.78] tracking-[0.015em]">
+          <span aria-hidden="true" className="font-display block select-none text-[clamp(3.4rem,17vw,14rem)] font-medium leading-[0.86] tracking-[0.1em] [margin-right:-0.1em]">
             SEDOSA
           </span>
         </h1>

@@ -412,6 +412,49 @@ export async function removeCategoryImageAction(fd: FormData) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// landing photos
+
+export async function saveGalleryAltAction(fd: FormData) {
+  await run("/admin/photos", async () => {
+    const db = await getDb();
+    const id = int(fd, "mediaId");
+    const settings = await getSettings(db);
+    await saveSettings(db, { galleryPhotos: settings.galleryPhotos.map((p) => (p.mediaId === id ? { ...p, alt: str(fd, "alt").slice(0, 200) } : p)) });
+    revalidatePath("/", "layout");
+    return "Description saved.";
+  });
+}
+
+export async function moveGalleryPhotoAction(fd: FormData) {
+  await run("/admin/photos", async () => {
+    const db = await getDb();
+    const id = int(fd, "mediaId");
+    const dir = str(fd, "dir") === "up" ? -1 : 1;
+    const list = [...(await getSettings(db)).galleryPhotos];
+    const i = list.findIndex((p) => p.mediaId === id);
+    const j = i + dir;
+    if (i < 0 || j < 0 || j >= list.length) return;
+    [list[i], list[j]] = [list[j], list[i]];
+    await saveSettings(db, { galleryPhotos: list });
+    revalidatePath("/", "layout");
+    return "Order saved.";
+  });
+}
+
+export async function removeGalleryPhotoAction(fd: FormData) {
+  await run("/admin/photos", async () => {
+    const db = await getDb();
+    const id = int(fd, "mediaId");
+    const settings = await getSettings(db);
+    if (!settings.galleryPhotos.some((p) => p.mediaId === id)) return;
+    await saveSettings(db, { galleryPhotos: settings.galleryPhotos.filter((p) => p.mediaId !== id) });
+    await deleteMedia(db, id);
+    revalidatePath("/", "layout");
+    return "Photo removed.";
+  });
+}
+
 export async function deleteCategoryAction(fd: FormData) {
   await run("/admin/services", async () => {
     const db = await getDb();

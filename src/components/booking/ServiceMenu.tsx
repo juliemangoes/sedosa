@@ -10,7 +10,7 @@ type Group = PublicData["categories"][number] & { services: PublicService[]; fro
 
 /**
  * The menu room. Categories hang on the rose wall as oval vanity mirrors (the
- * owner's photo in each, or a Bodoni monogram on rose glass) and act as tabs;
+ * owner's photo in each, or a monogram on rose glass) and act as tabs;
  * choosing one sends a light sheen across its glass and lays that category's
  * services out below on a plaster menu card. Search covers everything.
  */

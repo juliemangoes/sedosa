@@ -6,14 +6,14 @@ Visitor mode: **Operate**. The owner runs a one-person, two-studio business: tod
 
 THESIS: The same powder room, seen from the back office: a calm working tool where the world lends only type, palette, density and one signature move. Refuses the grey SaaS template with a single accent, and refuses dressing the tool up as a vanity.
 
-OWN-WORLD: Oxblood rail and phone tab bar; a warm blush-plaster working ground with white panels; lacquer rose for the current selection and primary emphasis; brass for focus rings and small numerals. Jost for all UI; Bodoni Moda only for page titles and the headline figures on Home and Finance. Standard controls throughout.
+OWN-WORLD: Oxblood rail and phone tab bar; a warm blush-plaster working ground with white panels; lacquer rose for the current selection and primary emphasis; brass for focus rings and small numerals. Jost for everything; page titles and headline figures larger and medium weight. (Bodoni removed at the user's request.) Standard controls throughout.
 
 STORY: The owner sees what needs doing today (who is next, what is unpaid, which reminders are due) and acts in one tap.
 
-FIRST VIEWPORT: Rail (desktop) or top bar plus bottom tabs (phone). Home opens on the date and greeting in Bodoni, then today's figures, then Next up and the day's timeline, with WhatsApp reminders and items needing attention beside them.
+FIRST VIEWPORT: Rail (desktop) or top bar plus bottom tabs (phone). Home opens on the date and a large greeting, then today's figures, then Next up and the day's timeline, with WhatsApp reminders and items needing attention beside them.
 
 FORM: Powder Room, Operate rendition. seed: none (pinned) — same user selection as the client site ("The dashboard follows the same world in a calmer, tool-first version." was part of the confirmed question).
 
-Signature move: headline figures and appointment times set in Bodoni numerals, like a reservation ledger, against Jost labels.
+Signature move: large tabular headline figures and appointment times against small tracked-caps labels, like a reservation ledger.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

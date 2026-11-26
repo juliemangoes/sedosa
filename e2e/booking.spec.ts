@@ -390,6 +390,31 @@ test("client opts in to WhatsApp; owner messages and schedules a reminder", asyn
   }
 });
 
+test("owner adds a photo and it hangs on the landing page's photo wall", async ({ page }) => {
+  await login(page);
+  await page.getByRole("link", { name: "Photos" }).first().click();
+  await expect(page.getByRole("heading", { level: 1, name: "Photos" })).toBeVisible();
+  await page.locator("#gallery-file").setInputFiles({ name: "studio.png", mimeType: "image/png", buffer: Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAEAAAAAwCAIAAAAuKetIAAAAU0lEQVR4nO3PQQ3AIADAQEAxalCHmIngcVnSU9DOu8/4s6UDXjWgNaA1oDWgNaA1oDWgNaA1oDWgNaA1oDWgNaA1oDWgNaA1oDWgNaA1oDWgNaB9EHcCQioGA6gAAAAASUVORK5CYII=", "base64") });
+  await expect(page.getByText("Photo 1", { exact: true })).toBeVisible();
+  await page.getByLabel("Describe it").first().fill("Brow mapping in the studio");
+  await page.getByRole("button", { name: "Save" }).first().click();
+  await expect(page.getByText("Description saved.")).toBeVisible();
+
+  await page.goto("/");
+  const wall = page.locator('section[aria-labelledby="results-title"]');
+  await expect(wall.getByRole("img", { name: "Brow mapping in the studio" })).toBeAttached();
+  // The studio's own results still hang after the owner's photos.
+  await expect(wall.getByRole("img")).toHaveCount(3);
+
+  // Removing it takes it off the wall.
+  await page.goto("/admin/photos");
+  page.once("dialog", (d) => d.accept());
+  await page.getByRole("button", { name: "Remove" }).first().click();
+  await expect(page.getByText("Photo removed.")).toBeVisible();
+  await page.goto("/");
+  await expect(wall.getByRole("img")).toHaveCount(2);
+});
+
 test("phone: hero CTA, compact steps and sticky continue @phone", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("link", { name: /^Book .+ on .+ at / }).first()).toBeInViewport();

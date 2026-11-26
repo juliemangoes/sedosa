@@ -11,7 +11,9 @@ const MAX_INPUT_BYTES = 12 * 1024 * 1024;
  * Normalizes an uploaded image: respects phone rotation, strips metadata
  * (including GPS), and re-encodes to WebP. Category photos are cropped to 4:3.
  */
-export async function processImage(input: Buffer, kind: "category" | "receipt") {
+export type MediaKind = "category" | "receipt" | "gallery";
+
+export async function processImage(input: Buffer, kind: MediaKind) {
   if (input.length > MAX_INPUT_BYTES) throw new MediaError("That image is too large (12 MB max).");
   let img;
   try {
@@ -25,11 +27,11 @@ export async function processImage(input: Buffer, kind: "category" | "receipt") 
     kind === "category"
       ? img.resize({ width: 1200, height: 900, fit: "cover", position: "attention" })
       : img.resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true });
-  const { data, info } = await out.webp({ quality: kind === "category" ? 80 : 75 }).toBuffer({ resolveWithObject: true });
+  const { data, info } = await out.webp({ quality: kind === "receipt" ? 75 : 80 }).toBuffer({ resolveWithObject: true });
   return { bytes: data, width: info.width, height: info.height, mime: "image/webp" };
 }
 
-export async function saveMedia(db: DB, kind: "category" | "receipt", input: Buffer) {
+export async function saveMedia(db: DB, kind: MediaKind, input: Buffer) {
   const p = await processImage(input, kind);
   const [row] = await db.insert(t.media).values({ kind, ...p }).returning({ id: t.media.id, width: t.media.width, height: t.media.height });
   return row;

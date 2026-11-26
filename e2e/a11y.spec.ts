@@ -74,6 +74,8 @@ test("menu details sheet and account pages are accessible", async ({ page }) => 
   const hint = await page.getByText(/here's the code for testing/).textContent();
   await page.getByLabel("6-digit code").fill(hint!.match(/(\d{6})/)![1]);
   await expect(page.getByRole("heading", { name: /^Hi/ })).toBeVisible();
+  // The title can land a moment after the heading on a client-side navigation.
+  await expect(page).toHaveTitle(/account/i);
   await audit(page, "account dashboard");
 });
 
@@ -89,6 +91,7 @@ test("owner dashboard pages are accessible", async ({ page }) => {
     ["/admin/finance", "Finance"],
     ["/admin/clients", "Clients"],
     ["/admin/settings", "Settings"],
+    ["/admin/photos", "Photos"],
   ]) {
     await page.goto(path);
     await expect(page.getByRole("heading", { level: 1, name: heading })).toBeVisible();

@@ -140,7 +140,7 @@
       },
       "figure": {
         "displayName": "Figure",
-        "purpose": "Prices, dates, times and headline numbers in Bodoni lining figures."
+        "purpose": "Prices, dates, times and headline numbers as large tabular figures."
       },
       "body": {
         "displayName": "Body",
@@ -262,15 +262,15 @@
       "refersTo": "reservation-card",
       "description": "Framed rose-white card with a brass rule inside its edge.",
       "html": "<div class=\"ds-card\"><div class=\"ds-card-in\"><h3>Next openings</h3><p>Brow Sculpt/Wax &middot; 30 min</p></div></div>",
-      "css": ".ds-card{background:#fff6f8;border-radius:28px;padding:6px;box-shadow:0 24px 48px -24px rgba(58,15,28,.55);max-width:22rem}.ds-card-in{border-radius:22px;box-shadow:inset 0 0 0 1px #b08a4f;padding:20px 24px;color:#3a0f1c}.ds-card-in h3{margin:0;font:500 1.6rem/1.15 'Bodoni Moda Variable','Bodoni Moda',Didot,serif}.ds-card-in p{margin:.25rem 0 0;font:400 .875rem 'Jost Variable',Jost,sans-serif;color:#6b3445}"
+      "css": ".ds-card{background:#fff6f8;border-radius:28px;padding:6px;box-shadow:0 24px 48px -24px rgba(58,15,28,.55);max-width:22rem}.ds-card-in{border-radius:22px;box-shadow:inset 0 0 0 1px #b08a4f;padding:20px 24px;color:#3a0f1c}.ds-card-in h3{margin:0;font:500 1.6rem/1.15 'Jost Variable',Jost,Futura,sans-serif}.ds-card-in p{margin:.25rem 0 0;font:400 .875rem 'Jost Variable',Jost,sans-serif;color:#6b3445}"
     },
     {
       "name": "Slot",
       "kind": "chip",
       "refersTo": "slot",
-      "description": "Time button with Bodoni figures; selected is oxblood.",
+      "description": "Time button with large tabular figures; selected is oxblood.",
       "html": "<button class=\"ds-slot\">10:30 <small>AM</small></button> <button class=\"ds-slot is-on\">11:00 <small>AM</small></button>",
-      "css": ".ds-slot{border:0;border-radius:16px;background:transparent;box-shadow:inset 0 0 0 1px #9c5a70;color:#3a0f1c;padding:.6rem 1rem;font:500 1.2rem 'Bodoni Moda Variable','Bodoni Moda',Didot,serif}.ds-slot small{font:500 .65rem 'Jost Variable',Jost,sans-serif;letter-spacing:.1em}.ds-slot:hover{background:#f7d9e1;box-shadow:inset 0 0 0 1px #9e2d5a}.ds-slot.is-on{background:#3a0f1c;color:#fff6f8;box-shadow:0 10px 22px -12px rgba(58,15,28,.8)}"
+      "css": ".ds-slot{border:0;border-radius:16px;background:transparent;box-shadow:inset 0 0 0 1px #9c5a70;color:#3a0f1c;padding:.6rem 1rem;font:500 1.2rem 'Jost Variable',Jost,Futura,sans-serif}.ds-slot small{font:500 .65rem 'Jost Variable',Jost,sans-serif;letter-spacing:.1em}.ds-slot:hover{background:#f7d9e1;box-shadow:inset 0 0 0 1px #9e2d5a}.ds-slot.is-on{background:#3a0f1c;color:#fff6f8;box-shadow:0 10px 22px -12px rgba(58,15,28,.8)}"
     },
     {
       "name": "Dashboard Nav Item",
@@ -283,10 +283,10 @@
   ],
   "narrative": {
     "northStar": "The Powder Room",
-    "overview": "Sedosa is a members'-club powder room you step into: lacquered rose walls, oxblood velvet, brass hardware, and the booking waiting on the vanity like a reservation card. The client site is the room itself. Rose owns whole walls, the name is set in Bodoni across the width, photographs hang in oval vanity mirrors, and the next open times sit in the first screen. Reading rooms (policies, prep, visit) step down to blush plaster, and the page closes in an oxblood room.\n\nThe owner's dashboard is the same house seen from the back office. It takes only type, palette, density and one signature move from the room: an oxblood rail, a plaster working ground with rose-white panels, standard controls, and headline figures set in Bodoni numerals like a reservation ledger.\n\nThe system refuses both category ruts: beige spa minimalism and the black-and-neon club flyer the studio's old graphics wore. Pink is the studio's binding colour; premium comes from craft and restraint, never claims.",
+    "overview": "Sedosa is a members'-club powder room you step into: lacquered rose walls, oxblood velvet, brass hardware, and the booking waiting on the vanity like a reservation card. The client site is the room itself. Rose owns whole walls, the name is set in spaced capitals across the width, photographs hang in oval vanity mirrors, and the next open times sit in the first screen. Reading rooms (policies, prep, visit) step down to blush plaster, and the page closes in an oxblood room.\n\nThe owner's dashboard is the same house seen from the back office. It takes only type, palette, density and one signature move from the room: an oxblood rail, a plaster working ground with rose-white panels, standard controls, and large tabular headline figures like a reservation ledger.\n\nThe system refuses both category ruts: beige spa minimalism and the black-and-neon club flyer the studio's old graphics wore. Pink is the studio's binding colour; premium comes from craft and restraint, never claims.",
     "keyCharacteristics": [
       "Committed colour: lacquer rose carries whole regions on client surfaces; oxblood is the ink and the primary action.",
-      "One display voice (Bodoni Moda, high contrast, medium weight) against one working voice (Jost).",
+      "One family, Jost, carrying every role through size, weight, case and spacing; nothing thin or fussy to read.",
       "Oval mirrors in thin brass rims frame every photograph.",
       "Lacquer is suggested by light, not faked: soft falloffs on the rose field, no bevels, chrome or glitter.",
       "Motion is one authored moment: a light sheen across a mirror's glass when it is chosen."
@@ -308,8 +308,8 @@
         "section": "colors"
       },
       {
-        "name": "The Two Voices Rule",
-        "body": "Bodoni for names, titles and numbers; Jost for everything you read at length or operate. Bodoni never sets a button, an input or a body paragraph.",
+        "name": "The One Family Rule",
+        "body": "Jost sets everything. Roles differ by size, weight (400 body, 500 headings and figures), case and tracking, never by adding a second family. No high-contrast serifs: the owner found them hard to read.",
         "section": "typography"
       },
       {
@@ -326,7 +326,7 @@
     "dos": [
       "**Do** set every text on lacquer rose in oxblood (5.38:1).",
       "**Do** frame photographs in the vanity mirror with its 2px brass rim.",
-      "**Do** set prices, dates, times and headline numbers in Bodoni figures with tabular lining numerals.",
+      "**Do** set prices, dates, times and headline numbers as large medium-weight tabular figures.",
       "**Do** use rose-white for panels and inputs, plaster for reading rooms, oxblood for the closing room.",
       "**Do** keep motion to one authored moment per surface (the mirror sheen) and 150–250ms state transitions in the dashboard.",
       "**Do** theme browser surfaces: rose selection with oxblood text, deep-lacquer caret, deep-lacquer scrollbar, deep-lacquer focus ring (brass-light on oxblood)."
@@ -338,7 +338,7 @@
       "**Don't** draw a bar down one side of a box to mark state; use a full outline or a tint.",
       "**Don't** use glyphs or emoji as icons; icons are drawn SVG in one stroke weight.",
       "**Don't** fake materials with bevels, chrome gradients or glitter; lacquer is light on a flat field.",
-      "**Don't** set buttons, inputs or body copy in Bodoni."
+      "**Don't** bring back a high-contrast serif or a second display family; legibility comes first."
     ]
   }
 }

@@ -49,6 +49,8 @@ export type PublicData = {
   categories: { id: number; name: string; description: string; imageUrl: string | null }[];
   /** Most-booked services recently (shown with a "Popular" badge). */
   popularIds: number[];
+  /** Photos the owner added under Photos, for the landing page's photo wall (in order). */
+  gallery: { url: string; alt: string; width: number; height: number }[];
   services: PublicService[];
   addons: { id: number; name: string; durationMin: number; priceCents: number }[];
   forms: PublicForm[];

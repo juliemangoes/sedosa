@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/jost/wght.css";
-import "@fontsource-variable/bodoni-moda/opsz.css";
 import "./globals.css";
 import RevealObserver from "@/components/RevealObserver";
 

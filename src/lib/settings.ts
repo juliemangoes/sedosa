@@ -98,6 +98,8 @@ export const settingsSchema = z.object({
     ]),
   /** Secret part of the owner's calendar subscription URL (rotate to revoke). */
   calendarFeedKey: z.string().default(""),
+  /** Photos for the landing page's photo wall, in display order (uploaded under Photos). */
+  galleryPhotos: z.array(z.object({ mediaId: z.number().int().positive(), alt: z.string().max(200).default("") })).default([]),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;

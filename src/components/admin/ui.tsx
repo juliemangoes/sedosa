@@ -4,7 +4,7 @@ import type { AppointmentStatus, DepositStatus } from "@/db/schema";
 
 /*
  * The back office of the powder room: plaster ground, rose-white panels, oxblood ink,
- * Jost for everything you operate and Bodoni only for page titles and headline figures.
+ * Jost throughout, with page titles and headline figures set larger and medium weight.
  */
 
 export function PageHeader({ title, subtitle, children }: { title: string; subtitle?: ReactNode; children?: ReactNode }) {
@@ -36,7 +36,7 @@ export function Card({ title, children, className = "", actions, subtitle }: { t
   );
 }
 
-/** Headline figure. The number is set in Bodoni, like a reservation ledger. */
+/** Headline figure: a large tabular number over a tracked-caps label. */
 export function Stat({ label, value, hint, tone = "default", icon }: { label: string; value: ReactNode; hint?: ReactNode; tone?: "default" | "good" | "bad" | "brand"; icon?: ReactNode }) {
   const brand = tone === "brand";
   const toneCls = brand ? "on-dark bg-oxblood text-plaster ring-oxblood" : tone === "good" ? "bg-panel ring-[#1f6b4a]/30" : tone === "bad" ? "bg-panel ring-[#a61b2b]/30" : "bg-panel ring-line";
