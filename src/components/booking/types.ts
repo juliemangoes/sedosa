@@ -51,7 +51,7 @@ export type PublicData = {
   popularIds: number[];
   /** Photos the owner added under Photos, for the landing page's photo wall (in order). */
   gallery: { url: string; alt: string; width: number; height: number }[];
-  /** The owner's chosen hero photo (null: use the studio portrait). */
+  /** The owner's chosen hero photo (null: the built-in brow photo). */
   hero: { url: string; alt: string; width: number; height: number } | null;
   artist: { name: string; bio: string };
   services: PublicService[];

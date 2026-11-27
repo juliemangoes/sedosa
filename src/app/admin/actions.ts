@@ -463,7 +463,7 @@ export async function setHeroPhotoAction(fd: FormData) {
     const next = settings.heroMediaId === id || !settings.galleryPhotos.some((p) => p.mediaId === id) ? null : id;
     await saveSettings(db, { heroMediaId: next });
     revalidatePath("/", "layout");
-    return next ? "This photo now leads your booking page." : "The hero is back to the studio portrait.";
+    return next ? "This photo now leads your booking page." : "The hero is back to the built-in brow photo.";
   });
 }
 

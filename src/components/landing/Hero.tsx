@@ -1,8 +1,8 @@
 import Image from "next/image";
-import portrait from "@/assets/brand/portrait-hero.jpg";
 import resultOne from "@/assets/brand/result-brows-1.jpg";
 import resultTwo from "@/assets/brand/result-brows-2.jpg";
 import type { PublicData } from "@/components/booking/types";
+import { HERO_PHOTO } from "@/content/photos";
 import { placesLabel, prettyName, shortDuration } from "@/lib/display";
 import { revealDelay } from "@/lib/motion";
 import { IconArrowRight } from "./icons";
@@ -36,74 +36,33 @@ export default function Hero({ data, openings }: { data: PublicData; openings: O
 
 const veil = "bg-[linear-gradient(to_top,rgba(36,6,16,0.8),rgba(36,6,16,0.3)_50%,rgba(36,6,16,0.05)_78%)]";
 
-function Title({ businessName, size }: { businessName: string; size: string }) {
-  return (
-    <h1 id="hero-title">
-      <span className="sr-only">{businessName}</span>
-      <span aria-hidden="true" className={`heading block select-none leading-[0.84] tracking-[0.03em] [margin-right:-0.03em] ${size}`}>
-        SEDOSA
-      </span>
-    </h1>
-  );
-}
-
 function HeroPhoto({ data }: { data: PublicData }) {
   const where = placesLabel(data.locations.map((l) => l.city)) || "Georgia";
-  const wide = !!data.hero && data.hero.width / data.hero.height >= 1.2;
-  const sub = (
-    <p className="mt-4 text-[0.78rem] font-medium uppercase tracking-[0.28em]">
-      <span className="block sm:inline">Beauty Studio</span>
-      <span className="hidden sm:inline"> · </span>
-      <span className="mt-1.5 block tracking-[0.18em] sm:mt-0 sm:inline sm:tracking-[0.28em]">{where}</span>
-    </p>
-  );
-
-  if (wide) {
-    const h = data.hero!;
-    return (
-      <section aria-labelledby="hero-title" className="p-2.5 sm:p-4">
-        <div className="relative isolate overflow-hidden rounded-[1.4rem] sm:rounded-[1.9rem]">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={h.url} alt={h.alt} width={h.width} height={h.height} fetchPriority="high" className="absolute inset-0 -z-10 size-full object-cover" />
-          <div aria-hidden="true" className={`absolute inset-0 -z-10 ${veil}`} />
-          <div className="flex min-h-[27rem] flex-col items-center justify-end px-5 pb-8 pt-24 text-center text-panel sm:min-h-[36rem] lg:min-h-[40rem] lg:pb-12">
-            <Title businessName={data.businessName} size="text-[clamp(4.6rem,17vw,11.5rem)]" />
-            {sub}
-            <a href="#services" className="btn-rose mt-7">
-              Book an appointment <IconArrowRight size={17} />
-            </a>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // The studio portrait is tall: behind the title on phones, beside it on desktop.
+  const h = data.hero;
   return (
     <section aria-labelledby="hero-title" className="p-2.5 sm:p-4">
-      <div className="relative isolate overflow-hidden rounded-[1.4rem] sm:rounded-[1.9rem] lg:grid lg:grid-cols-[minmax(0,1fr)_27rem] lg:bg-plaster xl:grid-cols-[minmax(0,1fr)_30rem]">
-        <div className="absolute inset-0 -z-10 lg:relative lg:inset-auto lg:z-auto lg:order-2 lg:min-h-[36rem]">
-          <Image
-            src={portrait}
-            alt={`A styled portrait at ${data.businessName}`}
-            fill
-            priority
-            sizes="(min-width: 1280px) 30rem, (min-width: 1024px) 27rem, 100vw"
-            placeholder="blur"
-            className="object-cover object-top lg:object-[50%_12%]"
-          />
-          <div aria-hidden="true" className={`absolute inset-0 lg:hidden ${veil}`} />
-        </div>
-        <div className="flex min-h-[27rem] flex-col items-center justify-end px-5 pb-8 pt-24 text-center text-panel sm:min-h-[36rem] lg:min-h-0 lg:items-start lg:justify-center lg:px-14 lg:py-16 lg:text-left lg:text-oxblood">
-          <Title businessName={data.businessName} size="text-[clamp(4.6rem,19vw,9.5rem)]" />
-          {sub}
-          <p className="mt-6 hidden max-w-sm text-lg leading-snug lg:block">
-            Brows, Korean lash lifts, PMU and waxing. Pick a service, choose an open time, and you&apos;re booked.
+      <div className="relative isolate overflow-hidden rounded-[1.4rem] bg-oxblood sm:rounded-[1.9rem]">
+        {h ? (
+          // The owner's chosen photo (already resized when it was uploaded).
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={h.url} alt={h.alt} width={h.width} height={h.height} fetchPriority="high" className="absolute inset-0 -z-10 size-full object-cover" />
+        ) : (
+          <Image src={HERO_PHOTO.image} alt={HERO_PHOTO.alt} fill priority sizes="(min-width: 1280px) 78rem, 100vw" placeholder="blur" className="-z-10 object-cover object-[50%_40%]" />
+        )}
+        <div aria-hidden="true" className={`absolute inset-0 -z-10 ${veil}`} />
+        <div className="flex min-h-[27rem] flex-col items-center justify-end px-5 pb-8 pt-24 text-center text-panel sm:min-h-[36rem] lg:min-h-[40rem] lg:pb-12">
+          <h1 id="hero-title">
+            <span className="sr-only">{data.businessName}</span>
+            <span aria-hidden="true" className="heading block select-none text-[clamp(4.6rem,18vw,11.5rem)] leading-[0.84] tracking-[0.03em] [margin-right:-0.03em]">
+              SEDOSA
+            </span>
+          </h1>
+          <p className="mt-4 text-[0.78rem] font-medium uppercase tracking-[0.28em]">
+            <span className="block sm:inline">Beauty Studio</span>
+            <span className="hidden sm:inline"> · </span>
+            <span className="mt-1.5 block tracking-[0.18em] sm:mt-0 sm:inline sm:tracking-[0.28em]">{where}</span>
           </p>
-          <a href="#services" className="btn-rose mt-7 lg:hidden">
-            Book an appointment <IconArrowRight size={17} />
-          </a>
-          <a href="#services" className="btn-primary mt-8 hidden lg:inline-flex">
+          <a href="#services" className="btn-rose mt-7">
             Book an appointment <IconArrowRight size={17} />
           </a>
         </div>

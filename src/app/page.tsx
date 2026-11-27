@@ -1,3 +1,4 @@
+import { builtInCategoryPhoto } from "@/content/photos";
 import type { Metadata } from "next";
 import { cache } from "react";
 import { and, desc, gte, inArray, sql } from "drizzle-orm";
@@ -130,7 +131,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     depositCents,
     hoursHeadline: openRow ? `${openRow.days} · ${openRow.hours}` : "By appointment",
     hours,
-    categories: catalog.categories.map((c) => ({ id: c.id, name: c.name, description: c.description, imageUrl: mediaUrl(c.imageId) })),
+    categories: catalog.categories.map((c) => ({ id: c.id, name: c.name, description: c.description, imageUrl: mediaUrl(c.imageId) ?? builtInCategoryPhoto(c.name) })),
     popularIds: popularIds.filter((id) => catalog.services.some((s) => s.id === id)),
     gallery: gallery.map(({ mediaId: _id, ...g }) => g),
     hero: (() => {

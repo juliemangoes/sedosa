@@ -14,14 +14,16 @@ It ships with the studio's real menu, copied from the old Acuity page:
   booking site: a rose-white page in a rose frame, condensed Oswald capitals
   for headings and Jost for everything else (see [DESIGN.md](DESIGN.md)).
   It includes:
-  - A big rounded **hero photo** with SEDOSA in tall capitals: the studio
-    portrait, or any wide photo the owner marks as the hero in the dashboard.
+  - A big rounded **hero photo** with SEDOSA in tall capitals: a brow-mapping
+    shot, or any photo the owner marks as the hero in the dashboard.
   - **Next openings** right under it (inside the first screen on phones): the
     next three open times. Tapping one opens booking with that time selected.
   - **Meet your artist**: the owner's name and bio (from Settings) beside two
     photos; until those are filled in, a short studio welcome.
   - **Our services**: a photo card per category with its name on a wine pill
-    and a one-line description (photos and lines edited in the dashboard).
+    and a one-line description. Built-in photos cover brows, lash lifts,
+    packages, lash removal and PMU until the owner uploads their own in the
+    dashboard (waxing needs one).
     Swipe on phones, a grid on larger screens, arrow keys for keyboard users;
     picking a card shows that category's services right below, and
     "Next: …" walks through them in order. Search

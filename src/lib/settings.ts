@@ -100,7 +100,7 @@ export const settingsSchema = z.object({
   calendarFeedKey: z.string().default(""),
   /** Photos for the landing page's photo wall, in display order (uploaded under Photos). */
   galleryPhotos: z.array(z.object({ mediaId: z.number().int().positive(), alt: z.string().max(200).default("") })).default([]),
-  /** The photo-wall photo shown large in the landing page hero (null = the studio portrait). */
+  /** The photo-wall photo shown large in the landing page hero (null = the built-in brow photo). */
   heroMediaId: z.number().int().positive().nullable().default(null),
   /** "Meet your artist" on the landing page; empty shows a short studio welcome instead. */
   artistName: z.string().max(80).default(""),

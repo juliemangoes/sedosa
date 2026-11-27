@@ -1,7 +1,7 @@
 # Surface brief: client site (landing, booking flow, confirmation, account)
 
 Scope: `/`, the booking flow, `/booking/[token]`, `/account`. Visitor mode: **Persuade** (landing) flowing into a short task (booking).
-Audience and job: Sedosa clients, mostly on phones from Instagram, choosing a brow/lash/wax service and an open time. Proof on hand: real menu and prices, policies, two real result photos, the studio portrait, owner-uploaded category photos. No reviews or claims exist; none may be invented.
+Audience and job: Sedosa clients, mostly on phones from Instagram, choosing a brow/lash/wax service and an open time. Proof on hand: real menu and prices, policies, two real result photos, the studio portrait, six licensed treatment photos the owner supplied (in /photos), owner-uploaded category and photo-wall photos. No reviews or claims exist; none may be invented.
 Constraint: pink stays the studio colour; the chrome logo, black-satin/neon look and playful voice are replaceable. Must feel high class and premium, not white or sterile.
 
 ## Direction contract
@@ -12,7 +12,7 @@ OWN-WORLD: A rose-white sheet in a lacquered rose frame; blush cards inside it; 
 
 STORY: The visitor understands this is a polished studio for brows, lashes and waxing in Covington and Decatur, believes the work is premium from the room itself and the real results, and books an open time within a few taps.
 
-FIRST VIEWPORT: Inside the rose frame, a big rounded hero photo with SEDOSA in huge rose-white condensed capitals low and centred, "Beauty Studio" and the cities beneath, and a rose Book button (desktop with the tall studio portrait: blush left with oxblood SEDOSA, portrait right; a wide owner-chosen photo fills the frame on every screen). Directly under it, the Next openings strip with three tappable times and "See all times", inside the first screen on phones. Book is also in the header.
+FIRST VIEWPORT: Inside the rose frame, a big rounded hero photo (the owner's licensed brow-mapping shot, or a photo they mark as the hero) with SEDOSA in huge rose-white condensed capitals low and centred, "Beauty Studio" and the cities beneath, and a rose Book button. Directly under it, the Next openings strip with three tappable times and "See all times", inside the first screen on phones. Book is also in the header.
 
 FORM: Powder Room. seed: none (pinned) — the user selected "The Powder Room": "A members'-club powder room: lacquered rose walls, oxblood velvet, brass details. Big Bodoni wordmark, oval vanity-mirror photo frames, and the next open times sitting in the first screen like a reservation card." (The concept roll could not run: the skill launcher was blocked in this environment, so the user chose from three derived directions plus the category standard.)
 

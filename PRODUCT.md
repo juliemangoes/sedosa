@@ -45,6 +45,7 @@ The studio's own booking home rather than a marketplace listing: real availabili
 
 - `src/assets/brand/portrait.png`: a styled studio portrait (a neon ring and sparkles are baked into the image; the inner photograph can be cropped).
 - `src/assets/brand/results.jpg`: two real brow results shown inside phone frames.
+- `photos/`: six treatment photos (brow mapping, brow tinting, lash work, microblading) the owner holds a licence for. Resized copies in `src/assets/photos/` serve as the default hero and category photos. They show the services, not this studio's clients, so they are never presented as Sedosa's own results.
 - Category photos, photo-wall photos and an optional hero photo the owner uploads in the dashboard (stored in the database).
 - The owner's name and bio for "Meet your artist", once entered in Settings.
 - The real menu with prices, durations and deposits; policies; hours; city names.
