@@ -421,8 +421,15 @@ test("owner adds a photo and it hangs on the landing page's photo wall", async (
 
 test("phone: hero CTA, compact steps and sticky continue @phone", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("link", { name: /^Book .+ on .+ at / }).first()).toBeInViewport();
+  // The hero photo fills the whole first screen; the next openings follow on scroll.
+  const hero = await page.locator('section[aria-labelledby="hero-title"]').boundingBox();
+  expect(hero!.height).toBeGreaterThanOrEqual(page.viewportSize()!.height - 1);
+  await expect(page.getByRole("link", { name: "Book an appointment", exact: true })).toBeInViewport();
   await expect(page.getByRole("link", { name: "Book now" })).toBeInViewport();
+  const firstSlot = page.getByRole("link", { name: /^Book .+ on .+ at / }).first();
+  await expect(firstSlot).not.toBeInViewport();
+  await firstSlot.scrollIntoViewIfNeeded();
+  await expect(firstSlot).toBeInViewport();
   // Category cards swipe sideways on phones without widening the page.
   await page.getByRole("tab", { name: /Waxing/ }).click();
   await page.getByRole("button", { name: "Book Chin Wax!" }).click();

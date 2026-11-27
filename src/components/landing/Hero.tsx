@@ -40,32 +40,33 @@ function HeroPhoto({ data }: { data: PublicData }) {
   const where = placesLabel(data.locations.map((l) => l.city)) || "Georgia";
   const h = data.hero;
   return (
-    <section aria-labelledby="hero-title" className="p-2.5 sm:p-4">
-      <div className="relative isolate overflow-hidden rounded-[1.4rem] bg-oxblood sm:rounded-[1.9rem]">
-        {h ? (
-          // The owner's chosen photo (already resized when it was uploaded).
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={h.url} alt={h.alt} width={h.width} height={h.height} fetchPriority="high" className="absolute inset-0 -z-10 size-full object-cover" />
-        ) : (
-          <Image src={HERO_PHOTO.image} alt={HERO_PHOTO.alt} fill priority sizes="(min-width: 1280px) 78rem, 100vw" placeholder="blur" className="-z-10 object-cover object-[50%_40%]" />
-        )}
-        <div aria-hidden="true" className={`absolute inset-0 -z-10 ${veil}`} />
-        <div className="flex min-h-[27rem] flex-col items-center justify-end px-5 pb-8 pt-24 text-center text-panel sm:min-h-[36rem] lg:min-h-[40rem] lg:pb-12">
-          <h1 id="hero-title">
-            <span className="sr-only">{data.businessName}</span>
-            <span aria-hidden="true" className="heading block select-none text-[clamp(4.6rem,18vw,11.5rem)] leading-[0.84] tracking-[0.03em] [margin-right:-0.03em]">
-              SEDOSA
-            </span>
-          </h1>
-          <p className="mt-4 text-[0.78rem] font-medium uppercase tracking-[0.28em]">
-            <span className="block sm:inline">Beauty Studio</span>
-            <span className="hidden sm:inline"> · </span>
-            <span className="mt-1.5 block tracking-[0.18em] sm:mt-0 sm:inline sm:tracking-[0.28em]">{where}</span>
-          </p>
-          <a href="#services" className="btn-rose mt-7">
-            Book an appointment <IconArrowRight size={17} />
-          </a>
-        </div>
+    // Pulled up under the sticky header (h-16) so the photo fills the entire first screen.
+    <section aria-labelledby="hero-title" className="relative isolate -mt-16 flex h-svh min-h-[32rem] flex-col overflow-hidden bg-oxblood">
+      {h ? (
+        // The owner's chosen photo (already resized when it was uploaded).
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={h.url} alt={h.alt} width={h.width} height={h.height} fetchPriority="high" className="absolute inset-0 -z-10 size-full object-cover" />
+      ) : (
+        <Image src={HERO_PHOTO.image} alt={HERO_PHOTO.alt} fill priority sizes="100vw" placeholder="blur" className="-z-10 object-cover object-[25%_40%] sm:object-[50%_40%]" />
+      )}
+      {/* Wine veils: under the header at the top, under the title at the bottom */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(36,6,16,0.6),rgba(36,6,16,0)_9rem)]" />
+      <div aria-hidden="true" className={`absolute inset-0 -z-10 ${veil}`} />
+      <div className="mt-auto flex flex-col items-center px-5 pb-12 text-center text-panel sm:pb-16 lg:pb-20">
+        <h1 id="hero-title">
+          <span className="sr-only">{data.businessName}</span>
+          <span aria-hidden="true" className="heading block select-none text-[clamp(4.6rem,18vw,12.5rem)] leading-[0.84] tracking-[0.03em] [margin-right:-0.03em]">
+            SEDOSA
+          </span>
+        </h1>
+        <p className="mt-4 text-[0.78rem] font-medium uppercase tracking-[0.28em]">
+          <span className="block sm:inline">Beauty Studio</span>
+          <span className="hidden sm:inline"> · </span>
+          <span className="mt-1.5 block tracking-[0.18em] sm:mt-0 sm:inline sm:tracking-[0.28em]">{where}</span>
+        </p>
+        <a href="#services" className="btn-rose mt-7">
+          Book an appointment <IconArrowRight size={17} />
+        </a>
       </div>
     </section>
   );
@@ -76,8 +77,8 @@ function OpeningsStrip({ openings }: { openings: Openings | null }) {
   const name = prettyName(openings.serviceName);
   const href = (s: Openings["slots"][number]) => `/?service=${openings.serviceId}&slot=${encodeURIComponent(s.start)}&loc=${s.locationIds.join(",")}`;
   return (
-    <section aria-labelledby="openings-title" className="px-2.5 sm:px-4">
-      <div className="flex flex-col gap-4 rounded-[1.4rem] bg-plaster px-5 py-5 sm:rounded-[1.6rem] md:flex-row md:items-center md:gap-6 md:px-8">
+    <section aria-labelledby="openings-title" className="bg-plaster">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-7 sm:px-6 md:flex-row md:items-center md:gap-6 md:py-8">
         <div className="md:mr-auto">
           <h2 id="openings-title" className="heading text-[1.6rem] text-oxblood">
             Next openings
@@ -134,7 +135,7 @@ function MeetArtist({ data }: { data: PublicData }) {
     .filter(Boolean);
 
   return (
-    <section id="artist" aria-labelledby="artist-title" className="scroll-mt-20 px-2.5 pt-12 sm:px-4 sm:pt-16">
+    <section id="artist" aria-labelledby="artist-title" className="scroll-mt-20 px-4 pt-14 sm:px-6 sm:pt-20">
       <div className="mx-auto grid max-w-5xl gap-8 rounded-[1.75rem] bg-plaster p-6 sm:p-10 md:grid-cols-[1.15fr_1fr] md:items-center md:gap-12">
         <div>
           <h2 id="artist-title" className="heading text-[clamp(2.1rem,5vw,2.9rem)] text-oxblood">

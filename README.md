@@ -11,13 +11,13 @@ It ships with the studio's real menu, copied from the old Acuity page:
 ## What clients get
 
 - **A landing page designed as "The Powder Room"**, laid out like a boutique
-  booking site: a rose-white page in a rose frame, condensed Oswald capitals
-  for headings and Jost for everything else (see [DESIGN.md](DESIGN.md)).
+  booking site in rose, blush and wine, with condensed Oswald capitals for
+  headings and Jost for everything else (see [DESIGN.md](DESIGN.md)).
   It includes:
-  - A big rounded **hero photo** with SEDOSA in tall capitals: a brow-mapping
-    shot, or any photo the owner marks as the hero in the dashboard.
-  - **Next openings** right under it (inside the first screen on phones): the
-    next three open times. Tapping one opens booking with that time selected.
+  - A **full-screen hero photo** with SEDOSA in tall capitals under a
+    transparent header: a brow-mapping shot, or any photo the owner marks as
+    the hero in the dashboard.
+  - **Next openings** as soon as you scroll: the next three open times. Tapping one opens booking with that time selected.
   - **Meet your artist**: the owner's name and bio (from Settings) beside two
     photos; until those are filled in, a short studio welcome.
   - **Our services**: a photo card per category with its name on a wine pill

@@ -38,7 +38,9 @@ export default function BookingApp({ data, initialServiceId, initialSlot, hero, 
   const [service, setService] = useState<PublicService | null>(initialService);
   const [location, setLocation] = useState<LocationChoice>(initialService && initialService.locationIds.length === 1 ? initialService.locationIds[0] : "any");
   const [addonIds, setAddonIds] = useState<number[]>([]);
-  const [slot, setSlot] = useState<Slot | null>(slotPicked ? { start: initialSlot!.start, locationIds: initialSlot!.locationIds.length ? initialSlot!.locationIds : initialService!.locationIds } : null);
+  const [slot, setSlot] = useState<Slot | null>(
+    slotPicked ? { start: initialSlot!.start, locationIds: initialSlot!.locationIds.length ? initialSlot!.locationIds : initialService!.locationIds } : null,
+  );
   const [notice, setNotice] = useState<string | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const browseScroll = useRef(0);
@@ -98,15 +100,13 @@ export default function BookingApp({ data, initialServiceId, initialSlot, hero, 
 
   if (step === "browse" || !service) {
     return (
-      <div id="top" className="min-h-screen bg-rose">
+      <div id="top" className="min-h-screen bg-panel">
         <SiteHeader businessName={data.businessName} mode="browse" onExit={exit} account={account} accountsEnabled={accountsEnabled} />
-        <div className="px-2.5 sm:px-5">
-          <main className="mx-auto max-w-[78rem] overflow-clip rounded-[1.75rem] bg-panel shadow-[0_30px_60px_-40px_rgba(58,15,28,0.6)] sm:rounded-[2.25rem]">
-            {hero}
-            <ServiceMenu data={data} onBook={chooseService} />
-            {sections}
-          </main>
-        </div>
+        <main>
+          {hero}
+          <ServiceMenu data={data} onBook={chooseService} />
+          {sections}
+        </main>
         {footer}
         <StickyBookBar />
       </div>

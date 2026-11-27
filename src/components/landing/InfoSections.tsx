@@ -104,8 +104,8 @@ export default function InfoSections({ data }: { data: PublicData }) {
       )}
 
       {/* Policies */}
-      <section aria-labelledby="policies-title" id="policies" className="scroll-mt-20 px-2.5 sm:px-4">
-        <div className="mx-auto grid max-w-[74rem] gap-12 rounded-[1.75rem] bg-plaster px-5 py-14 sm:px-10 sm:py-20 lg:grid-cols-[5fr_7fr] lg:gap-16 lg:px-14">
+      <section aria-labelledby="policies-title" id="policies" className="scroll-mt-20 px-4 sm:px-6">
+        <div className="mx-auto grid max-w-6xl gap-12 rounded-[1.75rem] bg-plaster px-5 py-14 sm:px-10 sm:py-20 lg:grid-cols-[5fr_7fr] lg:gap-16 lg:px-14">
           <div>
             <h2 id="policies-title" className="heading text-[clamp(2.4rem,7vw,3.75rem)] text-oxblood">
               Booking policies
@@ -263,8 +263,8 @@ export default function InfoSections({ data }: { data: PublicData }) {
       </section>
 
       {/* The closing wall */}
-      <section aria-labelledby="closing-title" className="p-2.5 sm:p-4">
-        <div className="on-rose lacquer rounded-[1.4rem] px-5 py-16 text-center text-oxblood sm:rounded-[1.9rem] sm:py-20">
+      <section aria-labelledby="closing-title" className="on-rose lacquer text-oxblood">
+        <div className="mx-auto max-w-3xl px-5 py-16 text-center sm:py-24">
           <h2 id="closing-title" className="heading text-[clamp(2.6rem,8vw,4.5rem)]">
             Ready when you are
           </h2>
@@ -282,7 +282,7 @@ export function SiteFooter({ data }: { data: PublicData }) {
   const phone = normalizePhone(data.phone);
   const link = "underline-offset-[0.4em] hover:underline";
   return (
-    <footer className="on-rose bg-rose pb-28 pt-10 text-oxblood sm:pb-10">
+    <footer className="on-rose border-t border-oxblood/15 bg-rose pb-28 pt-10 text-oxblood sm:pb-10">
       <div className="mx-auto flex max-w-[78rem] flex-col gap-8 px-5 sm:flex-row sm:items-start sm:justify-between sm:px-8">
         <div>
           <Wordmark businessName={data.businessName} size="lg" />

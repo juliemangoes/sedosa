@@ -174,9 +174,7 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
               >
                 <span className="relative block">
                   <span
-                    className={`photo-frame block aspect-[4/5] rounded-[1.4rem] transition duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1 sm:aspect-square lg:aspect-[5/4] ${
-                      on ? "ring-2 ring-lacquer ring-offset-4 ring-offset-panel" : ""
-                    }`}
+                    className={`photo-frame block aspect-[4/5] rounded-[1.4rem] transition duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1 sm:aspect-square lg:aspect-[5/4]`}
                   >
                     {g.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element

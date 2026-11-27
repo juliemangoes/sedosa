@@ -14,6 +14,7 @@ type Props = {
 };
 
 function AccountLink({ account }: { account: AccountProfile | null }) {
+  // The circle takes the header's text colour, so it reads on the photo and on rose.
   const initial = (account?.firstName || account?.email || "?").slice(0, 1).toUpperCase();
   return (
     <a
@@ -24,7 +25,7 @@ function AccountLink({ account }: { account: AccountProfile | null }) {
       <span
         aria-hidden="true"
         className={`grid size-10 place-items-center rounded-full transition duration-200 ${
-          account ? "font-display bg-oxblood text-lg text-brass-light" : "ring-1 ring-oxblood group-hover:bg-oxblood group-hover:text-plaster"
+          account ? "font-display bg-oxblood text-lg text-brass-light" : "ring-1 ring-current group-hover:bg-oxblood group-hover:text-plaster group-hover:ring-oxblood"
         }`}
       >
         {account ? (
@@ -52,11 +53,14 @@ export default function SiteHeader({ businessName, mode, onExit, account = null,
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // On the landing page the header starts out transparent over the full-screen hero photo.
+  const overlay = mode === "browse" && !scrolled;
+
   return (
     <header
-      className={`on-rose sticky top-0 z-30 bg-rose text-oxblood transition-shadow duration-300 ${
-        scrolled ? "shadow-[0_1px_0_var(--color-brass),0_14px_30px_-20px_rgba(58,15,28,0.6)]" : ""
-      }`}
+      className={`sticky top-0 z-30 transition-[background-color,box-shadow] duration-200 ${
+        overlay ? "on-dark bg-transparent text-panel" : "on-rose bg-rose text-oxblood"
+      } ${scrolled ? "shadow-[0_1px_0_rgba(58,15,28,0.12),0_14px_30px_-20px_rgba(58,15,28,0.6)]" : ""}`}
     >
       {mode === "browse" && (
         <a
@@ -95,7 +99,7 @@ export default function SiteHeader({ businessName, mode, onExit, account = null,
             </nav>
             <div className="flex items-center gap-2 sm:gap-3">
               {(accountsEnabled || account) && <AccountLink account={account} />}
-              <a href="#services" className="btn-primary min-h-0 px-5 py-2.5">
+              <a href="#services" className={`${overlay ? "btn-rose" : "btn-primary"} min-h-0 px-4 py-2.5 sm:px-5`}>
                 Book now
               </a>
             </div>
