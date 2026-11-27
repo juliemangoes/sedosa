@@ -98,7 +98,7 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
 
       <section className="on-rose lacquer pb-28 pt-12 text-center text-oxblood sm:pt-16">
         <div className="mx-auto max-w-2xl px-4">
-          <h1 className="font-display animate-rise text-[clamp(2.4rem,8vw,3.8rem)] font-medium leading-[1.02]">{status.title}</h1>
+          <h1 className="heading animate-rise text-[clamp(2.4rem,8vw,3.8rem)]">{status.title}</h1>
           <p className="mt-4 animate-rise text-lg [animation-delay:120ms]">{status.sub}</p>
           {sp.canceled && holdActive && <p className="mt-2">Payment was canceled. You can try again below.</p>}
         </div>
@@ -195,7 +195,7 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
 
         {confirmed && a.depositStatus === "due" && !stripeEnabled() && (
           <section aria-labelledby="deposit-title" className="on-dark rounded-[1.75rem] bg-oxblood p-6 text-plaster sm:p-8">
-            <h2 id="deposit-title" className="font-display text-[1.75rem] font-medium leading-tight">
+            <h2 id="deposit-title" className="heading text-[1.75rem]">
               One more step: your {money(a.depositCents)} deposit
             </h2>
             <p className="mt-3 leading-relaxed">{settings.manualDepositInstructions}</p>
@@ -226,13 +226,13 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
 
         {confirmed && (guides.length > 0 || PREP_ALWAYS.length > 0) && (
           <section aria-labelledby="prep-title" className={panel}>
-            <h2 id="prep-title" className="font-display text-[1.75rem] font-medium leading-tight">
+            <h2 id="prep-title" className="heading text-[1.75rem]">
               Get ready for your appointment
             </h2>
             <div className={`mt-5 grid gap-8 ${guides.length > 1 ? "sm:grid-cols-2" : ""}`}>
               {guides.map((g) => (
                 <div key={g.id}>
-                  {guides.length > 1 && <h3 className="font-display mb-3 border-b border-line pb-2 text-xl font-medium">{g.title}</h3>}
+                  {guides.length > 1 && <h3 className="heading mb-3 border-b border-line pb-2 text-xl">{g.title}</h3>}
                   <ul className="space-y-3">
                     {g.items.map((it) => (
                       <li key={it} className="flex gap-3 leading-snug">
@@ -256,7 +256,7 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
         {confirmed && (signedInHere || accountsEnabled()) && (
           <section className="flex flex-col items-start gap-5 rounded-[1.75rem] bg-plaster-2 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
             <div>
-              <h2 className="font-display text-[1.5rem] font-medium leading-tight">{signedInHere ? "It's in your account" : "Keep all your bookings in one place"}</h2>
+              <h2 className="heading text-[1.5rem]">{signedInHere ? "It's in your account" : "Keep all your bookings in one place"}</h2>
               <p className="mt-1.5 text-ink-soft">
                 {signedInHere ? "See every upcoming and past visit, and book again in a tap." : "Create a free account with this email: no password, and booking next time is quicker."}
               </p>
@@ -269,7 +269,7 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
 
         {(confirmed || a.status === "pending") && (
           <details className="group rounded-[1.75rem] bg-panel ring-1 ring-line">
-            <summary className="font-display flex cursor-pointer list-none items-center justify-between gap-3 p-6 text-[1.5rem] font-medium sm:px-8 [&::-webkit-details-marker]:hidden">
+            <summary className="heading flex cursor-pointer list-none items-center justify-between gap-3 p-6 text-[1.5rem] sm:px-8 [&::-webkit-details-marker]:hidden">
               Booking policies
               <IconChevronDown className="transition group-open:rotate-180" />
             </summary>
@@ -295,7 +295,7 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
 
       {confirmed && (
         <section className="on-dark bg-oxblood px-4 py-16 text-center text-plaster">
-          <p className="font-display text-[clamp(2.4rem,7vw,3.6rem)] font-medium leading-none">Thank you</p>
+          <p className="heading text-[clamp(2.4rem,7vw,3.6rem)]">Thank you</p>
           <p className="mx-auto mt-4 max-w-md">{settings.confirmationNote}</p>
           {ig && (
             <a href={`https://instagram.com/${ig}`} target="_blank" rel="noopener noreferrer" className="btn-ghost-light mt-7">

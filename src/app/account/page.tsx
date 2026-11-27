@@ -54,13 +54,13 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       <div className="min-h-screen">
         {header}
         <section className="on-rose lacquer pb-28 pt-12 text-center text-oxblood sm:pt-16">
-          <h1 className="font-display animate-rise px-4 text-[clamp(2.4rem,8vw,3.8rem)] font-medium leading-[1.02]">Your account</h1>
+          <h1 className="heading animate-rise px-4 text-[clamp(2.4rem,8vw,3.8rem)]">Your account</h1>
           <p className="mx-auto mt-4 max-w-md animate-rise px-4 text-lg [animation-delay:120ms]">Sign in with your email to see your appointments and book faster.</p>
         </section>
         <main className="relative mx-auto -mt-20 grid max-w-5xl gap-8 px-4 pb-20 sm:px-6 lg:grid-cols-[1fr_20rem]">
           <section aria-label="Sign in" className="animate-rise rounded-[2rem] bg-panel p-1.5 shadow-[0_30px_60px_-30px_rgba(58,15,28,0.65)] [animation-delay:200ms]">
             <div className="rounded-[1.6rem] p-6 ring-1 ring-brass sm:p-8">
-            <h2 className="font-display text-[1.75rem] font-medium leading-tight">Sign in or create your account</h2>
+            <h2 className="heading text-[1.75rem]">Sign in or create your account</h2>
             {sp.error === "link" && (
               <p role="alert" className="mt-3 rounded-2xl bg-panel px-4 py-2.5 text-sm font-medium text-[#a61b2b] ring-1 ring-[#a61b2b]/50">
                 That sign-in link has expired or was already used. Request a new code below.
@@ -110,7 +110,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       <section className="on-rose lacquer pb-28 pt-12 text-oxblood sm:pt-16">
         <div className="mx-auto flex max-w-5xl flex-wrap items-end justify-between gap-4 px-4 sm:px-6">
           <div>
-            <h1 className="font-display animate-rise text-[clamp(2.4rem,8vw,3.8rem)] font-medium leading-[1.02]">Hi{me.firstName ? `, ${me.firstName}` : ""}</h1>
+            <h1 className="heading animate-rise text-[clamp(2.4rem,8vw,3.8rem)]">Hi{me.firstName ? `, ${me.firstName}` : ""}</h1>
             <p className="mt-3 animate-rise text-lg [animation-delay:120ms]">
               {sp.welcome ? "You're signed in. " : ""}
               {upcoming.length ? `You have ${upcoming.length} upcoming appointment${upcoming.length === 1 ? "" : "s"}.` : "No upcoming appointments yet."}
@@ -195,7 +195,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
 
         <div className="grid gap-8 lg:grid-cols-[1fr_22rem]">
           <section aria-labelledby="past-title">
-            <h2 id="past-title" className="font-display text-[1.75rem] font-medium">
+            <h2 id="past-title" className="heading text-[1.75rem]">
               Past appointments
             </h2>
             {past.length === 0 ? (
@@ -224,7 +224,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
           </section>
 
           <section aria-labelledby="profile-title" className="h-fit rounded-[1.75rem] bg-panel p-6 ring-1 ring-line">
-            <h2 id="profile-title" className="font-display text-[1.75rem] font-medium">
+            <h2 id="profile-title" className="heading text-[1.75rem]">
               My details
             </h2>
             <div className="mt-4">

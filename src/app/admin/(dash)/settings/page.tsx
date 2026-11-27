@@ -122,6 +122,17 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
             </div>
           </Card>
 
+          <Card title="Meet your artist" subtitle="Shown on your booking page next to two of your photos. Leave empty to show a short studio welcome instead.">
+            <div className="grid gap-4">
+              <Field label="Your name" htmlFor="artistName">
+                <input id="artistName" name="artistName" defaultValue={s.artistName} maxLength={80} placeholder="e.g. Jasmine" className={inputCls} />
+              </Field>
+              <Field label="About you" htmlFor="artistBio" hint="A few sentences about you and your work. Line breaks are kept.">
+                <textarea id="artistBio" name="artistBio" rows={5} defaultValue={s.artistBio} maxLength={1200} className={inputCls} />
+              </Field>
+            </div>
+          </Card>
+
           <Card title="WhatsApp" subtitle="Message clients in one tap and send reminders on WhatsApp.">
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Studio WhatsApp number" htmlFor="whatsappNumber" hint="Shown on your booking page as a “WhatsApp me” link. Leave empty to hide it.">

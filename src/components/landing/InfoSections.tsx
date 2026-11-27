@@ -7,6 +7,7 @@ import { placesLabel, priceLabel } from "@/lib/display";
 import { prettyPhone, normalizePhone } from "@/lib/format";
 import { revealDelay } from "@/lib/motion";
 import { IconArrowRight, IconCheck, IconInstagram } from "./icons";
+import Wordmark from "./Wordmark";
 
 /** A framed panel: rose-white card with a brass rule set just inside its edge. */
 function Framed({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -31,68 +32,94 @@ export default function InfoSections({ data }: { data: PublicData }) {
   const where = placesLabel(data.locations.map((l) => l.city));
   const n = data.locations.length;
   const visitTitle = !where ? "Visit the studio" : n > 1 ? `${n === 2 ? "Two" : n} studios, ${where}` : `Find us in ${where}`;
-  const contactLink = "flex items-center gap-2 border-b border-line py-3 hover:border-lacquer hover:text-lacquer";
+  const contactLink = "block border-b border-line py-3 hover:border-lacquer hover:text-lacquer";
 
   // Photo wall: the owner's photos first, then the studio's real results.
   const wall = [
-    ...data.gallery.map((g) => ({ key: g.url, src: g.url, alt: g.alt, builtIn: null as null | typeof resultOne })),
-    { key: "result-1", src: resultOne.src, alt: "A client's freshly shaped and tinted brows, close up", builtIn: resultOne },
-    { key: "result-2", src: resultTwo.src, alt: "Another client's fresh brow result, close up", builtIn: resultTwo },
+    ...data.gallery.map((g) => ({
+      key: g.url,
+      src: g.url,
+      alt: g.alt,
+      builtIn: null as null | typeof resultOne,
+    })),
+    {
+      key: "result-1",
+      src: resultOne.src,
+      alt: "A client's freshly shaped and tinted brows, close up",
+      builtIn: resultOne,
+    },
+    {
+      key: "result-2",
+      src: resultTwo.src,
+      alt: "Another client's fresh brow result, close up",
+      builtIn: resultTwo,
+    },
   ];
 
   return (
     <>
-      {/* The photo wall */}
-      <section aria-labelledby="results-title" className="on-dark overflow-hidden bg-oxblood py-20 text-plaster sm:py-28">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6 px-4 sm:px-6">
-          <div>
-            <h2 id="results-title" className="font-display text-[clamp(2.4rem,6vw,3.6rem)] font-medium leading-[1.02]">
-              Fresh from the chair
-            </h2>
-            <p className="mt-4 max-w-md text-lg">
-              Real work from the studio. Show yours off and tag {handle ? <span className="text-brass-light">@{handle}</span> : "the studio"} in your selfies.
-            </p>
+      {/* The photo wall (once the owner has added photos) */}
+      {data.gallery.length > 0 && (
+        <section aria-labelledby="results-title" className="overflow-hidden pb-16 pt-4 sm:pb-24">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6 px-4 sm:px-8">
+            <div>
+              <h2 id="results-title" className="heading text-[clamp(2.4rem,7vw,3.75rem)] text-oxblood">
+                Fresh from the chair
+              </h2>
+              <p className="mt-4 max-w-md text-lg text-ink-soft">
+                Real work from the studio. Show yours off and tag {handle ? <span className="font-medium text-lacquer">@{handle}</span> : "the studio"} in your selfies.
+              </p>
+            </div>
+            {igUrl && (
+              <a href={igUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary">
+                <IconInstagram size={18} /> See more on Instagram
+              </a>
+            )}
           </div>
-          {igUrl && (
-            <a href={igUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost-light">
-              <IconInstagram size={18} /> See more on Instagram
-            </a>
-          )}
-        </div>
-        <ul className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:gap-5 sm:px-6 [&>li:first-child]:ms-auto [&>li:last-child]:me-auto">
-          {wall.map((w, i) => {
-            return (
-              <li key={w.key} className="w-[72vw] shrink-0 snap-center sm:w-64 lg:w-72">
-                <figure data-reveal style={revealDelay(Math.min(i, 5) * 90)}>
-                  <div className="photo-frame aspect-[4/5] shadow-[0_30px_50px_-28px_rgba(0,0,0,0.85)]">
-                    {w.builtIn ? (
-                      <Image src={w.builtIn} alt={w.alt} sizes="(min-width: 1024px) 18rem, (min-width: 640px) 16rem, 72vw" placeholder="blur" className="size-full object-cover" />
-                    ) : (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={w.src} alt={w.alt} loading="lazy" decoding="async" className="size-full object-cover" />
-                    )}
-                  </div>
-                </figure>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
+          <ul className="no-scrollbar mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6 sm:gap-5 sm:px-8 [&>li:first-child]:ms-auto [&>li:last-child]:me-auto">
+            {wall.map((w, i) => {
+              return (
+                <li key={w.key} className="w-[68vw] shrink-0 snap-center sm:w-60 lg:w-64">
+                  <figure data-reveal style={revealDelay(Math.min(i, 5) * 90)}>
+                    <div className="photo-frame aspect-[4/5]">
+                      {w.builtIn ? (
+                        <Image
+                          src={w.builtIn}
+                          alt={w.alt}
+                          sizes="(min-width: 1024px) 18rem, (min-width: 640px) 16rem, 72vw"
+                          placeholder="blur"
+                          className="size-full object-cover"
+                        />
+                      ) : (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={w.src} alt={w.alt} loading="lazy" decoding="async" className="size-full object-cover" />
+                      )}
+                    </div>
+                  </figure>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       {/* Policies */}
-      <section aria-labelledby="policies-title" id="policies" className="scroll-mt-20 bg-plaster-2 py-20 sm:py-28">
-        <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[5fr_7fr] lg:gap-16">
+      <section aria-labelledby="policies-title" id="policies" className="scroll-mt-20 px-2.5 sm:px-4">
+        <div className="mx-auto grid max-w-[74rem] gap-12 rounded-[1.75rem] bg-plaster px-5 py-14 sm:px-10 sm:py-20 lg:grid-cols-[5fr_7fr] lg:gap-16 lg:px-14">
           <div>
-            <h2 id="policies-title" className="font-display text-[clamp(2.4rem,6vw,3.6rem)] font-medium leading-[1.02]">
+            <h2 id="policies-title" className="heading text-[clamp(2.4rem,7vw,3.75rem)] text-oxblood">
               Booking policies
             </h2>
             <p className="mt-4 max-w-md text-lg text-ink-soft">Please read these before you book. They keep the calendar fair for everyone.</p>
 
             <Framed className="mt-10">
-              <h3 className="font-display text-2xl font-medium">How to pay</h3>
+              <h3 className="heading text-[1.6rem] text-oxblood">How to pay</h3>
               <dl className="mt-5 space-y-5 text-[0.98rem]">
                 <div>
-                  <dt className="caps text-ink-soft">Deposit{data.depositCents > 0 ? `, ${priceLabel(data.depositCents)} non-refundable` : ""}</dt>
+                  <dt className="caps text-ink-soft">
+                    Deposit
+                    {data.depositCents > 0 ? `, ${priceLabel(data.depositCents)} non-refundable` : ""}
+                  </dt>
                   <dd className="mt-1.5">
                     {data.onlineDeposit
                       ? "By card when you book. Your card is kept on file for the no-show fee."
@@ -110,7 +137,7 @@ export default function InfoSections({ data }: { data: PublicData }) {
           <dl className="divide-y divide-line border-y border-oxblood">
             {data.policies.map((p) => (
               <div key={p.title} className="grid gap-2 py-6 sm:grid-cols-[13rem_1fr] sm:gap-8 sm:py-7">
-                <dt className="font-display text-[1.4rem] font-medium leading-snug">{p.title}</dt>
+                <dt className="heading text-[1.35rem] tracking-[0.03em] text-oxblood">{p.title}</dt>
                 <dd className="leading-relaxed">{p.body}</dd>
               </div>
             ))}
@@ -119,16 +146,16 @@ export default function InfoSections({ data }: { data: PublicData }) {
       </section>
 
       {/* Prep */}
-      <section aria-labelledby="prep-title" id="prep" className="scroll-mt-20 py-20 sm:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <h2 id="prep-title" className="font-display text-[clamp(2.4rem,6vw,3.6rem)] font-medium leading-[1.02]">
+      <section aria-labelledby="prep-title" id="prep" className="scroll-mt-20 py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-8">
+          <h2 id="prep-title" className="heading text-[clamp(2.4rem,7vw,3.75rem)] text-oxblood">
             How to prepare
           </h2>
           <p className="mt-4 max-w-xl text-lg text-ink-soft">A few simple things so your results come out at their best.</p>
           <div className="mt-12 grid gap-10 md:grid-cols-3 md:gap-0 md:divide-x md:divide-line">
             {PREP_GUIDES.map((g, gi) => (
               <article key={g.id} className={gi === 0 ? "md:pr-8" : gi === PREP_GUIDES.length - 1 ? "md:pl-8" : "md:px-8"}>
-                <h3 className="font-display border-b border-oxblood pb-3 text-[1.75rem] font-medium">{g.title}</h3>
+                <h3 className="heading border-b border-oxblood pb-3 text-[1.55rem] tracking-[0.03em] text-oxblood">{g.title}</h3>
                 <ul className="mt-5 space-y-3.5">
                   {g.items.map((it) => (
                     <li key={it} className="flex gap-3 leading-snug">
@@ -148,34 +175,21 @@ export default function InfoSections({ data }: { data: PublicData }) {
       </section>
 
       {/* Visit */}
-      <section aria-labelledby="visit-title" id="visit" className="scroll-mt-20 bg-plaster-2 py-20 sm:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <h2 id="visit-title" className="font-display text-[clamp(2.4rem,6vw,3.6rem)] font-medium leading-[1.02]">
+      <section aria-labelledby="visit-title" id="visit" className="scroll-mt-20 border-t border-line pb-16 pt-16 sm:pb-24 sm:pt-20">
+        <div className="mx-auto max-w-6xl px-4 text-center sm:px-8">
+          <h2 id="visit-title" className="sr-only">
             {visitTitle}
           </h2>
-          <div className="mt-12 grid gap-12 lg:grid-cols-3 lg:gap-0 lg:divide-x lg:divide-line">
-            <div className="lg:pr-10">
-              <h3 className="caps text-ink-soft">Locations</h3>
-              <ul className="mt-4 space-y-4">
-                {data.locations.map((l) => (
-                  <li key={l.id}>
-                    <p className="font-display text-[1.5rem] font-medium leading-tight">{l.city ?? l.name}</p>
-                    <p className="text-ink-soft">{l.name}</p>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-5 text-[0.95rem] text-ink-soft">{data.locationNote}</p>
-            </div>
-
-            <div className="lg:px-10">
-              <h3 className="caps text-ink-soft">Booking hours</h3>
+          <div className="grid gap-14 md:grid-cols-3 md:gap-8">
+            <div>
+              <h3 className="heading text-[clamp(1.9rem,4vw,2.4rem)] text-oxblood">Business hours</h3>
               {data.hours.map((g) => (
-                <div key={g.label} className="mt-4">
-                  {data.hours.length > 1 && <p className="mb-1 font-medium">{g.label}</p>}
-                  <dl className="divide-y divide-line">
+                <div key={g.label} className="mt-5">
+                  {data.hours.length > 1 && <p className="caps mb-2 text-lacquer">{g.label}</p>}
+                  <dl className="space-y-2.5">
                     {g.rows.map((r) => (
-                      <div key={r.days} className="flex justify-between gap-4 py-2.5">
-                        <dt className="font-medium">{r.days}</dt>
+                      <div key={r.days}>
+                        <dt className="font-medium uppercase tracking-[0.08em]">{r.days}</dt>
                         <dd className={`tabular-nums ${r.closed ? "text-ink-soft" : ""}`}>{r.hours}</dd>
                       </div>
                     ))}
@@ -184,9 +198,22 @@ export default function InfoSections({ data }: { data: PublicData }) {
               ))}
             </div>
 
-            <div className="lg:pl-10">
-              <h3 className="caps text-ink-soft">Say hello</h3>
-              <ul className="mt-2 flex flex-col">
+            <div>
+              <h3 className="heading text-[clamp(1.9rem,4vw,2.4rem)] text-oxblood">{data.locations.length > 1 ? "Locations" : "Location"}</h3>
+              <ul className="mt-5 space-y-4">
+                {data.locations.map((l) => (
+                  <li key={l.id}>
+                    <p className="font-medium uppercase tracking-[0.08em]">{l.city ?? l.name}</p>
+                    {l.city && <p className="text-ink-soft">{l.name}</p>}
+                  </li>
+                ))}
+              </ul>
+              <p className="mx-auto mt-5 max-w-xs text-[0.95rem] text-ink-soft">{data.locationNote}</p>
+            </div>
+
+            <div>
+              <h3 className="heading text-[clamp(1.9rem,4vw,2.4rem)] text-oxblood">Say hello</h3>
+              <ul className="mx-auto mt-3 flex max-w-xs flex-col">
                 {phone && (
                   <>
                     <li>
@@ -236,9 +263,9 @@ export default function InfoSections({ data }: { data: PublicData }) {
       </section>
 
       {/* The closing wall */}
-      <section aria-labelledby="closing-title" className="on-rose lacquer text-oxblood">
-        <div className="mx-auto max-w-3xl px-4 py-20 text-center sm:py-24">
-          <h2 id="closing-title" className="font-display text-[clamp(2.4rem,6vw,3.6rem)] font-medium leading-[1.02]">
+      <section aria-labelledby="closing-title" className="p-2.5 sm:p-4">
+        <div className="on-rose lacquer rounded-[1.4rem] px-5 py-16 text-center text-oxblood sm:rounded-[1.9rem] sm:py-20">
+          <h2 id="closing-title" className="heading text-[clamp(2.6rem,8vw,4.5rem)]">
             Ready when you are
           </h2>
           <p className="mx-auto mt-4 max-w-md text-lg">Pick a service and an open time. Booking takes about a minute.</p>
@@ -253,38 +280,35 @@ export default function InfoSections({ data }: { data: PublicData }) {
 
 export function SiteFooter({ data }: { data: PublicData }) {
   const phone = normalizePhone(data.phone);
-  const [first, ...rest] = data.businessName.split(" ");
+  const link = "underline-offset-[0.4em] hover:underline";
   return (
-    <footer className="on-dark border-t border-brass/40 bg-oxblood pb-28 pt-12 text-plaster sm:pb-12">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 sm:flex-row sm:items-start sm:justify-between sm:px-6">
+    <footer className="on-rose bg-rose pb-28 pt-10 text-oxblood sm:pb-10">
+      <div className="mx-auto flex max-w-[78rem] flex-col gap-8 px-5 sm:flex-row sm:items-start sm:justify-between sm:px-8">
         <div>
-          <p className="leading-none">
-            <span className="font-display block text-3xl font-medium">{first}</span>
-            <span className="mt-1 block text-[0.62rem] font-medium uppercase tracking-[0.32em] text-brass-light">{rest.join(" ")}</span>
-          </p>
+          <Wordmark businessName={data.businessName} size="lg" />
           <p className="mt-4 max-w-sm text-[0.95rem]">Already booked? Use the link in your confirmation email to reschedule or cancel.</p>
         </div>
         <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-[0.78rem] font-medium uppercase tracking-[0.14em]">
-          <a href="#services" className="hover:text-brass-light">
+          <a href="#services" className={link}>
             Services
           </a>
-          <a href="#policies" className="hover:text-brass-light">
+          <a href="#policies" className={link}>
             Policies
           </a>
-          <a href="#prep" className="hover:text-brass-light">
+          <a href="#prep" className={link}>
             Prep
           </a>
-          <a href="#visit" className="hover:text-brass-light">
+          <a href="#visit" className={link}>
             Visit
           </a>
           {phone && (
-            <a href={`tel:${phone}`} className="hover:text-brass-light">
+            <a href={`tel:${phone}`} className={link}>
               {prettyPhone(phone)}
             </a>
           )}
         </nav>
       </div>
-      <p className="mx-auto mt-10 max-w-6xl px-4 text-xs text-brass-light sm:px-6">
+      <p className="mx-auto mt-8 max-w-[78rem] px-5 text-xs sm:px-8">
         © {new Date().getFullYear()} {data.businessName}
       </p>
     </footer>

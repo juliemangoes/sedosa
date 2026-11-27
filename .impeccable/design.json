@@ -128,15 +128,15 @@
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "The SEDOSA wordmark across the hero only."
+        "purpose": "SEDOSA in the hero only, in Oswald condensed capitals."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Room titles, booking step titles, confirmation greeting, dashboard page titles."
+        "purpose": "Section and page titles on the client site, in Oswald capitals (the dashboard keeps Jost)."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Card titles that name a thing."
+        "purpose": "Card titles, policy names and category pills, in Oswald capitals."
       },
       "figure": {
         "displayName": "Figure",
@@ -144,7 +144,7 @@
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Reading text and all UI copy."
+        "purpose": "Reading text and all UI copy, in Jost."
       },
       "label": {
         "displayName": "Label",
@@ -170,7 +170,17 @@
       {
         "name": "photo",
         "value": "0 22px 40px -24px rgba(58,15,28,0.6)",
-        "purpose": "Photographs; deeper on the oxblood wall."
+        "purpose": "Photographs and category cards."
+      },
+      {
+        "name": "sheet",
+        "value": "0 30px 60px -40px rgba(58,15,28,0.6)",
+        "purpose": "The page sheet resting on the rose frame."
+      },
+      {
+        "name": "pill",
+        "value": "0 10px 20px -12px rgba(58,15,28,0.7)",
+        "purpose": "The category label pill lifting off its photo."
       }
     ],
     "motion": [
@@ -254,15 +264,15 @@
       "refersTo": "photo-frame",
       "description": "Clean rounded rectangle holding a photo edge to edge, with a soft shadow.",
       "html": "<figure class=\"ds-photo\"><span></span></figure>",
-      "css": ".ds-photo{width:160px;aspect-ratio:4/5;border-radius:24px;overflow:hidden;margin:0;background:#f0cad5;box-shadow:0 22px 40px -24px rgba(58,15,28,.6)}"
+      "css": ".ds-photo{width:160px;aspect-ratio:4/5;border-radius:22px;overflow:hidden;margin:0;background:#f0cad5;box-shadow:0 22px 40px -24px rgba(58,15,28,.6)}"
     },
     {
-      "name": "Reservation Card",
-      "kind": "card",
-      "refersTo": "reservation-card",
-      "description": "Framed rose-white card with a brass rule inside its edge.",
-      "html": "<div class=\"ds-card\"><div class=\"ds-card-in\"><h3>Next openings</h3><p>Brow Sculpt/Wax &middot; 30 min</p></div></div>",
-      "css": ".ds-card{background:#fff6f8;border-radius:28px;padding:6px;box-shadow:0 24px 48px -24px rgba(58,15,28,.55);max-width:22rem}.ds-card-in{border-radius:22px;box-shadow:inset 0 0 0 1px #b08a4f;padding:20px 24px;color:#3a0f1c}.ds-card-in h3{margin:0;font:500 1.6rem/1.15 'Jost Variable',Jost,Futura,sans-serif}.ds-card-in p{margin:.25rem 0 0;font:400 .875rem 'Jost Variable',Jost,sans-serif;color:#6b3445}"
+      "name": "Category Card",
+      "kind": "custom",
+      "refersTo": "category-card",
+      "description": "Rounded category photo with its name on an oxblood pill across the bottom edge; the selected pill turns rose.",
+      "html": "<div class=\"ds-cat\"><span class=\"ds-cat-photo\"></span><span class=\"ds-cat-pill\">All Things Brows</span><span class=\"ds-cat-sub\">From $18</span></div>",
+      "css": ".ds-cat{position:relative;width:200px;text-align:center;font-family:'Jost Variable',Jost,sans-serif}.ds-cat-photo{display:block;aspect-ratio:4/5;border-radius:22px;background:#f0cad5;box-shadow:0 22px 40px -24px rgba(58,15,28,.6)}.ds-cat-pill{position:absolute;left:0;right:0;margin:auto;top:calc(250px - 20px);width:fit-content;padding:10px 20px;border-radius:999px;background:#3a0f1c;color:#fff6f8;font:600 1rem/1.05 'Oswald Variable',Oswald,'Arial Narrow',sans-serif;text-transform:uppercase;letter-spacing:.06em}.ds-cat-sub{display:block;margin-top:36px;font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#9e2d5a}"
     },
     {
       "name": "Slot",
@@ -283,10 +293,11 @@
   ],
   "narrative": {
     "northStar": "The Powder Room",
-    "overview": "Sedosa is a members'-club powder room you step into: lacquered rose walls, oxblood velvet, brass hardware, and the booking waiting on the vanity like a reservation card. The client site is the room itself. Rose owns whole walls, the name is set in spaced capitals across the width, photographs sit in clean rounded frames, and the next open times sit in the first screen. After the menu, photos line up on an oxblood wall. Reading rooms (policies, prep, visit) step down to blush plaster, and the page closes back on the rose wall.\n\nThe owner's dashboard is the same house seen from the back office. It takes only type, palette, density and one signature move from the room: an oxblood rail, a plaster working ground with rose-white panels, standard controls, and large tabular headline figures like a reservation ledger.\n\nThe system refuses both category ruts: beige spa minimalism and the black-and-neon club flyer the studio's old graphics wore. Pink is the studio's binding colour; premium comes from craft and restraint, never claims.",
+    "overview": "Sedosa is a members'-club powder room: lacquered rose, oxblood velvet, brass hardware, a warm rose-white page. The client site follows a boutique booking-page layout the owner pinned from a reference, recoloured in the studio's pink: one rose-white sheet set in a lacquered rose frame, opening on a big rounded hero photo with SEDOSA in tall condensed capitals, then the next open times, \"Meet your artist\", \"Our services\" as photo cards with wine pill labels, the selected category's menu, policies, prep, business hours and location, and a rose closing panel.\n\nThe owner's dashboard is the same house seen from the back office. It takes only type, palette, density and one signature move from the room: an oxblood rail, a plaster working ground with rose-white panels, standard controls, and large tabular headline figures like a reservation ledger.\n\nThe system refuses both category ruts: beige spa minimalism and the black-and-neon club flyer the studio's old graphics wore. Pink is the studio's binding colour; premium comes from craft and restraint, never claims.",
     "keyCharacteristics": [
-      "Committed colour: lacquer rose carries whole regions on client surfaces; oxblood is the ink and the primary action.",
-      "One family, Jost, carrying every role through size, weight, case and spacing; nothing thin or fussy to read.",
+      "Committed colour: lacquer rose frames every client page and closes it; oxblood is the ink, the category pills and the primary action.",
+      "Two voices: Oswald condensed capitals for headings, Jost for everything read, every figure, label and button.",
+      "Big photography first: the hero photo fills its rounded frame edge to edge, and every category leads with its photo.",
       "Photographs in clean rounded rectangles with a soft shadow; no ovals, rims or decorative frames.",
       "Lacquer is suggested by light, not faked: soft falloffs on the rose field, no bevels, chrome or glitter.",
       "Motion is one authored moment: a light sheen across a category photo when it is chosen."
@@ -304,12 +315,12 @@
       },
       {
         "name": "The Warm White Rule",
-        "body": "The lightest surface is rose-white. No pure #fff surfaces; the room is never sterile.",
+        "body": "The lightest surface is rose-white, and text over photographs is rose-white too. No pure #fff; the room is never sterile.",
         "section": "colors"
       },
       {
-        "name": "The One Family Rule",
-        "body": "Jost sets everything. Roles differ by size, weight (400 body, 500 headings and figures), case and tracking, never by adding a second family. No high-contrast serifs: the owner found them hard to read.",
+        "name": "The Two Voices Rule",
+        "body": "Oswald speaks only in headings: always capitals, always 600, never for running text, prices or buttons. Jost carries everything else. No third family and no high-contrast serif (the owner found them hard to read). Condensed capitals belong to the client site; the dashboard stays in Jost.",
         "section": "typography"
       },
       {
@@ -327,7 +338,9 @@
       "**Do** set every text on lacquer rose in oxblood (5.38:1).",
       "**Do** show photographs in plain rounded rectangles, edge to edge.",
       "**Do** set prices, dates, times and headline numbers as large medium-weight tabular figures.",
-      "**Do** use rose-white for panels and inputs, plaster for reading rooms, oxblood for the closing room.",
+      "**Do** keep client pages as a rose-white sheet in the rose frame, with blush cards and panels inside it.",
+      "**Do** set headings in Oswald capitals and everything else in Jost.",
+      "**Do** lead with photography: a big hero photo and a photo on every category card.",
       "**Do** keep motion to one authored moment per surface (the category sheen) and 150–250ms state transitions in the dashboard.",
       "**Do** theme browser surfaces: rose selection with oxblood text, deep-lacquer caret, deep-lacquer scrollbar, deep-lacquer focus ring (brass-light on oxblood)."
     ],
@@ -339,7 +352,8 @@
       "**Don't** use glyphs or emoji as icons; icons are drawn SVG in one stroke weight.",
       "**Don't** fake materials with bevels, chrome gradients or glitter; lacquer is light on a flat field.",
       "**Don't** put photos in ovals, arches, circles or brass rims (rejected by the owner).",
-      "**Don't** bring back a high-contrast serif or a second display family; legibility comes first."
+      "**Don't** bring back a high-contrast serif or add a third family; Oswald is for headings only and never for running text.",
+      "**Don't** drift from the layout the owner pinned (big hero photo with a condensed title, Meet your artist, photo-card services with pills, business hours and location) without asking."
     ]
   }
 }

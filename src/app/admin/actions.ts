@@ -448,10 +448,22 @@ export async function removeGalleryPhotoAction(fd: FormData) {
     const id = int(fd, "mediaId");
     const settings = await getSettings(db);
     if (!settings.galleryPhotos.some((p) => p.mediaId === id)) return;
-    await saveSettings(db, { galleryPhotos: settings.galleryPhotos.filter((p) => p.mediaId !== id) });
+    await saveSettings(db, { galleryPhotos: settings.galleryPhotos.filter((p) => p.mediaId !== id), ...(settings.heroMediaId === id ? { heroMediaId: null } : {}) });
     await deleteMedia(db, id);
     revalidatePath("/", "layout");
     return "Photo removed.";
+  });
+}
+
+export async function setHeroPhotoAction(fd: FormData) {
+  await run("/admin/photos", async () => {
+    const db = await getDb();
+    const id = int(fd, "mediaId");
+    const settings = await getSettings(db);
+    const next = settings.heroMediaId === id || !settings.galleryPhotos.some((p) => p.mediaId === id) ? null : id;
+    await saveSettings(db, { heroMediaId: next });
+    revalidatePath("/", "layout");
+    return next ? "This photo now leads your booking page." : "The hero is back to the studio portrait.";
   });
 }
 
@@ -667,6 +679,8 @@ export async function saveSettingsAction(fd: FormData) {
       locationNote: str(fd, "locationNote"),
       confirmationNote: str(fd, "confirmationNote"),
       policies,
+      artistName: str(fd, "artistName").slice(0, 80),
+      artistBio: str(fd, "artistBio").slice(0, 1200),
       whatsappNumber: str(fd, "whatsappNumber"),
       whatsappReminders: bool(fd, "whatsappReminders"),
       whatsappReminderHours: int(fd, "whatsappReminderHours", current.whatsappReminderHours),

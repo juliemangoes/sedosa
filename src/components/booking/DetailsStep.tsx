@@ -193,7 +193,7 @@ export default function DetailsStep(props: {
     <form id={DETAILS_FORM_ID} onSubmit={submit} noValidate className="mt-6 space-y-5">
       <section aria-labelledby="you-title" className="rounded-[1.75rem] bg-panel p-5 ring-1 ring-line sm:p-7">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="you-title" className="font-display text-[1.65rem] font-medium leading-tight">
+          <h2 id="you-title" className="heading text-[1.65rem]">
             {account ? `Booking as ${account.firstName || "you"}` : returning && client.firstName ? `Welcome back, ${client.firstName}` : "Your details"}
           </h2>
           {account && (
@@ -328,7 +328,7 @@ export default function DetailsStep(props: {
       )}
 
       <section aria-labelledby="notes-title" className="rounded-[1.75rem] bg-panel p-5 ring-1 ring-line sm:p-7">
-        <h2 id="notes-title" className="font-display text-[1.65rem] font-medium leading-tight">
+        <h2 id="notes-title" className="heading text-[1.65rem]">
           Anything I should know? <span className="text-sm font-normal text-ink-soft">Optional</span>
         </h2>
         <label htmlFor="notes" className="sr-only">
@@ -346,7 +346,7 @@ export default function DetailsStep(props: {
       </section>
 
       <section aria-labelledby="policy-title" className="on-dark rounded-[1.75rem] bg-oxblood p-5 text-plaster sm:p-7">
-        <h2 id="policy-title" className="font-display text-[1.65rem] font-medium leading-tight">
+        <h2 id="policy-title" className="heading text-[1.65rem]">
           Before you confirm
         </h2>
         <ul className="mt-4 space-y-2.5 text-[0.95rem] leading-relaxed">

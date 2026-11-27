@@ -23,6 +23,7 @@
 
   --font-sans: "Jost Variable", "Jost", "Avenir Next", "Futura", system-ui, sans-serif;
   --font-display: "Jost Variable", "Jost", "Avenir Next", "Futura", system-ui, sans-serif;
+  --font-heading: "Oswald Variable", "Oswald", "Arial Narrow", "Helvetica Neue", sans-serif;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -94,6 +95,15 @@
 }
 
 @layer components {
+  /* Headings on the client site: condensed capitals, set bold and tight. */
+  .heading {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
+  }
+
   /* Small tracked capitals in Jost: labels for controls and groups, never an eyebrow over a heading. */
   .caps {
     font-family: var(--font-sans);

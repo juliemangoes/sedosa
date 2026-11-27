@@ -65,7 +65,7 @@ export default function ServiceSheet({ data, service, popular, onClose, onBook }
               <IconX size={18} />
             </button>
 
-            <h2 id="sheet-title" className="font-display pr-12 text-[2rem] font-medium leading-[1.05]">
+            <h2 id="sheet-title" className="heading pr-12 text-[2rem]">
               {prettyName(s.name)}
             </h2>
             <div className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-b border-oxblood pb-4">
@@ -99,7 +99,7 @@ export default function ServiceSheet({ data, service, popular, onClose, onBook }
 
             {addons.length > 0 && (
               <div className="mt-6">
-                <h3 className="font-display text-[1.3rem] font-medium">Add-ons you can include</h3>
+                <h3 className="heading text-[1.3rem]">Add-ons you can include</h3>
                 <ul className="mt-2 grid gap-2 sm:grid-cols-2">
                   {addons.map((a) => (
                     <li key={a.id} className="flex items-center justify-between gap-3 rounded-2xl bg-panel px-3.5 py-2.5 text-sm ring-1 ring-line">
@@ -116,7 +116,7 @@ export default function ServiceSheet({ data, service, popular, onClose, onBook }
 
             {prep && (
               <div className="mt-6">
-                <h3 className="font-display text-[1.3rem] font-medium">How to prepare</h3>
+                <h3 className="heading text-[1.3rem]">How to prepare</h3>
                 <ul className="mt-2 space-y-2 text-[0.95rem]">
                   {prep.items.slice(0, 4).map((it) => (
                     <li key={it} className="flex gap-2.5">

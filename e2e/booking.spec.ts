@@ -67,15 +67,18 @@ async function openClientAppointment(page: Page, name: string) {
   await expect(page.getByRole("link", { name: "Back to Calendar" })).toBeVisible();
 }
 
-test("landing page: hero shortcuts, category carousel, search and details sheet", async ({ page }) => {
+test("landing page: category cards, search and details sheet", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Sedosa Beauty Studio" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Booking policies" })).toBeAttached();
   const tabs = page.getByRole("tablist", { name: "Service categories" });
   const panel = page.locator("#menu-panel");
 
-  // Hero category shortcut selects that category in the carousel and shows its services.
-  await page.getByRole("navigation", { name: "Jump to a category" }).getByRole("link", { name: "Waxing" }).click();
+  // "Meet your artist" falls back to a studio welcome until the owner writes an intro.
+  await expect(page.getByRole("heading", { name: "Welcome to the studio" })).toBeVisible();
+
+  // Choosing a category card selects it and brings its services into view.
+  await tabs.getByRole("tab", { name: /Waxing/ }).click();
   await expect(tabs.getByRole("tab", { name: /Waxing/ })).toHaveAttribute("aria-selected", "true");
   await expect(panel.getByRole("heading", { name: "Waxing", level: 3 })).toBeInViewport();
   await expect(panel.getByRole("button", { name: "Book Chin Wax!" })).toBeVisible();
@@ -412,7 +415,8 @@ test("owner adds a photo and it hangs on the landing page's photo wall", async (
   await page.getByRole("button", { name: "Remove" }).first().click();
   await expect(page.getByText("Photo removed.")).toBeVisible();
   await page.goto("/");
-  await expect(wall.getByRole("img")).toHaveCount(2);
+  // With no photos of the owner's left, the wall steps aside.
+  await expect(wall).toHaveCount(0);
 });
 
 test("phone: hero CTA, compact steps and sticky continue @phone", async ({ page }) => {

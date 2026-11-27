@@ -23,22 +23,22 @@ colors:
   chart-expense: "#b8862c"
 typography:
   display:
-    fontFamily: "Jost Variable, Jost, Avenir Next, Futura, system-ui, sans-serif"
-    fontSize: "clamp(3.4rem, 17vw, 14rem)"
-    fontWeight: 500
-    lineHeight: 0.86
-    letterSpacing: "0.1em"
+    fontFamily: "Oswald Variable, Oswald, Arial Narrow, Helvetica Neue, sans-serif"
+    fontSize: "clamp(4.6rem, 19vw, 11.5rem)"
+    fontWeight: 600
+    lineHeight: 0.84
+    letterSpacing: "0.03em"
   headline:
-    fontFamily: "Jost Variable, Jost, Avenir Next, Futura, system-ui, sans-serif"
-    fontSize: "clamp(2.4rem, 6vw, 3.6rem)"
-    fontWeight: 500
-    lineHeight: 1.02
-    letterSpacing: "-0.015em"
+    fontFamily: "Oswald Variable, Oswald, Arial Narrow, Helvetica Neue, sans-serif"
+    fontSize: "clamp(2.4rem, 7vw, 4.75rem)"
+    fontWeight: 600
+    lineHeight: 1.05
+    letterSpacing: "0.01em"
   title:
-    fontFamily: "Jost Variable, Jost, Avenir Next, Futura, system-ui, sans-serif"
+    fontFamily: "Oswald Variable, Oswald, Arial Narrow, Helvetica Neue, sans-serif"
     fontSize: "1.6rem"
-    fontWeight: 500
-    lineHeight: 1.15
+    fontWeight: 600
+    lineHeight: 1.05
   figure:
     fontFamily: "Jost Variable, Jost, Avenir Next, Futura, system-ui, sans-serif"
     fontSize: "1.55rem"
@@ -61,12 +61,16 @@ rounded:
   panel-ops: "20px"
   panel: "28px"
   frame-inner: "22px"
+  sheet: "36px"
+  photo: "22px"
   pill: "999px"
 spacing:
   gutter: "16px"
   gutter-wide: "24px"
-  room: "80px"
-  room-wide: "112px"
+  frame: "10px"
+  frame-wide: "20px"
+  room: "64px"
+  room-wide: "96px"
 components:
   button-primary:
     backgroundColor: "{colors.oxblood}"
@@ -93,11 +97,29 @@ components:
     textColor: "{colors.oxblood}"
     rounded: "{rounded.field}"
     padding: "12px 14px"
-  reservation-card:
+  page-sheet:
+    backgroundColor: "{colors.rose-white}"
+    textColor: "{colors.oxblood}"
+    rounded: "{rounded.sheet}"
+  framed-card:
     backgroundColor: "{colors.rose-white}"
     textColor: "{colors.oxblood}"
     rounded: "{rounded.panel}"
     padding: "6px"
+  openings-strip:
+    backgroundColor: "{colors.blush-plaster}"
+    textColor: "{colors.oxblood}"
+    rounded: "{rounded.panel}"
+    padding: "20px 32px"
+  category-pill:
+    backgroundColor: "{colors.oxblood}"
+    textColor: "{colors.rose-white}"
+    typography: "{typography.title}"
+    rounded: "{rounded.pill}"
+    padding: "10px 20px"
+  category-pill-selected:
+    backgroundColor: "{colors.lacquer-rose}"
+    textColor: "{colors.oxblood}"
   slot:
     backgroundColor: "transparent"
     textColor: "{colors.oxblood}"
@@ -122,15 +144,16 @@ components:
 
 **Creative North Star: "The Powder Room"**
 
-Sedosa is a members'-club powder room you step into: lacquered rose walls, oxblood velvet, brass hardware, and the booking waiting on the vanity like a reservation card. The client site is the room itself. Rose owns whole walls, the name is set in spaced capitals across the width, photographs sit in clean rounded frames, and the next open times sit in the first screen. After the menu, photos line up on an oxblood wall. Reading rooms (policies, prep, visit) step down to blush plaster, and the page closes back on the rose wall.
+Sedosa is a members'-club powder room: lacquered rose, oxblood velvet, brass hardware, a warm rose-white page. The client site follows a boutique booking-page layout the owner pinned from a reference, recoloured in the studio's pink: one rose-white sheet set in a lacquered rose frame, opening on a big rounded hero photo with SEDOSA in tall condensed capitals, then the next open times, "Meet your artist", "Our services" as photo cards with wine pill labels, the selected category's menu, policies, prep, business hours and location, and a rose closing panel.
 
 The owner's dashboard is the same house seen from the back office. It takes only type, palette, density and one signature move from the room: an oxblood rail, a plaster working ground with rose-white panels, standard controls, and large tabular headline figures like a reservation ledger.
 
 The system refuses both category ruts: beige spa minimalism and the black-and-neon club flyer the studio's old graphics wore. Pink is the studio's binding colour; premium comes from craft and restraint, never claims.
 
 **Key Characteristics:**
-- Committed colour: lacquer rose carries whole regions on client surfaces; oxblood is the ink and the primary action.
-- One family, Jost, carrying every role through size, weight, case and spacing; nothing thin or fussy to read.
+- Committed colour: lacquer rose frames every client page and closes it; oxblood is the ink, the category pills and the primary action.
+- Two voices: Oswald condensed capitals for headings, Jost for everything read, every figure, label and button.
+- Big photography first: the hero photo fills its rounded frame edge to edge, and every category leads with its photo.
 - Photographs in clean rounded rectangles with a soft shadow; no ovals, rims or decorative frames.
 - Lacquer is suggested by light, not faked: soft falloffs on the rose field, no bevels, chrome or glitter.
 - Motion is one authored moment: a light sheen across a category photo when it is chosen.
@@ -140,7 +163,7 @@ The system refuses both category ruts: beige spa minimalism and the black-and-ne
 A rose, plaster and oxblood palette with brass used as hardware, every text pairing checked to WCAG AA.
 
 ### Primary
-- **Lacquer Rose** (lacquer-rose): the walls. Hero, menu wall, headers and rose buttons. Text on it is always oxblood (5.38:1); never white.
+- **Lacquer Rose** (lacquer-rose): the frame. The page border, header, footer, closing panel, the selected category pill and rose buttons. Text on it is always oxblood (5.38:1); never white.
 - **Lacquer Rose, lit** (lacquer-rose-hi): hover on rose and the dado rail between walls.
 
 ### Secondary
@@ -151,9 +174,9 @@ A rose, plaster and oxblood palette with brass used as hardware, every text pair
 - **Brass, light** (brass-light): text and small details on oxblood (9.9:1): wordmark subline, group labels, Instagram handle.
 
 ### Neutral
-- **Oxblood** (oxblood): body text everywhere, primary buttons, the closing room, the dashboard rail. Raised surfaces on it use oxblood-raised.
-- **Blush Plaster** (blush-plaster): reading rooms and the dashboard ground; blush-plaster-deep for alternate rooms and quiet hovers.
-- **Rose-white** (rose-white): panels, cards, inputs and sheets. Warm, never pure white.
+- **Oxblood** (oxblood): body text and headings everywhere, primary buttons, category pills, the dashboard rail. Raised surfaces on it use oxblood-raised.
+- **Blush Plaster** (blush-plaster): cards inside the sheet (Next openings, Meet your artist, Booking policies, the hero's desktop ground), the booking flow and the dashboard ground; blush-plaster-deep for quiet hovers.
+- **Rose-white** (rose-white): the page sheet, panels, cards, inputs, and text over photographs. Warm, never pure white.
 - **Ink, soft** (ink-soft): secondary text on plaster (7.25:1) and rose-white.
 - **Hairline** (hairline) for decorative dividers; **Control line** (control-line) for input and slot borders (3.88:1 on plaster).
 - **State colours**: good (state-good), warning (state-warn), problem (state-bad), always as text plus a matching outline on rose-white, with a word, never colour alone.
@@ -164,33 +187,34 @@ A rose, plaster and oxblood palette with brass used as hardware, every text pair
 
 **The Brass Is Hardware Rule.** Brass draws rims, rules and small type on oxblood. It never fills a surface and never carries text on a light ground.
 
-**The Warm White Rule.** The lightest surface is rose-white. No pure #fff surfaces; the room is never sterile.
+**The Warm White Rule.** The lightest surface is rose-white, and text over photographs is rose-white too. No pure #fff; the room is never sterile.
 
 ## Typography
 
-**Display Font:** Jost (variable), with Avenir Next / Futura fallback
-**Body Font:** Jost (variable), the same family
+**Heading Font:** Oswald (variable, 600), with Arial Narrow fallback
+**Body Font:** Jost (variable), with Avenir Next / Futura fallback
 
-**Character:** A geometric sans in the Futura tradition: fashion-house capitals for the name, calm medium-weight headings, even strokes that stay readable at every size. The owner chose this over a high-contrast serif for legibility.
+**Character:** Tall condensed capitals for the name and every heading, poster-like the way the owner's reference sets them, over a geometric sans in the Futura tradition whose even strokes stay readable at every size. Both were chosen for legibility over a high-contrast serif.
 
 ### Hierarchy
-- **Display** (500, clamp 3.4–14rem, line-height 0.86, 0.1em tracking, capitals): the SEDOSA wordmark across the hero only.
-- **Headline** (500, clamp 2.4–3.6rem, line-height 1.02, -0.015em tracking): room titles, booking step titles, confirmation greeting. Dashboard page titles at a fixed 2.3rem.
-- **Title** (500, about 1.5–1.75rem): card titles that name a thing: Next openings, Your appointment, Booking policies' entries.
-- **Figure** (500, 1.2–2.2rem, tabular lining numerals): prices, dates, times, headline numbers. Large figure over small label is the signature on every surface.
-- **Body** (400, 1rem, up to 1.15rem in rooms, line-height about 1.5): reading text, kept within 65–75ch.
-- **Label** (500, 0.72rem, 0.16em tracking, uppercase): labels for controls, groups and data fields. Never above a heading.
+- **Display** (Oswald 600, clamp 4.6–11.5rem, line-height 0.84, 0.03em tracking, capitals): SEDOSA in the hero only, rose-white over the photo or oxblood beside it.
+- **Headline** (Oswald 600, clamp 2.4–4.75rem, line-height 1.05, capitals): section and page titles: Our services, Meet your artist, Booking policies, Business hours, booking step titles, the confirmation greeting.
+- **Title** (Oswald 600, about 1.35–1.75rem, capitals): card titles that name a thing (Next openings, Your appointment, policy names, prep guides) and the category pills (0.95–1.02rem, 0.06em tracking). The header wordmark is Oswald at 1.55–1.9rem with 0.12em tracking.
+- **Dashboard:** Jost throughout; page titles in Jost 500 at a fixed 2.3rem.
+- **Figure** (Jost 500, 1.2–2.2rem, tabular lining numerals): prices, dates, times, headline numbers. Large figure over small label is the signature on every surface.
+- **Body** (Jost 400, 1rem, up to 1.15rem in rooms, line-height about 1.5): reading text, kept within 65–75ch.
+- **Label** (Jost 500, 0.72rem, 0.16em tracking, uppercase): labels for controls, groups and data fields. Never above a heading.
 
 ### Named Rules
-**The One Family Rule.** Jost sets everything. Roles differ by size, weight (400 body, 500 headings and figures), case and tracking, never by adding a second family. No high-contrast serifs: the owner found them hard to read.
+**The Two Voices Rule.** Oswald speaks only in headings: always capitals, always 600, never for running text, prices or buttons. Jost carries everything else. No third family and no high-contrast serif (the owner found them hard to read). Condensed capitals belong to the client site; the dashboard stays in Jost.
 
 **The No Eyebrow Rule.** Tracked caps label controls and fields only. A heading is never introduced by a small label above it.
 
 ## Layout
 
-Client surfaces are full-bleed rooms stacked vertically: rose wall (hero), brass dado rail, rose menu wall, plaster menu card, oxblood photo wall, plaster-deep policies, plaster prep, plaster-deep visit, rose closing wall, oxblood footer. Content sits in a centred container (72–80rem) with 16px gutters on phones and 24px from 640px up. Rooms breathe at 80px vertical padding, 112px from 640px up; more space sits above a heading than below it.
+The landing page is one rose-white sheet (36px corners, max 78rem) set in a lacquered rose frame (10px each side on phones, 20px from 640px), with the sticky header and the footer on the frame. Inside the sheet, top to bottom: the hero photo, inset 10–16px with matching corners; the Next openings strip; Meet your artist (blush card, text left, two staggered 3:4 photos right, stacked under the text on phones); Our services (centred title, search, category cards in 3 columns from 640px and a swipe row on phones); the selected category's list; the photo wall (only once the owner has added photos); Booking policies in an inset blush panel; How to prepare; Business hours | Location | Say hello in three centred columns; and the rose closing panel inset like the hero. Sections breathe at 64px vertical padding, 80–96px from 640px up; more space sits above a heading than below it.
 
-The hero composes as a triptych on desktop (tagline and Book | portrait | reservation card) under the full-width wordmark, and on phones as portrait-left with the tagline beside it, the reservation card below, all inside the first screen. Lists use hairline dividers and dotted leaders to prices instead of cards.
+The hero has two forms. With a wide photo chosen in the dashboard (Photos, "Use as hero"), it fills the frame and SEDOSA sits centred low in rose-white over a soft wine gradient. With the tall studio portrait, phones show it the same way while desktop splits blush (SEDOSA, one line, Book) left and the portrait right. On phones the hero is short enough for the open times to show in the first screen. Lists use hairline dividers and dotted leaders to prices instead of cards. The booking flow, confirmation and account pages sit on blush plaster under the same rose header.
 
 The dashboard is a fixed 16rem oxblood rail with a plaster content area (max 72rem) on desktop; phones get an oxblood top bar, bottom tabs and a More sheet. Grids collapse to a single column under 1024px, with minmax(0, 1fr) columns so nothing forces sideways scrolling.
 
@@ -199,8 +223,10 @@ The dashboard is a fixed 16rem oxblood rail with a plaster content area (max 72r
 A hybrid: the room is flat colour, and depth is reserved for objects placed in it. Shadows are warm (oxblood-tinted), always offset downward with a soft blur, never a zero-offset halo and never a hard block.
 
 ### Shadow Vocabulary
-- **Object on the wall** (`0 24px 48px -24px rgba(58,15,28,0.55)`): reservation card, framed panels, the confirmation card.
-- **Photo** (`0 22px 40px -24px rgb(58 15 28 / 0.6)`): photographs; deeper (`0 30px 50px -28px rgba(0,0,0,0.85)`) on the oxblood wall.
+- **Sheet** (`0 30px 60px -40px rgba(58,15,28,0.6)`): the page sheet resting on the rose frame.
+- **Object on the wall** (`0 24px 48px -24px rgba(58,15,28,0.55)`): framed panels, the confirmation card.
+- **Photo** (`0 22px 40px -24px rgb(58 15 28 / 0.6)`): photographs and category cards.
+- **Pill** (`0 10px 20px -12px rgba(58,15,28,0.7)`): the category label pill lifting off its photo.
 - **Lacquered button** (`inset 0 1px 0 rgb(255 255 255 / 0.12), 0 6px 16px -8px rgb(58 15 28 / 0.6)`): primary buttons.
 - **Working panel** (`0 1px 0 rgba(58,15,28,0.04), 0 14px 30px -24px rgba(58,15,28,0.45)`): dashboard cards and figures.
 
@@ -209,7 +235,7 @@ A hybrid: the room is flat colour, and depth is reserved for objects placed in i
 
 ## Shapes
 
-Soft, generous corners and one true curve. Buttons and chips are full pills; client panels round at 28px with a 22px inner frame; inputs at 14px; dashboard panels at 20px and dashboard inputs at 12px. Photographs are rounded rectangles: 24px corners by default, 20px for menu category cards (4:5), 28px for the tall hero portrait, 12px for dashboard thumbnails. No ovals, arches or circles for photos. A framed card is a rose-white panel with a 1px brass rule set 6px inside its edge.
+Soft, generous corners and one true curve. Buttons, chips and category labels are full pills; the page sheet rounds at 28px on phones and 36px from 640px; the hero and closing panels at 22px and 30px; client panels at 28px with a 22px inner frame; inputs at 14px; dashboard panels at 20px and dashboard inputs at 12px. Photographs are rounded rectangles: 22px for category cards (4:5 on phones, square on tablets, 5:4 on desktop) and Meet your artist (3:4), 24px on the photo wall, 12px for dashboard thumbnails. No ovals, arches or circles for photos. A framed card is a rose-white panel with a 1px brass rule set 6px inside its edge.
 
 ## Components
 
@@ -228,7 +254,8 @@ Lacquered, confident pills.
 - **Popular / Most openings:** tracked caps in deep lacquer (or brass-light on oxblood) with a 1px outline.
 
 ### Cards / Containers
-- **Reservation card (framed):** rose-white, 28px corners, 1px brass rule 6px inside, object shadow. Used for Next openings, Your appointment, the confirmation card, How to pay and sign-in.
+- **Framed card:** rose-white, 28px corners, 1px brass rule 6px inside, object shadow. Used for Your appointment, the confirmation card, How to pay and sign-in.
+- **Openings strip:** blush, 22–26px corners; Next openings and the service on the left, three slot buttons, then See all times. Hidden when nothing is open.
 - **Plain panel:** rose-white, 28px, 1px hairline ring. Booking forms, manage booking, prep.
 - **Dashboard panel:** rose-white, 20px, hairline ring, working-panel shadow.
 - **Internal padding:** 20–32px.
@@ -239,17 +266,23 @@ Lacquered, confident pills.
 - **Error:** state-bad border and message in state-bad text naming the problem and the fix.
 
 ### Navigation
-- **Client header:** on the rose wall; type wordmark (spaced-capital name over a tracked-caps subline), tracked-caps links with an underline on hover, account circle and an oxblood Book now pill. Gains a brass hairline and soft shadow once scrolled.
+- **Client header:** on the rose frame; type wordmark (spaced-capital name over a tracked-caps subline), tracked-caps links with an underline on hover, account circle and an oxblood Book now pill. Gains a brass hairline and soft shadow once scrolled.
 - **Dashboard rail:** oxblood; brass-light group labels; links in plaster with brass-light icons; the current section is a rose pill with oxblood text. Phones: rose-white bottom tabs under a brass rule, current tab in deep lacquer.
 
 ### Photo frame
-A clean rounded rectangle with a soft fall-off shadow, holding the photo edge to edge (object-fit: cover). Used for the hero portrait, menu category cards, the photo wall and dashboard thumbnails. A category without a photo shows a plaster card with its initial in deep lacquer. The chosen category card gets a 2px oxblood ring set 4px off the card and one light sheen across the photo (1.4s, exponential ease-out).
+A clean rounded rectangle with a soft fall-off shadow, holding the photo edge to edge (object-fit: cover). Used for the hero, category cards, Meet your artist, the photo wall and dashboard thumbnails.
+
+### Category card
+A photo frame with the category name on a pill across its bottom edge, half on the photo and half off: an oxblood pill with rose-white Oswald capitals. Below it, the category's short line in tracked caps (two lines at most) and "From $price" in deep lacquer. A category without a photo shows a blush card with its initial in deep-lacquer Oswald. Cards are tabs: the chosen one turns its pill lacquer rose with oxblood text, gains a 2px deep-lacquer ring set 4px off the photo, and plays one light sheen across it (1.4s, exponential ease-out). When the list below is out of sight (the desktop grid), choosing a card scrolls it into view.
+
+### Meet your artist
+A blush card: the heading, the owner's name in deep-lacquer Oswald, then the bio from Settings with its line breaks kept. Beside it, two staggered 3:4 photos: the first two photo-wall photos, or the studio's two brow results. With no name or bio entered, the heading reads "Welcome to the studio" over a short studio introduction; nothing is invented about the owner.
 
 ### Photo wall
-The owner's photos (added under Photos in the dashboard, up to 12, in the order set there) hang on the oxblood wall after the menu, followed by the studio's two real brow results. All photos share one 4:5 rounded frame in a centred row that becomes a swipeable strip when it overflows. Each photo carries the owner's description as its alt text. The photos rise in once as the wall scrolls into view.
+The owner's photos (added under Photos in the dashboard, up to 12, in the order set there) line up on the sheet after the menu under "Fresh from the chair", followed by the studio's two real brow results. The wall appears once the owner has added a photo. All photos share one 4:5 rounded frame in a centred row that becomes a swipeable strip when it overflows. Each photo carries the owner's description as its alt text. The photos rise in once as the wall scrolls into view.
 
 ### Slot and date buttons
-Outlined rounded rectangles (16px) with the time in large tabular figures and AM/PM in tracked caps; selected is an oxblood fill with rose-white text. The same anatomy appears in the hero's reservation card.
+Outlined rounded rectangles (16px) with the time in large tabular figures and AM/PM in tracked caps; selected is an oxblood fill with rose-white text. The same anatomy appears in the Next openings strip, on rose-white.
 
 ## Do's and Don'ts
 
@@ -257,7 +290,9 @@ Outlined rounded rectangles (16px) with the time in large tabular figures and AM
 - **Do** set every text on lacquer rose in oxblood (5.38:1).
 - **Do** show photographs in plain rounded rectangles, edge to edge.
 - **Do** set prices, dates, times and headline numbers as large medium-weight tabular figures.
-- **Do** use rose-white for panels and inputs, plaster for reading rooms, oxblood for the closing room.
+- **Do** keep client pages as a rose-white sheet in the rose frame, with blush cards and panels inside it.
+- **Do** set headings in Oswald capitals and everything else in Jost.
+- **Do** lead with photography: a big hero photo and a photo on every category card.
 - **Do** keep motion to one authored moment per surface (the category sheen) and 150–250ms state transitions in the dashboard.
 - **Do** theme browser surfaces: rose selection with oxblood text, deep-lacquer caret, deep-lacquer scrollbar, deep-lacquer focus ring (brass-light on oxblood).
 
@@ -269,4 +304,5 @@ Outlined rounded rectangles (16px) with the time in large tabular figures and AM
 - **Don't** use glyphs or emoji as icons; icons are drawn SVG in one stroke weight.
 - **Don't** fake materials with bevels, chrome gradients or glitter; lacquer is light on a flat field.
 - **Don't** put photos in ovals, arches, circles or brass rims (rejected by the owner).
-- **Don't** bring back a high-contrast serif or a second display family; legibility comes first.
+- **Don't** bring back a high-contrast serif or add a third family; Oswald is for headings only and never for running text.
+- **Don't** drift from the layout the owner pinned (big hero photo with a condensed title, Meet your artist, photo-card services with pills, business hours and location) without asking.

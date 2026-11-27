@@ -64,7 +64,9 @@ async function nextOpenings(catalog: Awaited<ReturnType<typeof loadCatalog>>, zo
 }
 
 /** The owner's photo-wall photos, in order, with their real dimensions. */
-async function galleryPhotos(settings: Settings, businessName: string): Promise<PublicData["gallery"]> {
+type GalleryItem = PublicData["gallery"][number] & { mediaId: number };
+
+async function galleryPhotos(settings: Settings, businessName: string): Promise<GalleryItem[]> {
   const ids = settings.galleryPhotos.map((p) => p.mediaId);
   if (!ids.length) return [];
   const db = await getDb();
@@ -72,7 +74,7 @@ async function galleryPhotos(settings: Settings, businessName: string): Promise<
   const dims = new Map(rows.map((r) => [r.id, r]));
   return settings.galleryPhotos
     .filter((p) => dims.has(p.mediaId))
-    .map((p) => ({ url: mediaUrl(p.mediaId)!, alt: p.alt || `A photo from ${businessName}`, width: dims.get(p.mediaId)!.width, height: dims.get(p.mediaId)!.height }));
+    .map((p) => ({ mediaId: p.mediaId, url: mediaUrl(p.mediaId)!, alt: p.alt || `A photo from ${businessName}`, width: dims.get(p.mediaId)!.width, height: dims.get(p.mediaId)!.height }));
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -130,7 +132,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
     hours,
     categories: catalog.categories.map((c) => ({ id: c.id, name: c.name, description: c.description, imageUrl: mediaUrl(c.imageId) })),
     popularIds: popularIds.filter((id) => catalog.services.some((s) => s.id === id)),
-    gallery,
+    gallery: gallery.map(({ mediaId: _id, ...g }) => g),
+    hero: (() => {
+      const h = gallery.find((g) => g.mediaId === settings.heroMediaId);
+      return h ? { url: h.url, alt: h.alt, width: h.width, height: h.height } : null;
+    })(),
+    artist: { name: settings.artistName.trim(), bio: settings.artistBio.trim() },
     services: catalog.services.map((s) => ({
       id: s.id,
       categoryId: s.categoryId,

@@ -39,14 +39,16 @@ The studio's own booking home rather than a marketplace listing: real availabili
 - **Pink is the studio colour** (confirmed binding). Its shade and use may change.
 - Not binding (confirmed free to replace): the chrome logo, the black-satin and neon look of the current graphics, and the playful copy voice.
 - The feel to reach: high class and premium, but not white and sterile.
+- Landing layout pinned by the owner (2026-11): a boutique booking-site layout from a reference they shared (big hero photo with a condensed title, Meet your artist, photo-card services with pill labels, business hours and location), in Sedosa's pink.
 
 ## Evidence on Hand
 
 - `src/assets/brand/portrait.png`: a styled studio portrait (a neon ring and sparkles are baked into the image; the inner photograph can be cropped).
 - `src/assets/brand/results.jpg`: two real brow results shown inside phone frames.
-- Category photos the owner uploads in the dashboard (stored in the database).
+- Category photos, photo-wall photos and an optional hero photo the owner uploads in the dashboard (stored in the database).
+- The owner's name and bio for "Meet your artist", once entered in Settings.
 - The real menu with prices, durations and deposits; policies; hours; city names.
-- Absent, and not to be invented: reviews, ratings, testimonials, client counts, press, awards, years in business, the provider's name or biography.
+- Absent, and not to be invented: reviews, ratings, testimonials, client counts, press, awards, years in business, and the provider's name or biography until the owner enters them.
 
 ## Product Principles
 

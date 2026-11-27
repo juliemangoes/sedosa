@@ -98,11 +98,15 @@ export default function BookingApp({ data, initialServiceId, initialSlot, hero, 
 
   if (step === "browse" || !service) {
     return (
-      <div id="top">
+      <div id="top" className="min-h-screen bg-rose">
         <SiteHeader businessName={data.businessName} mode="browse" onExit={exit} account={account} accountsEnabled={accountsEnabled} />
-        {hero}
-        <ServiceMenu data={data} onBook={chooseService} />
-        {sections}
+        <div className="px-2.5 sm:px-5">
+          <main className="mx-auto max-w-[78rem] overflow-clip rounded-[1.75rem] bg-panel shadow-[0_30px_60px_-40px_rgba(58,15,28,0.6)] sm:rounded-[2.25rem]">
+            {hero}
+            <ServiceMenu data={data} onBook={chooseService} />
+            {sections}
+          </main>
+        </div>
         {footer}
         <StickyBookBar />
       </div>
@@ -133,7 +137,7 @@ export default function BookingApp({ data, initialServiceId, initialSlot, hero, 
         <Stepper steps={steps} current={current} />
         <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
           <div key={step} className="min-w-0 animate-rise">
-            <h1 ref={headingRef} tabIndex={-1} className="font-display text-[clamp(2.3rem,7vw,3.4rem)] font-medium leading-[1.02] outline-none">
+            <h1 ref={headingRef} tabIndex={-1} className="heading text-[clamp(2.3rem,7vw,3.4rem)] outline-none">
               {title}
             </h1>
             <p className="mt-3 text-[1.05rem] text-ink-soft">
@@ -169,7 +173,7 @@ export default function BookingApp({ data, initialServiceId, initialSlot, hero, 
                     setAddonIds((ids) => (on ? [...ids, id] : ids.filter((x) => x !== id)));
                   }}
                 />
-                <h2 className="font-display mt-10 text-[1.75rem] font-medium">When works for you?</h2>
+                <h2 className="heading mt-10 text-[1.75rem]">When works for you?</h2>
                 <div className="mt-3">
                   <SlotPicker
                     query={query}

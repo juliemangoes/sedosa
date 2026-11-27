@@ -86,8 +86,8 @@ export default function SiteHeader({ businessName, mode, onExit, account = null,
               <a href="#policies" className={navLink}>
                 Policies
               </a>
-              <a href="#prep" className={navLink}>
-                Prep
+              <a href="#artist" className={navLink}>
+                Artist
               </a>
               <a href="#visit" className={navLink}>
                 Visit

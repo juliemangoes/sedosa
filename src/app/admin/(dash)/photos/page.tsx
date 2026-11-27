@@ -4,7 +4,7 @@ import * as t from "@/db/schema";
 import { requireAdmin } from "@/lib/auth";
 import { getSettings } from "@/lib/settings";
 import { mediaUrl } from "@/lib/media";
-import { moveGalleryPhotoAction, removeGalleryPhotoAction, saveGalleryAltAction } from "../../actions";
+import { moveGalleryPhotoAction, removeGalleryPhotoAction, saveGalleryAltAction, setHeroPhotoAction } from "../../actions";
 import SubmitButton from "@/components/admin/SubmitButton";
 import GalleryUpload from "@/components/admin/GalleryUpload";
 import { Card, Empty, Flash, PageHeader, btnDangerCls, btnSecondaryCls, inputCls } from "@/components/admin/ui";
@@ -40,7 +40,7 @@ export default async function PhotosPage({ searchParams }: { searchParams: Promi
 
       <Card title="How it works" className="mb-6">
         <p className="max-w-2xl text-sm text-ink-soft">
-          Photos added here hang on the booking page under &ldquo;Fresh from the chair&rdquo;, in this order, after your menu. Your work, the studio, a fresh set of brows: anything clients should see.
+          Photos added here hang on the booking page under &ldquo;Fresh from the chair&rdquo;, in this order. The first two also sit beside &ldquo;Meet your artist&rdquo;, and the one you mark as the hero leads the page (a wide, landscape photo works best there).
           Phone photos are fine; they&apos;re resized and cleaned of location data automatically. Category photos for the menu are added under Services.
         </p>
       </Card>
@@ -70,7 +70,10 @@ export default async function PhotosPage({ searchParams }: { searchParams: Promi
                     <img src={mediaUrl(p.mediaId)!} alt={p.alt || `Photo ${i + 1}`} className="absolute inset-0 size-full object-cover" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">Photo {i + 1}</p>
+                    <p className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-ink-soft">
+                      Photo {i + 1}
+                      {settings.heroMediaId === p.mediaId && <span className="rounded-full bg-rose px-2 py-0.5 text-[0.65rem] text-oxblood">Hero</span>}
+                    </p>
                     <form key={p.alt} action={saveGalleryAltAction} className="mt-2 space-y-2">
                       <input type="hidden" name="mediaId" value={p.mediaId} />
                       <label htmlFor={`alt-${p.mediaId}`} className="block text-sm font-medium">
@@ -98,6 +101,10 @@ export default async function PhotosPage({ searchParams }: { searchParams: Promi
                       </button>
                     </form>
                   </div>
+                  <form action={setHeroPhotoAction} className="ml-auto mr-2">
+                    <input type="hidden" name="mediaId" value={p.mediaId} />
+                    <SubmitButton className={`${btnSecondaryCls} px-3 py-1.5 text-xs`}>{settings.heroMediaId === p.mediaId ? "Stop using as hero" : "Use as hero"}</SubmitButton>
+                  </form>
                   <form action={removeGalleryPhotoAction}>
                     <input type="hidden" name="mediaId" value={p.mediaId} />
                     <SubmitButton className={`${btnDangerCls} px-3 py-1.5 text-xs`} confirm="Remove this photo from your booking page?" pendingText="Removing…">

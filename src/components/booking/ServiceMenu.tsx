@@ -4,15 +4,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { PublicData, PublicService } from "./types";
 import ServiceSheet from "./ServiceSheet";
 import { categoryLabel, prettyName, priceLabel, shortDuration } from "@/lib/display";
-import { IconChevronLeft, IconChevronRight, IconSearch, IconX } from "@/components/landing/icons";
+import { IconChevronRight, IconSearch, IconX } from "@/components/landing/icons";
 
-type Group = PublicData["categories"][number] & { services: PublicService[]; fromCents: number; hasFree: boolean };
+type Group = PublicData["categories"][number] & {
+  services: PublicService[];
+  fromCents: number;
+  hasFree: boolean;
+};
 
 /**
- * The menu room. Categories sit on the rose wall as photo cards (the
- * owner's photo in each, or a monogram on rose glass) and act as tabs;
- * choosing one sends a light sheen across its glass and lays that category's
- * services out below on a plaster menu card. Search covers everything.
+ * "Our services": each category is a rounded photo card with its name on a
+ * wine pill across the bottom edge (the owner's photo, or a monogram on
+ * blush). The cards act as tabs: choosing one sends a light sheen across its
+ * photo and lists that category's services below. Search covers everything.
  */
 export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook: (s: PublicService) => void }) {
   const [q, setQ] = useState("");
@@ -23,7 +27,6 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
   const trackRef = useRef<HTMLDivElement>(null);
   const wallRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-  const [edges, setEdges] = useState({ start: true, end: false });
   const query = q.trim().toLowerCase();
   const popular = useMemo(() => new Set(data.popularIds), [data.popularIds]);
 
@@ -33,7 +36,12 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
         .map((c) => {
           const services = data.services.filter((s) => s.categoryId === c.id);
           const paid = services.map((s) => s.priceCents).filter((p) => p > 0);
-          return { ...c, services, fromCents: paid.length ? Math.min(...paid) : 0, hasFree: services.some((s) => s.priceCents === 0) };
+          return {
+            ...c,
+            services,
+            fromCents: paid.length ? Math.min(...paid) : 0,
+            hasFree: services.some((s) => s.priceCents === 0),
+          };
         })
         .filter((g) => g.services.length),
     [data],
@@ -41,25 +49,33 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
   const results = useMemo(() => {
     if (!query) return [];
     return groups
-      .map((g) => ({ ...g, services: g.services.filter((s) => `${s.name} ${s.description} ${s.categoryName}`.toLowerCase().includes(query)) }))
+      .map((g) => ({
+        ...g,
+        services: g.services.filter((s) => `${s.name} ${s.description} ${s.categoryName}`.toLowerCase().includes(query)),
+      }))
       .filter((g) => g.services.length);
   }, [groups, query]);
   const current = groups.find((g) => g.id === selected) ?? groups[0];
   const nextGroup = current ? groups[(groups.findIndex((g) => g.id === current.id) + 1) % groups.length] : null;
 
-  const select = useCallback((id: number, opts: { scroll?: "panel" } = {}) => {
+  const select = useCallback((id: number, opts: { scroll?: "panel" | "auto" } = {}) => {
     setSelected(id);
     setSheen((n) => n + 1);
     setQ("");
     const card = trackRef.current?.querySelector<HTMLElement>(`[data-cat-card="${id}"]`);
     if (card && trackRef.current) {
       const t = trackRef.current;
-      t.scrollTo({ left: card.offsetLeft - (t.clientWidth - card.clientWidth) / 2, behavior: "smooth" });
+      t.scrollTo({
+        left: card.offsetLeft - (t.clientWidth - card.clientWidth) / 2,
+        behavior: "smooth",
+      });
     }
-    if (opts.scroll === "panel") requestAnimationFrame(() => panelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+    const panel = panelRef.current;
+    const offscreen = !!panel && panel.getBoundingClientRect().top > window.innerHeight * 0.7;
+    if (opts.scroll === "panel" || (opts.scroll === "auto" && offscreen)) requestAnimationFrame(() => panel?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }, []);
 
-  // Hero shortcuts link to #cat-<id>: open that category and bring its list into view.
+  // Links to #cat-<id> open that category: open that category and bring its list into view.
   useEffect(() => {
     const fromHash = () => {
       const m = /^#cat-(\d+)$/.exec(window.location.hash);
@@ -89,14 +105,6 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
     return () => io.disconnect();
   }, []);
 
-  const onTrackScroll = () => {
-    const t = trackRef.current;
-    if (!t) return;
-    setEdges({ start: t.scrollLeft < 8, end: t.scrollLeft + t.clientWidth > t.scrollWidth - 8 });
-  };
-  useEffect(onTrackScroll, [groups.length]);
-  const page = (dir: 1 | -1) => trackRef.current?.scrollBy({ left: dir * trackRef.current.clientWidth * 0.8, behavior: "smooth" });
-
   const onTabKey = (e: React.KeyboardEvent, i: number) => {
     const next = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? groups.length - 1 : null;
     if (next === null) return;
@@ -108,15 +116,12 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
 
   return (
     <section id="services" aria-labelledby="services-title" className="scroll-mt-16">
-      {/* A brass dado rail divides the front wall from the menu wall */}
-      <div aria-hidden="true" className="h-[7px] border-y border-brass bg-rose-hi" />
-
-      <div ref={wallRef} className="on-rose lacquer pb-12 pt-12 text-oxblood sm:pt-16">
-        <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-          <h2 id="services-title" className="font-display text-[clamp(2.6rem,8vw,4.25rem)] font-medium leading-none">
-            The menu
+      <div ref={wallRef} className="px-4 pt-14 sm:px-8 sm:pt-20">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 id="services-title" className="heading text-[clamp(2.75rem,9vw,4.75rem)] text-oxblood">
+            Our services
           </h2>
-          <p className="mt-4 text-lg">Choose a category to see its services and prices, then book the one you want.</p>
+          <p className="mt-4 text-lg text-ink-soft">Choose a category to see its services and prices, then book the one you want.</p>
           <div className="relative mx-auto mt-6 max-w-md">
             <IconSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-soft" />
             <label htmlFor="service-search" className="sr-only">
@@ -128,83 +133,77 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search the menu: lami, tint, wax"
-              className="field rounded-full border-oxblood py-3 pl-11 pr-11"
+              className="field rounded-full py-3 pl-11 pr-11"
               autoComplete="off"
             />
             {q && (
-              <button type="button" onClick={() => setQ("")} aria-label="Clear search" className="absolute right-3 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full hover:bg-plaster">
+              <button
+                type="button"
+                onClick={() => setQ("")}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full hover:bg-plaster"
+              >
                 <IconX size={16} />
               </button>
             )}
           </div>
         </div>
 
-        <div className="relative mx-auto mt-10 max-w-7xl">
-          <div
-            ref={trackRef}
-            onScroll={onTrackScroll}
-            role="tablist"
-            aria-label="Service categories"
-            className="no-scrollbar flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto px-4 pb-3 pt-2 sm:scroll-px-6 sm:gap-6 sm:px-6"
-          >
-            {groups.map((g, i) => {
-              const on = !query && current?.id === g.id;
-              const label = categoryLabel(g.name);
-              return (
-                <button
-                  key={g.id}
-                  type="button"
-                  role="tab"
-                  id={`cat-tab-${g.id}`}
-                  data-cat-card={g.id}
-                  aria-selected={on}
-                  aria-controls="menu-panel"
-                  tabIndex={on || (query && i === 0) ? 0 : -1}
-                  onClick={() => select(g.id)}
-                  onKeyDown={(e) => onTabKey(e, i)}
-                  className="group w-[40%] shrink-0 snap-start rounded-3xl pb-1 text-center sm:w-[27%] md:w-[21%] lg:w-[calc((100%-7.5rem)/6)]"
-                >
+        <div
+          ref={trackRef}
+          role="tablist"
+          aria-label="Service categories"
+          className="no-scrollbar -mx-4 mt-10 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-4 pt-2 sm:mx-auto sm:grid sm:max-w-5xl sm:grid-cols-3 sm:gap-x-6 sm:gap-y-10 sm:overflow-visible sm:px-0 lg:gap-x-8"
+        >
+          {groups.map((g, i) => {
+            const on = !query && current?.id === g.id;
+            const label = categoryLabel(g.name);
+            return (
+              <button
+                key={g.id}
+                type="button"
+                role="tab"
+                id={`cat-tab-${g.id}`}
+                data-cat-card={g.id}
+                aria-selected={on}
+                aria-controls="menu-panel"
+                tabIndex={on || (query && i === 0) ? 0 : -1}
+                onClick={() => select(g.id, { scroll: "auto" })}
+                onKeyDown={(e) => onTabKey(e, i)}
+                className="group w-[58%] shrink-0 snap-start rounded-[1.6rem] text-center sm:w-auto"
+              >
+                <span className="relative block">
                   <span
-                    className={`photo-frame block aspect-[4/5] rounded-[1.25rem] transition duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1 ${
-                      on ? "ring-2 ring-oxblood ring-offset-4 ring-offset-rose" : ""
+                    className={`photo-frame block aspect-[4/5] rounded-[1.4rem] transition duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1 sm:aspect-square lg:aspect-[5/4] ${
+                      on ? "ring-2 ring-lacquer ring-offset-4 ring-offset-panel" : ""
                     }`}
                   >
                     {g.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={g.imageUrl} alt="" loading={i < 4 ? "eager" : "lazy"} decoding="async" className="absolute inset-0 size-full object-cover" />
+                      <img src={g.imageUrl} alt="" loading={i < 3 ? "eager" : "lazy"} decoding="async" className="absolute inset-0 size-full object-cover" />
                     ) : (
                       <span aria-hidden="true" className="absolute inset-0 grid place-items-center bg-plaster">
-                        <span className="font-display text-[clamp(2.2rem,8vw,3rem)] font-medium text-lacquer">{label.slice(0, 1)}</span>
+                        <span className="heading text-[clamp(3rem,10vw,4.5rem)] text-lacquer">{label.slice(0, 1)}</span>
                       </span>
                     )}
                     {on && <span key={sheen} aria-hidden="true" className="sheen animate-sheen" />}
                   </span>
-                  <span className={`font-display mt-4 block text-[1.2rem] font-medium leading-tight sm:text-[1.3rem] ${on ? "underline decoration-1 underline-offset-[0.3em]" : ""}`}>{label}</span>
-                  <span className="mt-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.14em]">
-                    {g.fromCents ? `From ${priceLabel(g.fromCents)}` : "Free consultation"}
+                  {/* The label pill sits across the bottom edge of the photo */}
+                  <span
+                    className={`heading absolute inset-x-0 bottom-0 mx-auto w-fit max-w-[calc(100%-1.25rem)] translate-y-1/2 text-balance rounded-full px-5 py-2.5 text-[0.95rem] tracking-[0.06em] shadow-[0_10px_20px_-12px_rgba(58,15,28,0.7)] transition duration-300 sm:text-[1.02rem] ${
+                      on ? "bg-rose text-oxblood" : "bg-oxblood text-panel group-hover:bg-oxblood-2"
+                    }`}
+                  >
+                    {label}
                   </span>
-                </button>
-              );
-            })}
-          </div>
-          <button
-            type="button"
-            onClick={() => page(-1)}
-            disabled={edges.start}
-            aria-label="Previous categories"
-            className="absolute left-2 top-[36%] hidden size-11 place-items-center rounded-full bg-panel text-oxblood shadow-[0_8px_20px_-10px_rgba(58,15,28,0.6)] transition hover:bg-white disabled:pointer-events-none disabled:opacity-0 lg:grid"
-          >
-            <IconChevronLeft />
-          </button>
-          <button
-            type="button"
-            onClick={() => page(1)}
-            disabled={edges.end}
-            aria-label="More categories"
-            className="absolute right-2 top-[36%] hidden size-11 place-items-center rounded-full bg-panel text-oxblood shadow-[0_8px_20px_-10px_rgba(58,15,28,0.6)] transition hover:bg-white disabled:pointer-events-none disabled:opacity-0 lg:grid"
-          >
-            <IconChevronRight />
-          </button>
+                </span>
+                <span className="mt-9 block px-2 text-[0.72rem] font-medium uppercase leading-relaxed tracking-[0.14em] text-ink-soft">
+                  <span className="line-clamp-2">{g.description || `${g.services.length} service${g.services.length === 1 ? "" : "s"}`}</span>
+                  <span className="mt-1 block text-lacquer">{g.fromCents ? `From ${priceLabel(g.fromCents)}` : "Free consultation"}</span>
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -236,7 +235,7 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
         role="tabpanel"
         aria-labelledby={!query && current ? `cat-tab-${current.id}` : undefined}
         aria-label={query ? "Search results" : undefined}
-        className="mx-auto max-w-4xl scroll-mt-32 px-4 pb-20 pt-12 sm:px-6 sm:pb-28"
+        className="mx-auto max-w-4xl scroll-mt-32 px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-14"
       >
         <p className="sr-only" aria-live="polite">
           {query ? `${results.reduce((n, g) => n + g.services.length, 0)} services match “${q}”` : ""}
@@ -244,7 +243,7 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
         {query ? (
           results.length === 0 ? (
             <div className="mx-auto max-w-md animate-rise text-center">
-              <p className="font-display text-2xl font-medium">No services match “{q}”</p>
+              <p className="heading text-[1.75rem] text-oxblood">No services match “{q}”</p>
               <p className="mt-2 text-ink-soft">Try another word, or choose a category above.</p>
               <button type="button" className="btn-primary mt-6" onClick={() => setQ("")}>
                 Show all services
@@ -254,7 +253,7 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
             <div className="space-y-12">
               {results.map((g) => (
                 <div key={g.id} className="animate-rise">
-                  <h3 className="font-display text-[1.75rem] font-medium leading-tight">{categoryLabel(g.name)}</h3>
+                  <h3 className="heading text-[1.9rem] text-oxblood">{categoryLabel(g.name)}</h3>
                   <ServiceList group={g} popular={popular} onDetails={setDetails} onBook={onBook} />
                 </div>
               ))}
@@ -265,10 +264,8 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
             <div key={current.id} className="animate-rise">
               <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-oxblood pb-4">
                 <div>
-                  <h3 className="font-display text-[clamp(2rem,6vw,2.75rem)] font-medium leading-none">{categoryLabel(current.name)}</h3>
-                  <p className="mt-2 text-sm text-ink-soft">
-                    {current.description || `${current.services.length} service${current.services.length === 1 ? "" : "s"}`}
-                  </p>
+                  <h3 className="heading text-[clamp(2.1rem,6vw,2.9rem)] text-oxblood">{categoryLabel(current.name)}</h3>
+                  <p className="mt-2 text-sm text-ink-soft">{current.description || `${current.services.length} service${current.services.length === 1 ? "" : "s"}`}</p>
                 </div>
                 {groups.length > 1 && nextGroup && (
                   <button

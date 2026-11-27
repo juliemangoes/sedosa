@@ -25,7 +25,7 @@ export default function IntakeForm({ forms, answers, errors, onChange }: Props) 
           <fieldset key={form.id} className="rounded-[1.75rem] bg-panel p-5 ring-1 ring-line sm:p-7">
             <legend className="sr-only">{form.name}</legend>
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="font-display text-[1.5rem] font-medium leading-tight">{form.name}</h3>
+              <h3 className="heading text-[1.5rem]">{form.name}</h3>
               {required.length > 0 && (
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${answered === required.length ? "text-[#1f6b4a] ring-1 ring-[#1f6b4a]/40" : "text-lacquer ring-1 ring-lacquer/50"}`}>
                   {answered === required.length ? (

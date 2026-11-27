@@ -3,7 +3,7 @@ export default function Wordmark({ businessName, size = "md", tone = "oxblood" }
   const [first, ...rest] = businessName.split(" ");
   return (
     <span className="flex flex-col leading-none">
-      <span className={`font-display font-medium uppercase tracking-[0.2em] [margin-right:-0.2em] ${size === "lg" ? "text-[1.6rem]" : "text-[1.3rem]"}`}>{first}</span>
+      <span className={`heading tracking-[0.12em] [margin-right:-0.12em] ${size === "lg" ? "text-[1.9rem]" : "text-[1.55rem]"}`}>{first}</span>
       {rest.length > 0 && (
         <span className={`mt-0.5 font-medium uppercase tracking-[0.32em] ${size === "lg" ? "mt-1 text-[0.62rem]" : "text-[0.58rem]"} ${tone === "light" ? "text-brass-light" : ""}`}>{rest.join(" ")}</span>
       )}

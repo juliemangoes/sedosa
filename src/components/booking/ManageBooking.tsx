@@ -48,7 +48,7 @@ export default function ManageBooking({ token, timezone, canReschedule, canCance
     <section aria-labelledby="manage-title" className="rounded-[1.75rem] bg-panel p-6 ring-1 ring-line sm:p-8">
       {mode === "idle" && (
         <>
-          <h2 id="manage-title" className="font-display text-[1.75rem] font-medium leading-tight">
+          <h2 id="manage-title" className="heading text-[1.75rem]">
             Need to make a change?
           </h2>
           {done && (
@@ -71,7 +71,7 @@ export default function ManageBooking({ token, timezone, canReschedule, canCance
       {mode === "reschedule" && (
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
-            <h2 id="manage-title" className="font-display text-[1.75rem] font-medium leading-tight">
+            <h2 id="manage-title" className="heading text-[1.75rem]">
               Pick a new time
             </h2>
             <button type="button" className="text-sm font-medium text-lacquer underline-offset-4 hover:underline" onClick={() => setMode("idle")}>
@@ -106,7 +106,7 @@ export default function ManageBooking({ token, timezone, canReschedule, canCance
 
       {mode === "cancel" && (
         <div className="text-center">
-          <h2 id="manage-title" className="font-display text-[1.75rem] font-medium leading-tight">
+          <h2 id="manage-title" className="heading text-[1.75rem]">
             Cancel this appointment?
           </h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-ink-soft">

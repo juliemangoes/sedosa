@@ -91,7 +91,7 @@ export function Summary({ data, service, location, addons, slot, action }: Summa
   return (
     <div className="rounded-[1.75rem] bg-panel p-1.5 shadow-[0_24px_48px_-28px_rgba(58,15,28,0.55)]">
     <div className="rounded-[1.4rem] p-6 ring-1 ring-brass">
-      <h2 className="font-display text-[1.5rem] font-medium leading-tight">Your appointment</h2>
+      <h2 className="heading text-[1.5rem]">Your appointment</h2>
       <p className="mt-1 font-medium leading-snug">{prettyName(service.name)}</p>
       <ul className="mt-3 space-y-2 text-sm">
         <li className="flex items-center gap-2 text-ink-soft">
@@ -237,7 +237,7 @@ export function AddonPicker({ addons, selected, onToggle }: { addons: PublicData
         className="flex w-full items-center justify-between gap-3 rounded-2xl text-left"
       >
         <span>
-          <span className="font-display text-[1.6rem] font-medium">Add something extra?</span> <span className="text-sm text-ink-soft">Optional · {addons.length} options</span>
+          <span className="heading text-[1.6rem]">Add something extra?</span> <span className="text-sm text-ink-soft">Optional · {addons.length} options</span>
           {!open && chosen.length > 0 && (
             <span className="mt-2 flex flex-wrap gap-1.5">
               {chosen.map((a) => (

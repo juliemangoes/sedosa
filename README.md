@@ -10,25 +10,30 @@ It ships with the studio's real menu, copied from the old Acuity page:
 
 ## What clients get
 
-- **A landing page designed as "The Powder Room"**: lacquered rose walls,
-  blush plaster, oxblood and brass, set in Jost throughout (see
-  [DESIGN.md](DESIGN.md)). It includes:
-  - A hero that fits the first screen on any phone: the name set in spaced capitals
-    across the width, the studio portrait in a tall rounded photo, one line,
-    and a reservation card with the **next three open times**. Tapping one
-    opens booking with that time already selected.
-  - A menu that opens on a row of **category photo cards**, each with its own
-    photo (uploaded from the dashboard). Swipe on phones, arrows on desktop,
-    arrow keys for keyboard users; picking a card shows that category's
-    services right below, and "Next: …" walks through them in order. Search
+- **A landing page designed as "The Powder Room"**, laid out like a boutique
+  booking site: a rose-white page in a rose frame, condensed Oswald capitals
+  for headings and Jost for everything else (see [DESIGN.md](DESIGN.md)).
+  It includes:
+  - A big rounded **hero photo** with SEDOSA in tall capitals: the studio
+    portrait, or any wide photo the owner marks as the hero in the dashboard.
+  - **Next openings** right under it (inside the first screen on phones): the
+    next three open times. Tapping one opens booking with that time selected.
+  - **Meet your artist**: the owner's name and bio (from Settings) beside two
+    photos; until those are filled in, a short studio welcome.
+  - **Our services**: a photo card per category with its name on a wine pill
+    and a one-line description (photos and lines edited in the dashboard).
+    Swipe on phones, a grid on larger screens, arrow keys for keyboard users;
+    picking a card shows that category's services right below, and
+    "Next: …" walks through them in order. Search
     looks across every category. Tapping a service opens a details sheet
     (description, deposit, consent forms, add-ons, prep). "Popular" badges
     come from real bookings.
   - Booking policies, prep checklists for brows, lash lifts and waxing, and
     payment info.
-  - Locations, hours and contact links, including "WhatsApp me" once the
-    studio's WhatsApp number is set.
-  - Client results, and a Book button that stays within reach on phones.
+  - Business hours, locations and contact links, including "WhatsApp me"
+    once the studio's WhatsApp number is set.
+  - A photo wall of the owner's photos and the studio's results, and a Book
+    button that stays within reach on phones.
   - All the text from the old policy graphics as real, readable text that
     search engines can see.
 - **Client accounts** with passwordless sign-in (a 6-digit code or a one-tap
@@ -111,14 +116,17 @@ and a "New" button on phones.
   preferences.
 - **Photos**: add up to 12 photos (several at once, straight from a phone) to
   the landing page's photo wall, describe them for screen readers, reorder or
-  remove them. They hang after the menu, followed by the studio's real results.
+  remove them. They hang after the menu, followed by the studio's real results;
+  the first two also sit beside "Meet your artist", and **"Use as hero"** puts
+  one at the top of the page (a wide, landscape photo works best).
 - **Services, add-ons, forms**: edit names, prices, durations, deposits,
   buffers, which add-ons and forms each service uses, and the questions on
   each form. **Upload a photo and a one-line description for each category**
-  (straight from your phone's camera roll); it appears on the menu carousel.
+  (straight from your phone's camera roll); it appears on the category cards.
 - **Hours & time off**: weekly hours per location (split shifts are OK),
   special hours for a date, blocked time.
 - **Settings**: policies, booking rules, fees, Cash App/Zelle handles,
+  your name and bio for **Meet your artist**,
   **WhatsApp** (studio number, automatic reminders on/off, how many hours
   before, the reminder wording and your quick messages), and a private
   **calendar feed** to subscribe to on your phone.
@@ -140,7 +148,7 @@ is nothing to install.
 
 ```bash
 npm test          # availability engine, booking rules, Stripe flow (mocked), finance, WhatsApp scheduling, image processing
-npm run e2e       # real browser: landing + carousel, booking, accounts, reschedule/cancel, race, dashboard, finance, WhatsApp, phone, accessibility
+npm run e2e       # real browser: landing + category cards, booking, accounts, reschedule/cancel, race, dashboard, finance, WhatsApp, phone, accessibility
 ```
 
 `npm run e2e` builds the app and serves it on port 3100 with a throwaway
@@ -259,7 +267,7 @@ src/app/page.tsx                  public booking page
 src/app/booking/[token]/          confirmation / manage page
 src/app/admin/                    owner dashboard (home, calendar, finance, clients…) + server actions
 src/app/api/                      availability, bookings, Stripe webhook, cron, calendar feed
-src/components/booking/           booking flow UI (category carousel, time grid, intake forms)
+src/components/booking/           booking flow UI (category cards, time grid, intake forms)
 src/components/admin/             dashboard shell, finance chart, WhatsApp buttons, uploads
 src/lib/availability.ts           slot engine (pure, unit tested)
 src/lib/booking.ts                create / reschedule / cancel / deposit logic
@@ -269,7 +277,7 @@ src/lib/finance.ts                income/expense ledger, periods, CSV
 src/lib/media.ts                  photo processing (sharp) and storage
 src/db/schema.ts, drizzle/        database schema + migrations
 src/db/seed-data.ts               the studio's menu, forms and locations
-src/components/landing/           landing page sections (hero, policies, prep, visit, results)
+src/components/landing/           landing page sections (hero, openings, artist, policies, prep, visit, photo wall)
 src/content/prep.ts               prep checklists shown on the landing + confirmation pages
 src/assets/brand/                 portrait and results photos cropped from the studio's graphics (origin noted in each file)
 ```
