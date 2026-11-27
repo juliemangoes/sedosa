@@ -192,7 +192,7 @@ A rose, plaster and oxblood palette with brass used as hardware, every text pair
 ### Hierarchy
 - **Display** (Oswald 600, clamp 4.6–11.5rem, line-height 0.84, 0.03em tracking, capitals): SEDOSA in the hero only, rose-white over the photo or oxblood beside it.
 - **Headline** (Oswald 600, clamp 2.4–4.75rem, line-height 1.05, capitals): section and page titles: Our services, Meet your artist, Booking policies, Business hours, booking step titles, the confirmation greeting.
-- **Title** (Oswald 600, about 1.35–1.75rem, capitals): card titles that name a thing (Next openings, Your appointment, policy names, prep guides) and the category pills (0.95–1.02rem, 0.06em tracking). The header wordmark is Oswald at 1.55–1.9rem with 0.12em tracking.
+- **Title** (Oswald 600, about 1.35–1.75rem, capitals): card titles that name a thing (Next openings, Your appointment, policy names, prep guides) and the category pills (0.95–1.02rem, 0.06em tracking). The header wordmark is Oswald at 1.55–1.9rem with 0.12em tracking, with "Beauty Studio" beneath in small Jost capitals spread letter by letter to exactly the name's width (never wider).
 - **Dashboard:** Jost throughout; page titles in Jost 500 at a fixed 2.3rem.
 - **Figure** (Jost 500, 1.2–2.2rem, tabular lining numerals): prices, dates, times, headline numbers. Large figure over small label is the signature on every surface.
 - **Body** (Jost 400, 1rem, up to 1.15rem in rooms, line-height about 1.5): reading text, kept within 65–75ch.
