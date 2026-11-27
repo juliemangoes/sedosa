@@ -107,7 +107,7 @@ export default async function BookingPage({ params, searchParams }: { params: Pr
       <main className="relative mx-auto -mt-20 max-w-3xl space-y-6 px-4 pb-20 sm:px-6">
         {/* The reservation card */}
         <section aria-label="Appointment details" className="relative animate-rise overflow-hidden rounded-[2rem] bg-panel p-1.5 shadow-[0_30px_60px_-30px_rgba(58,15,28,0.65)] [animation-delay:200ms]">
-          {celebrate && <span aria-hidden="true" className="mirror-sheen animate-sheen [animation-delay:700ms] [animation-duration:1.8s]" />}
+          {celebrate && <span aria-hidden="true" className="sheen animate-sheen [animation-delay:700ms] [animation-duration:1.8s]" />}
           <div className="rounded-[1.6rem] ring-1 ring-brass">
             <div className={`grid gap-5 p-6 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-8 sm:p-8 ${inactive ? "opacity-60" : ""}`}>
               <div className="mx-auto text-center sm:mx-0 sm:border-r sm:border-line sm:pr-8">

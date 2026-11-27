@@ -195,34 +195,22 @@
   }
 
   /*
-   * The vanity mirror: a tall oval of glass in a brass rim.
-   * .mirror-sheen plays one light pass across the glass when its mirror is chosen.
+   * Photo frame: a clean rounded rectangle with a soft fall-off shadow.
+   * .sheen plays one light pass across a photo (a chosen menu category, a fresh confirmation card).
    */
-  .mirror {
+  .photo-frame {
     position: relative;
-    border-radius: 50% / 50%;
     overflow: hidden;
     isolation: isolate;
-    box-shadow:
-      0 0 0 2px var(--color-brass),
-      0 0 0 7px rgb(255 246 248 / 0.0),
-      0 22px 40px -22px rgb(58 15 28 / 0.65);
+    border-radius: 1.5rem;
+    box-shadow: 0 22px 40px -24px rgb(58 15 28 / 0.6);
   }
-  .mirror::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    background: radial-gradient(70% 45% at 30% 18%, rgb(255 255 255 / 0.28), transparent 70%);
-    mix-blend-mode: soft-light;
-  }
-  .mirror-sheen {
+  .sheen {
     position: absolute;
     inset: -10% auto -10% 0;
     width: 45%;
     pointer-events: none;
-    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.45), transparent);
     mix-blend-mode: soft-light;
     z-index: 2;
   }

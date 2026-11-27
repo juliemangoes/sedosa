@@ -158,11 +158,6 @@
         "purpose": "Reservation card, framed panels, confirmation card."
       },
       {
-        "name": "mirror",
-        "value": "0 0 0 2px #b08a4f, 0 22px 40px -22px rgba(58,15,28,0.65)",
-        "purpose": "Brass rim plus the mirror's fall-off."
-      },
-      {
         "name": "lacquered-button",
         "value": "inset 0 1px 0 rgba(255,255,255,0.12), 0 6px 16px -8px rgba(58,15,28,0.6)",
         "purpose": "Primary buttons."
@@ -171,6 +166,11 @@
         "name": "working-panel",
         "value": "0 1px 0 rgba(58,15,28,0.04), 0 14px 30px -24px rgba(58,15,28,0.45)",
         "purpose": "Dashboard cards and figures."
+      },
+      {
+        "name": "photo",
+        "value": "0 22px 40px -24px rgba(58,15,28,0.6)",
+        "purpose": "Photographs; deeper on the oxblood wall."
       }
     ],
     "motion": [
@@ -182,7 +182,7 @@
       {
         "name": "sheen",
         "value": "1.4s ease-out-expo",
-        "purpose": "One light pass across a mirror's glass when it is chosen; across the confirmation card on a fresh booking."
+        "purpose": "One light pass across a chosen category photo; across the confirmation card on a fresh booking."
       },
       {
         "name": "rise",
@@ -249,12 +249,12 @@
       "css": ".ds-field{width:100%;background:#fff6f8;border:1px solid #9c5a70;border-radius:14px;padding:.75rem .9rem;font:400 1rem 'Jost Variable',Jost,sans-serif;color:#3a0f1c;caret-color:#9e2d5a}.ds-field::placeholder{color:#6b3445}.ds-field:hover{border-color:#9e2d5a}.ds-field:focus{outline:none;border-color:#9e2d5a;box-shadow:0 0 0 3px rgba(158,45,90,.22)}"
     },
     {
-      "name": "Vanity Mirror",
+      "name": "Photo Frame",
       "kind": "custom",
-      "refersTo": "mirror",
-      "description": "Tall ellipse photo frame in a 2px brass rim; the signature.",
-      "html": "<figure class=\"ds-mirror\"><span></span></figure>",
-      "css": ".ds-mirror{width:160px;aspect-ratio:3/4;border-radius:50%;overflow:hidden;margin:0;background:radial-gradient(80% 60% at 35% 25%,#fbe4eb,#eeb0c4 70%,#e597b1);box-shadow:0 0 0 2px #b08a4f,0 22px 40px -22px rgba(58,15,28,.65)}"
+      "refersTo": "photo-frame",
+      "description": "Clean rounded rectangle holding a photo edge to edge, with a soft shadow.",
+      "html": "<figure class=\"ds-photo\"><span></span></figure>",
+      "css": ".ds-photo{width:160px;aspect-ratio:4/5;border-radius:24px;overflow:hidden;margin:0;background:#f0cad5;box-shadow:0 22px 40px -24px rgba(58,15,28,.6)}"
     },
     {
       "name": "Reservation Card",
@@ -283,13 +283,13 @@
   ],
   "narrative": {
     "northStar": "The Powder Room",
-    "overview": "Sedosa is a members'-club powder room you step into: lacquered rose walls, oxblood velvet, brass hardware, and the booking waiting on the vanity like a reservation card. The client site is the room itself. Rose owns whole walls, the name is set in spaced capitals across the width, photographs hang in oval vanity mirrors, and the next open times sit in the first screen. Reading rooms (policies, prep, visit) step down to blush plaster, and the page closes in an oxblood room.\n\nThe owner's dashboard is the same house seen from the back office. It takes only type, palette, density and one signature move from the room: an oxblood rail, a plaster working ground with rose-white panels, standard controls, and large tabular headline figures like a reservation ledger.\n\nThe system refuses both category ruts: beige spa minimalism and the black-and-neon club flyer the studio's old graphics wore. Pink is the studio's binding colour; premium comes from craft and restraint, never claims.",
+    "overview": "Sedosa is a members'-club powder room you step into: lacquered rose walls, oxblood velvet, brass hardware, and the booking waiting on the vanity like a reservation card. The client site is the room itself. Rose owns whole walls, the name is set in spaced capitals across the width, photographs sit in clean rounded frames, and the next open times sit in the first screen. After the menu, photos line up on an oxblood wall. Reading rooms (policies, prep, visit) step down to blush plaster, and the page closes back on the rose wall.\n\nThe owner's dashboard is the same house seen from the back office. It takes only type, palette, density and one signature move from the room: an oxblood rail, a plaster working ground with rose-white panels, standard controls, and large tabular headline figures like a reservation ledger.\n\nThe system refuses both category ruts: beige spa minimalism and the black-and-neon club flyer the studio's old graphics wore. Pink is the studio's binding colour; premium comes from craft and restraint, never claims.",
     "keyCharacteristics": [
       "Committed colour: lacquer rose carries whole regions on client surfaces; oxblood is the ink and the primary action.",
       "One family, Jost, carrying every role through size, weight, case and spacing; nothing thin or fussy to read.",
-      "Oval mirrors in thin brass rims frame every photograph.",
+      "Photographs in clean rounded rectangles with a soft shadow; no ovals, rims or decorative frames.",
       "Lacquer is suggested by light, not faked: soft falloffs on the rose field, no bevels, chrome or glitter.",
-      "Motion is one authored moment: a light sheen across a mirror's glass when it is chosen."
+      "Motion is one authored moment: a light sheen across a category photo when it is chosen."
     ],
     "rules": [
       {
@@ -319,16 +319,16 @@
       },
       {
         "name": "The Objects Cast, Walls Don't Rule",
-        "body": "Rooms are flat. Only things set into the room (cards, mirrors, buttons, sheets) cast a shadow.",
+        "body": "Rooms are flat. Only things set into the room (cards, photos, buttons, sheets) cast a shadow.",
         "section": "elevation"
       }
     ],
     "dos": [
       "**Do** set every text on lacquer rose in oxblood (5.38:1).",
-      "**Do** frame photographs in the vanity mirror with its 2px brass rim.",
+      "**Do** show photographs in plain rounded rectangles, edge to edge.",
       "**Do** set prices, dates, times and headline numbers as large medium-weight tabular figures.",
       "**Do** use rose-white for panels and inputs, plaster for reading rooms, oxblood for the closing room.",
-      "**Do** keep motion to one authored moment per surface (the mirror sheen) and 150–250ms state transitions in the dashboard.",
+      "**Do** keep motion to one authored moment per surface (the category sheen) and 150–250ms state transitions in the dashboard.",
       "**Do** theme browser surfaces: rose selection with oxblood text, deep-lacquer caret, deep-lacquer scrollbar, deep-lacquer focus ring (brass-light on oxblood)."
     ],
     "donts": [
@@ -338,6 +338,7 @@
       "**Don't** draw a bar down one side of a box to mark state; use a full outline or a tint.",
       "**Don't** use glyphs or emoji as icons; icons are drawn SVG in one stroke weight.",
       "**Don't** fake materials with bevels, chrome gradients or glitter; lacquer is light on a flat field.",
+      "**Don't** put photos in ovals, arches, circles or brass rims (rejected by the owner).",
       "**Don't** bring back a high-contrast serif or a second display family; legibility comes first."
     ]
   }

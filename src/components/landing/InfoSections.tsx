@@ -39,11 +39,6 @@ export default function InfoSections({ data }: { data: PublicData }) {
     { key: "result-1", src: resultOne.src, alt: "A client's freshly shaped and tinted brows, close up", builtIn: resultOne },
     { key: "result-2", src: resultTwo.src, alt: "Another client's fresh brow result, close up", builtIn: resultTwo },
   ];
-  const FRAMES = [
-    { frame: "aspect-[3/4] rounded-[50%]", width: "w-[58vw] sm:w-56 lg:w-60" },
-    { frame: "aspect-[3/4] rounded-t-full rounded-b-[1.5rem]", width: "w-[54vw] sm:w-52 lg:w-56" },
-    { frame: "aspect-square rounded-full", width: "w-[46vw] sm:w-44 lg:w-48" },
-  ];
 
   return (
     <>
@@ -64,15 +59,14 @@ export default function InfoSections({ data }: { data: PublicData }) {
             </a>
           )}
         </div>
-        <ul className="no-scrollbar mt-14 flex snap-x snap-mandatory items-center gap-6 overflow-x-auto px-4 pb-10 pt-2 sm:gap-8 sm:px-6 [&>li:first-child]:ms-auto [&>li:last-child]:me-auto">
+        <ul className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:gap-5 sm:px-6 [&>li:first-child]:ms-auto [&>li:last-child]:me-auto">
           {wall.map((w, i) => {
-            const f = FRAMES[i % FRAMES.length];
             return (
-              <li key={w.key} className={`shrink-0 snap-center ${f.width} ${i % 2 ? "translate-y-8" : ""}`}>
-                <figure data-reveal style={revealDelay(Math.min(i, 5) * 110)}>
-                  <div className={`mirror ${f.frame} shadow-[0_0_0_2px_var(--color-brass),0_30px_50px_-24px_rgba(0,0,0,0.8)]`}>
+              <li key={w.key} className="w-[72vw] shrink-0 snap-center sm:w-64 lg:w-72">
+                <figure data-reveal style={revealDelay(Math.min(i, 5) * 90)}>
+                  <div className="photo-frame aspect-[4/5] shadow-[0_30px_50px_-28px_rgba(0,0,0,0.85)]">
                     {w.builtIn ? (
-                      <Image src={w.builtIn} alt={w.alt} sizes="(min-width: 1024px) 15rem, 58vw" placeholder="blur" className="size-full object-cover" />
+                      <Image src={w.builtIn} alt={w.alt} sizes="(min-width: 1024px) 18rem, (min-width: 640px) 16rem, 72vw" placeholder="blur" className="size-full object-cover" />
                     ) : (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={w.src} alt={w.alt} loading="lazy" decoding="async" className="size-full object-cover" />

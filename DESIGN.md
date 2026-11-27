@@ -122,7 +122,7 @@ components:
 
 **Creative North Star: "The Powder Room"**
 
-Sedosa is a members'-club powder room you step into: lacquered rose walls, oxblood velvet, brass hardware, and the booking waiting on the vanity like a reservation card. The client site is the room itself. Rose owns whole walls, the name is set in spaced capitals across the width, photographs hang in oval vanity mirrors, and the next open times sit in the first screen. After the menu, photos hang on an oxblood wall in brass-rimmed frames. Reading rooms (policies, prep, visit) step down to blush plaster, and the page closes back on the rose wall.
+Sedosa is a members'-club powder room you step into: lacquered rose walls, oxblood velvet, brass hardware, and the booking waiting on the vanity like a reservation card. The client site is the room itself. Rose owns whole walls, the name is set in spaced capitals across the width, photographs sit in clean rounded frames, and the next open times sit in the first screen. After the menu, photos line up on an oxblood wall. Reading rooms (policies, prep, visit) step down to blush plaster, and the page closes back on the rose wall.
 
 The owner's dashboard is the same house seen from the back office. It takes only type, palette, density and one signature move from the room: an oxblood rail, a plaster working ground with rose-white panels, standard controls, and large tabular headline figures like a reservation ledger.
 
@@ -131,9 +131,9 @@ The system refuses both category ruts: beige spa minimalism and the black-and-ne
 **Key Characteristics:**
 - Committed colour: lacquer rose carries whole regions on client surfaces; oxblood is the ink and the primary action.
 - One family, Jost, carrying every role through size, weight, case and spacing; nothing thin or fussy to read.
-- Oval mirrors in thin brass rims frame every photograph.
+- Photographs in clean rounded rectangles with a soft shadow; no ovals, rims or decorative frames.
 - Lacquer is suggested by light, not faked: soft falloffs on the rose field, no bevels, chrome or glitter.
-- Motion is one authored moment: a light sheen across a mirror's glass when it is chosen.
+- Motion is one authored moment: a light sheen across a category photo when it is chosen.
 
 ## Colors
 
@@ -147,7 +147,7 @@ A rose, plaster and oxblood palette with brass used as hardware, every text pair
 - **Deep Lacquer** (deep-lacquer): links, current selection, focus rings and small accents on plaster or rose-white (5.36:1 on plaster). Pressed state: deep-lacquer-pressed.
 
 ### Tertiary
-- **Brass** (brass): mirror rims, the inner rule of framed cards, hairline dividers in dark rooms. Never text on light grounds.
+- **Brass** (brass): the inner rule of framed cards, hairline dividers in dark rooms. Never text on light grounds.
 - **Brass, light** (brass-light): text and small details on oxblood (9.9:1): wordmark subline, group labels, Instagram handle.
 
 ### Neutral
@@ -190,7 +190,7 @@ A rose, plaster and oxblood palette with brass used as hardware, every text pair
 
 Client surfaces are full-bleed rooms stacked vertically: rose wall (hero), brass dado rail, rose menu wall, plaster menu card, oxblood photo wall, plaster-deep policies, plaster prep, plaster-deep visit, rose closing wall, oxblood footer. Content sits in a centred container (72–80rem) with 16px gutters on phones and 24px from 640px up. Rooms breathe at 80px vertical padding, 112px from 640px up; more space sits above a heading than below it.
 
-The hero composes as a triptych on desktop (tagline and Book | mirror | reservation card) under the full-width wordmark, and on phones as mirror-left with the tagline beside it, the reservation card below, all inside the first screen. Lists use hairline dividers and dotted leaders to prices instead of cards.
+The hero composes as a triptych on desktop (tagline and Book | portrait | reservation card) under the full-width wordmark, and on phones as portrait-left with the tagline beside it, the reservation card below, all inside the first screen. Lists use hairline dividers and dotted leaders to prices instead of cards.
 
 The dashboard is a fixed 16rem oxblood rail with a plaster content area (max 72rem) on desktop; phones get an oxblood top bar, bottom tabs and a More sheet. Grids collapse to a single column under 1024px, with minmax(0, 1fr) columns so nothing forces sideways scrolling.
 
@@ -200,16 +200,16 @@ A hybrid: the room is flat colour, and depth is reserved for objects placed in i
 
 ### Shadow Vocabulary
 - **Object on the wall** (`0 24px 48px -24px rgba(58,15,28,0.55)`): reservation card, framed panels, the confirmation card.
-- **Mirror** (`0 0 0 2px var(--color-brass), 0 22px 40px -22px rgb(58 15 28 / 0.65)`): the brass rim plus the mirror's fall-off shadow.
+- **Photo** (`0 22px 40px -24px rgb(58 15 28 / 0.6)`): photographs; deeper (`0 30px 50px -28px rgba(0,0,0,0.85)`) on the oxblood wall.
 - **Lacquered button** (`inset 0 1px 0 rgb(255 255 255 / 0.12), 0 6px 16px -8px rgb(58 15 28 / 0.6)`): primary buttons.
 - **Working panel** (`0 1px 0 rgba(58,15,28,0.04), 0 14px 30px -24px rgba(58,15,28,0.45)`): dashboard cards and figures.
 
 ### Named Rules
-**The Objects Cast, Walls Don't Rule.** Rooms are flat. Only things set into the room (cards, mirrors, buttons, sheets) cast a shadow.
+**The Objects Cast, Walls Don't Rule.** Rooms are flat. Only things set into the room (cards, photos, buttons, sheets) cast a shadow.
 
 ## Shapes
 
-Soft, generous corners and one true curve. Buttons and chips are full pills; client panels round at 28px with a 22px inner frame; inputs at 14px; dashboard panels at 20px and dashboard inputs at 12px. The signature silhouette is the tall ellipse of the vanity mirror (border-radius 50% on a 3:4 or 490:710 box), always rimmed in a 2px brass line. On the photo wall it alternates with two sister frames: an arch (fully rounded top, 24px bottom corners, 3:4) and a round mirror (1:1). A framed card is a rose-white panel with a 1px brass rule set 6px inside its edge.
+Soft, generous corners and one true curve. Buttons and chips are full pills; client panels round at 28px with a 22px inner frame; inputs at 14px; dashboard panels at 20px and dashboard inputs at 12px. Photographs are rounded rectangles: 24px corners by default, 20px for menu category cards (4:5), 28px for the tall hero portrait, 12px for dashboard thumbnails. No ovals, arches or circles for photos. A framed card is a rose-white panel with a 1px brass rule set 6px inside its edge.
 
 ## Components
 
@@ -242,11 +242,11 @@ Lacquered, confident pills.
 - **Client header:** on the rose wall; type wordmark (spaced-capital name over a tracked-caps subline), tracked-caps links with an underline on hover, account circle and an oxblood Book now pill. Gains a brass hairline and soft shadow once scrolled.
 - **Dashboard rail:** oxblood; brass-light group labels; links in plaster with brass-light icons; the current section is a rose pill with oxblood text. Phones: rose-white bottom tabs under a brass rule, current tab in deep lacquer.
 
-### Vanity Mirror (signature)
-A tall ellipse holding a photograph in a 2px brass rim, with a soft-light glass highlight. Used for the hero portrait, menu categories and results. Without a photo, the glass is a rose gradient with the category's initial in Jost. Choosing a menu mirror adds an outer oxblood ring and plays one light sheen across the glass (1.4s, exponential ease-out).
+### Photo frame
+A clean rounded rectangle with a soft fall-off shadow, holding the photo edge to edge (object-fit: cover). Used for the hero portrait, menu category cards, the photo wall and dashboard thumbnails. A category without a photo shows a plaster card with its initial in deep lacquer. The chosen category card gets a 2px oxblood ring set 4px off the card and one light sheen across the photo (1.4s, exponential ease-out).
 
 ### Photo wall
-The owner's photos (added under Photos in the dashboard, up to 12, in the order set there) hang on the oxblood wall after the menu, followed by the studio's two real brow results. Frames cycle oval, arch, round with every second frame dropped 32px, in a centred row that becomes a swipeable strip when it overflows. Each photo carries the owner's description as its alt text. The frames rise in once as the wall scrolls into view.
+The owner's photos (added under Photos in the dashboard, up to 12, in the order set there) hang on the oxblood wall after the menu, followed by the studio's two real brow results. All photos share one 4:5 rounded frame in a centred row that becomes a swipeable strip when it overflows. Each photo carries the owner's description as its alt text. The photos rise in once as the wall scrolls into view.
 
 ### Slot and date buttons
 Outlined rounded rectangles (16px) with the time in large tabular figures and AM/PM in tracked caps; selected is an oxblood fill with rose-white text. The same anatomy appears in the hero's reservation card.
@@ -255,10 +255,10 @@ Outlined rounded rectangles (16px) with the time in large tabular figures and AM
 
 ### Do:
 - **Do** set every text on lacquer rose in oxblood (5.38:1).
-- **Do** frame photographs in the vanity mirror with its 2px brass rim.
+- **Do** show photographs in plain rounded rectangles, edge to edge.
 - **Do** set prices, dates, times and headline numbers as large medium-weight tabular figures.
 - **Do** use rose-white for panels and inputs, plaster for reading rooms, oxblood for the closing room.
-- **Do** keep motion to one authored moment per surface (the mirror sheen) and 150–250ms state transitions in the dashboard.
+- **Do** keep motion to one authored moment per surface (the category sheen) and 150–250ms state transitions in the dashboard.
 - **Do** theme browser surfaces: rose selection with oxblood text, deep-lacquer caret, deep-lacquer scrollbar, deep-lacquer focus ring (brass-light on oxblood).
 
 ### Don't:
@@ -268,4 +268,5 @@ Outlined rounded rectangles (16px) with the time in large tabular figures and AM
 - **Don't** draw a bar down one side of a box to mark state; use a full outline or a tint.
 - **Don't** use glyphs or emoji as icons; icons are drawn SVG in one stroke weight.
 - **Don't** fake materials with bevels, chrome gradients or glitter; lacquer is light on a flat field.
+- **Don't** put photos in ovals, arches, circles or brass rims (rejected by the owner).
 - **Don't** bring back a high-contrast serif or a second display family; legibility comes first.

@@ -14,10 +14,10 @@ It ships with the studio's real menu, copied from the old Acuity page:
   blush plaster, oxblood and brass, set in Jost throughout (see
   [DESIGN.md](DESIGN.md)). It includes:
   - A hero that fits the first screen on any phone: the name set in spaced capitals
-    across the width, the studio portrait in an oval vanity mirror, one line,
+    across the width, the studio portrait in a tall rounded photo, one line,
     and a reservation card with the **next three open times**. Tapping one
     opens booking with that time already selected.
-  - A menu that opens on a **wall of category mirrors**, each with its own
+  - A menu that opens on a row of **category photo cards**, each with its own
     photo (uploaded from the dashboard). Swipe on phones, arrows on desktop,
     arrow keys for keyboard users; picking a card shows that category's
     services right below, and "Next: …" walks through them in order. Search
@@ -56,8 +56,8 @@ It ships with the studio's real menu, copied from the old Acuity page:
 - Email confirmations, reschedule/cancel notices and day-before reminders.
   Clients who opt in get texts too, and can tick **"Send my reminder on
   WhatsApp"** when booking (or later from their account).
-- **Motion**: one signature moment. Choosing a category mirror sends a light
-  sheen across its glass, and a fresh booking's confirmation card gets the same
+- **Motion**: one signature moment. Choosing a category card sends a light
+  sheen across its photo, and a fresh booking's confirmation card gets the same
   sheen. Step content rises in briefly. Everything switches off for anyone with
   "reduce motion" on, and content never depends on it.
 - Accessibility is checked automatically with axe (WCAG 2.1 AA, including

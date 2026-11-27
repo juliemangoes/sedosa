@@ -1,5 +1,5 @@
 import Image from "next/image";
-import portrait from "@/assets/brand/portrait-mirror.jpg";
+import portrait from "@/assets/brand/portrait-hero.jpg";
 import type { PublicData } from "@/components/booking/types";
 import { categoryLabel, placesLabel, prettyName, shortDuration } from "@/lib/display";
 import { IconArrowRight } from "./icons";
@@ -13,7 +13,7 @@ export type Openings = {
 
 /**
  * The powder room's front wall: lacquered rose, the name set in spaced capitals across
- * the width, the portrait in an oval vanity mirror over it, and the next open
+ * the width, the portrait in a tall photo over it, and the next open
  * times waiting on a reservation card.
  */
 export default function Hero({ data, openings }: { data: PublicData; openings: Openings | null }) {
@@ -31,15 +31,15 @@ export default function Hero({ data, openings }: { data: PublicData; openings: O
         </h1>
 
         <div className="relative z-10 -mt-[clamp(1.6rem,8.4vw,5.6rem)] grid grid-cols-[auto_1fr] items-end gap-x-5 gap-y-6 sm:grid-cols-1 sm:gap-x-10 lg:grid-cols-[1fr_auto_1fr]">
-          {/* The mirror */}
-          <figure className="w-[44vw] max-w-[11.5rem] sm:mx-auto sm:w-64 sm:max-w-none lg:order-2 lg:w-[18.5rem]">
-            <div className="mirror aspect-[490/710] bg-plaster-2">
+          {/* The portrait */}
+          <figure className="w-[42vw] max-w-[11rem] sm:mx-auto sm:w-60 sm:max-w-none lg:order-2 lg:w-[17rem]">
+            <div className="photo-frame aspect-[371/617] rounded-[1.75rem] bg-plaster-2 shadow-[0_30px_50px_-26px_rgba(58,15,28,0.75)]">
               <Image
                 src={portrait}
                 alt={`A styled portrait at ${data.businessName}`}
                 loading="eager"
                 fetchPriority="high"
-                sizes="(min-width: 1024px) 18.5rem, (min-width: 640px) 16rem, 44vw"
+                sizes="(min-width: 1024px) 17rem, (min-width: 640px) 15rem, 42vw"
                 placeholder="blur"
                 className="size-full object-cover"
               />

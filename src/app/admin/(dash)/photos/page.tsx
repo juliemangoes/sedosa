@@ -65,7 +65,7 @@ export default async function PhotosPage({ searchParams }: { searchParams: Promi
             <li key={p.mediaId}>
               <Card className="h-full">
                 <div className="flex gap-4">
-                  <span className="mirror block aspect-[3/4] w-24 shrink-0">
+                  <span className="photo-frame block aspect-[4/5] w-24 shrink-0 rounded-xl">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={mediaUrl(p.mediaId)!} alt={p.alt || `Photo ${i + 1}`} className="absolute inset-0 size-full object-cover" />
                   </span>

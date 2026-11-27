@@ -9,7 +9,7 @@ import { IconChevronLeft, IconChevronRight, IconSearch, IconX } from "@/componen
 type Group = PublicData["categories"][number] & { services: PublicService[]; fromCents: number; hasFree: boolean };
 
 /**
- * The menu room. Categories hang on the rose wall as oval vanity mirrors (the
+ * The menu room. Categories sit on the rose wall as photo cards (the
  * owner's photo in each, or a monogram on rose glass) and act as tabs;
  * choosing one sends a light sheen across its glass and lays that category's
  * services out below on a plaster menu card. Search covers everything.
@@ -70,7 +70,7 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
     return () => window.removeEventListener("hashchange", fromHash);
   }, [groups, select]);
 
-  // Compact category bar once the mirror wall has scrolled away.
+  // Compact category bar once the category cards have scrolled away.
   useEffect(() => {
     const el = wallRef.current;
     const panel = panelRef.current;
@@ -116,7 +116,7 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
           <h2 id="services-title" className="font-display text-[clamp(2.6rem,8vw,4.25rem)] font-medium leading-none">
             The menu
           </h2>
-          <p className="mt-4 text-lg">Choose a mirror to see its services and prices, then book the one you want.</p>
+          <p className="mt-4 text-lg">Choose a category to see its services and prices, then book the one you want.</p>
           <div className="relative mx-auto mt-6 max-w-md">
             <IconSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-soft" />
             <label htmlFor="service-search" className="sr-only">
@@ -165,19 +165,19 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
                   className="group w-[40%] shrink-0 snap-start rounded-3xl pb-1 text-center sm:w-[27%] md:w-[21%] lg:w-[calc((100%-7.5rem)/6)]"
                 >
                   <span
-                    className={`mirror block aspect-[3/4] transition duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1 ${
-                      on ? "shadow-[0_0_0_2px_var(--color-brass),0_0_0_6px_var(--color-rose),0_0_0_7.5px_var(--color-oxblood),0_26px_40px_-20px_rgba(58,15,28,0.7)]" : ""
+                    className={`photo-frame block aspect-[4/5] rounded-[1.25rem] transition duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1 ${
+                      on ? "ring-2 ring-oxblood ring-offset-4 ring-offset-rose" : ""
                     }`}
                   >
                     {g.imageUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={g.imageUrl} alt="" loading={i < 4 ? "eager" : "lazy"} decoding="async" className="absolute inset-0 size-full object-cover" />
                     ) : (
-                      <span aria-hidden="true" className="absolute inset-0 grid place-items-center bg-[radial-gradient(80%_60%_at_35%_25%,#fbe4eb,#eeb0c4_70%,#e597b1)]">
-                        <span className="font-display text-[clamp(2.6rem,9vw,3.6rem)] font-medium text-oxblood">{label.slice(0, 1)}</span>
+                      <span aria-hidden="true" className="absolute inset-0 grid place-items-center bg-plaster">
+                        <span className="font-display text-[clamp(2.2rem,8vw,3rem)] font-medium text-lacquer">{label.slice(0, 1)}</span>
                       </span>
                     )}
-                    {on && <span key={sheen} aria-hidden="true" className="mirror-sheen animate-sheen" />}
+                    {on && <span key={sheen} aria-hidden="true" className="sheen animate-sheen" />}
                   </span>
                   <span className={`font-display mt-4 block text-[1.2rem] font-medium leading-tight sm:text-[1.3rem] ${on ? "underline decoration-1 underline-offset-[0.3em]" : ""}`}>{label}</span>
                   <span className="mt-1.5 block text-[0.72rem] font-medium uppercase tracking-[0.14em]">
@@ -245,7 +245,7 @@ export default function ServiceMenu({ data, onBook }: { data: PublicData; onBook
           results.length === 0 ? (
             <div className="mx-auto max-w-md animate-rise text-center">
               <p className="font-display text-2xl font-medium">No services match “{q}”</p>
-              <p className="mt-2 text-ink-soft">Try another word, or choose a mirror above.</p>
+              <p className="mt-2 text-ink-soft">Try another word, or choose a category above.</p>
               <button type="button" className="btn-primary mt-6" onClick={() => setQ("")}>
                 Show all services
               </button>
