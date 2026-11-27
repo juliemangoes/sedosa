@@ -26,6 +26,9 @@
   "vars": {
     "CRON_INTERVAL_MINUTES": "60"
   },
+  // Keep variables added in the Cloudflare dashboard (e.g. APP_URL) when deploying;
+  // without this, each deploy would replace them with only the ones above.
+  "keep_vars": true,
   "observability": {
     "enabled": true
   }
