@@ -4,6 +4,7 @@ import catLashLift from "@/assets/photos/cat-lash-lift.jpg";
 import catPackages from "@/assets/photos/cat-packages.jpg";
 import catLashRemoval from "@/assets/photos/cat-lash-removal.jpg";
 import catPmu from "@/assets/photos/cat-pmu.jpg";
+import catWaxing from "@/assets/photos/cat-waxing.jpg";
 
 /*
  * Built-in photos (licensed by the owner, originals in /photos). They fill the
@@ -16,10 +17,11 @@ export const HERO_PHOTO = {
   alt: "A brow artist measuring a client's brows with a ruler before shaping",
 };
 
-/** A built-in photo for a menu category, matched on its name, or null when none fits (waxing, for one). */
+/** A built-in photo for a menu category, matched on its name, or null when none fits. */
 export function builtInCategoryPhoto(name: string): string | null {
   const n = name.toLowerCase();
   if (/pmu|microblad|ombr|powder/.test(n)) return catPmu.src;
+  if (/wax/.test(n)) return catWaxing.src;
   if (/removal/.test(n)) return catLashRemoval.src;
   if (/lash/.test(n) && /brow|package/.test(n)) return catPackages.src;
   if (/lash/.test(n)) return catLashLift.src;

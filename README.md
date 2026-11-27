@@ -21,9 +21,9 @@ It ships with the studio's real menu, copied from the old Acuity page:
   - **Meet your artist**: the owner's name and bio (from Settings) beside two
     photos; until those are filled in, a short studio welcome.
   - **Our services**: a photo card per category with its name on a wine pill
-    and a one-line description. Built-in photos cover brows, lash lifts,
-    packages, lash removal and PMU until the owner uploads their own in the
-    dashboard (waxing needs one).
+    and a one-line description. Built-in photos cover every current
+    category (brows, lash lifts, packages, lash removal, PMU, waxing) until
+    the owner uploads their own in the dashboard.
     Swipe on phones, a grid on larger screens, arrow keys for keyboard users;
     picking a card shows that category's services right below, and
     "Next: …" walks through them in order. Search

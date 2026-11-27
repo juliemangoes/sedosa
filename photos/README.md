@@ -18,10 +18,12 @@ are wired up in `src/content/photos.ts`:
 | --- | --- |
 | beautician-working-client-s-eyebrows (1).jpg | Hero (`hero-brow-mapping.jpg`) |
 | beautician-working-client-s-eyebrows.jpg | All Things Brows card (`cat-brows.jpg`) |
-| professional-eyelash-extension-application-…jpg | Korean Lash Lifts card (`cat-lash-lift.jpg`) |
-| young-woman-going-through-microblading-procedure.jpg | Lash Lift + Brow Packages card (`cat-packages.jpg`) |
+| high-angle-hand-holding-pink-swab.jpg | Korean Lash Lifts card (`cat-lash-lift.jpg`) |
+| professional-eyelash-extension-application-…jpg | Lash Lift + Brow Packages card (`cat-packages.jpg`) |
 | beautician-applying-eyelash-extensions-…jpg | Lash Removal card (`cat-lash-removal.jpg`) |
 | woman-going-through-microblading-treatment.jpg | PMU Services card (`cat-pmu.jpg`) |
+| beautician-waxing-female-legs-spa-center.jpg | Waxing card (`cat-waxing.jpg`) |
+| young-woman-going-through-microblading-procedure.jpg | Not used yet |
 
 Photos uploaded in the dashboard always take their place: a category photo
-under Services, or "Use as hero" under Photos. Waxing has no photo yet.
+under Services, or "Use as hero" under Photos.

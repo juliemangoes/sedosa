@@ -1,7 +1,7 @@
 # Surface brief: client site (landing, booking flow, confirmation, account)
 
 Scope: `/`, the booking flow, `/booking/[token]`, `/account`. Visitor mode: **Persuade** (landing) flowing into a short task (booking).
-Audience and job: Sedosa clients, mostly on phones from Instagram, choosing a brow/lash/wax service and an open time. Proof on hand: real menu and prices, policies, two real result photos, the studio portrait, six licensed treatment photos the owner supplied (in /photos), owner-uploaded category and photo-wall photos. No reviews or claims exist; none may be invented.
+Audience and job: Sedosa clients, mostly on phones from Instagram, choosing a brow/lash/wax service and an open time. Proof on hand: real menu and prices, policies, two real result photos, the studio portrait, eight licensed treatment photos the owner supplied (in /photos), owner-uploaded category and photo-wall photos. No reviews or claims exist; none may be invented.
 Constraint: pink stays the studio colour; the chrome logo, black-satin/neon look and playful voice are replaceable. Must feel high class and premium, not white or sterile.
 
 ## Direction contract
