@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   if (!(file instanceof Blob) || (kind !== "category" && kind !== "receipt" && kind !== "gallery")) return NextResponse.json({ error: "Choose a photo to upload." }, { status: 400 });
   try {
     const db = await getDb();
-    const buf = Buffer.from(await file.arrayBuffer());
+    const buf = new Uint8Array(await file.arrayBuffer());
     if (kind === "category") {
       const categoryId = Number(fd?.get("categoryId"));
       const cat = await db.query.categories.findFirst({ where: eq(t.categories.id, categoryId) });

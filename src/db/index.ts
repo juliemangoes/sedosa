@@ -1,10 +1,9 @@
 import path from "node:path";
-import fs from "node:fs";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
-import { drizzle as drizzlePglite } from "drizzle-orm/pglite";
 import { migrate as migratePg } from "drizzle-orm/node-postgres/migrator";
-import { migrate as migratePglite } from "drizzle-orm/pglite/migrator";
 import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { onWorkers } from "@/lib/runtime";
 import * as schema from "./schema";
 
 export type DB = PgDatabase<PgQueryResultHKT, typeof schema>;
@@ -24,19 +23,13 @@ export const MIGRATIONS_DIR = path.join(process.cwd(), "drizzle");
 export async function openDb(url = process.env.DATABASE_URL ?? ""): Promise<{ db: DB; kind: "pg" | "pglite" }> {
   if (url.startsWith("postgres://") || url.startsWith("postgresql://")) {
     const { Pool } = await import("pg");
-    const pool = new Pool({ connectionString: url, max: 5 });
+    const pool = new Pool({ connectionString: url, max: onWorkers ? 3 : 5 });
     return { db: drizzlePg(pool, { schema }) as unknown as DB, kind: "pg" };
   }
-  const { PGlite } = await import("@electric-sql/pglite");
-  let client;
-  if (url === "memory://") {
-    client = new PGlite();
-  } else {
-    const dir = url.startsWith("pglite://") ? url.slice("pglite://".length) : path.join(process.cwd(), ".data", "pglite");
-    fs.mkdirSync(dir, { recursive: true });
-    client = new PGlite(dir);
-  }
-  return { db: drizzlePglite(client, { schema }) as unknown as DB, kind: "pglite" };
+  if (onWorkers) throw new Error("DATABASE_URL must be a postgres:// connection string on Cloudflare.");
+  // Loaded lazily: the Cloudflare Worker never reaches this line.
+  const { openPglite } = await import("./pglite");
+  return { db: openPglite(url) as unknown as DB, kind: "pglite" };
 }
 
 export async function runMigrations(db: DB, kind: "pg" | "pglite") {
@@ -44,9 +37,25 @@ export async function runMigrations(db: DB, kind: "pg" | "pglite") {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await migratePg(db as any, { migrationsFolder: MIGRATIONS_DIR });
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await migratePglite(db as any, { migrationsFolder: MIGRATIONS_DIR });
+    const { migratePglite } = await import("./pglite");
+    await migratePglite(db, MIGRATIONS_DIR);
   }
+}
+
+/**
+ * On Cloudflare Workers a database connection can't outlive the request that opened it,
+ * so each request gets its own small pool (through Hyperdrive when that binding exists).
+ */
+const perRequest = new WeakMap<object, Promise<DB>>();
+function getWorkersDb(): Promise<DB> {
+  const { env, ctx } = getCloudflareContext();
+  let db = perRequest.get(ctx);
+  if (!db) {
+    const hyperdrive = (env as { HYPERDRIVE?: { connectionString: string } }).HYPERDRIVE;
+    db = openDb(hyperdrive?.connectionString ?? process.env.DATABASE_URL ?? "").then((r) => r.db);
+    perRequest.set(ctx, db);
+  }
+  return db;
 }
 
 /**
@@ -56,6 +65,7 @@ export async function runMigrations(db: DB, kind: "pg" | "pglite") {
  */
 export function getDb(): Promise<DB> {
   if (holder.db) return Promise.resolve(holder.db);
+  if (onWorkers) return getWorkersDb();
   holder.ready ??= (async () => {
     if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
       throw new Error(

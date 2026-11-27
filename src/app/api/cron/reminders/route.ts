@@ -11,8 +11,8 @@ import { dispatchDueReminders } from "@/lib/whatsapp";
 export const dynamic = "force-dynamic";
 
 /**
- * Run on a schedule (daily in vercel.json; hourly is better). Releases unpaid holds and sends reminders.
- * Protected by CRON_SECRET (Vercel Cron sends it as a Bearer token).
+ * Run hourly by the Cloudflare Cron Trigger (see wrangler.jsonc and worker.ts). Releases unpaid holds
+ * and sends reminders. Protected by CRON_SECRET, sent as a Bearer token.
  */
 export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET;

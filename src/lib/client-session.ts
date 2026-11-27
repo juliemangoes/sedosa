@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import type { DB } from "@/db";
 import * as t from "@/db/schema";
 import { sessionSecret } from "./session-secret";
+import { onWorkers } from "./runtime";
 
 /** Client account session: a signed cookie, separate from the owner's dashboard login. */
 export const CLIENT_COOKIE = "sedosa_client";
@@ -69,7 +70,7 @@ export function emailConfigured() {
  */
 export function devCodesAllowed() {
   if (emailConfigured()) return false;
-  if (process.env.VERCEL_ENV === "production") return false;
+  if (process.env.VERCEL_ENV === "production" || onWorkers) return false;
   return process.env.NODE_ENV !== "production" || process.env.DEV_LOGIN_CODES === "1";
 }
 

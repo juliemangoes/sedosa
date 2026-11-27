@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { downscale } from "./ImageUpload";
+import { prepareUpload } from "./ImageUpload";
 import { btnCls } from "./ui";
 
 /** Adds one or more photos to the landing page's photo wall. */
@@ -19,7 +19,7 @@ export default function GalleryUpload({ remaining }: { remaining: number }) {
     for (let i = 0; i < list.length; i++) {
       setProgress({ done: i, total: list.length });
       const fd = new FormData();
-      fd.set("file", await downscale(list[i]), "photo.jpg");
+      fd.set("file", await prepareUpload(list[i], "gallery"), "photo.jpg");
       fd.set("kind", "gallery");
       const res = await fetch("/api/admin/media", { method: "POST", body: fd }).catch(() => null);
       if (!res?.ok) {

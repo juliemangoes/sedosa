@@ -1,0 +1,32 @@
+{
+  // Cloudflare Workers config for the booking site (built with @opennextjs/cloudflare).
+  // Secrets (DATABASE_URL, ADMIN_PASSWORD, SESSION_SECRET, CRON_SECRET, ...) are set in the
+  // Cloudflare dashboard or with `npx wrangler secret put NAME`, never in this file.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sedosa",
+  // worker.ts wraps the generated .open-next/worker.js and adds the reminder cron.
+  "main": "worker.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Self-reference the adapter uses for internal requests; must match "name".
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "sedosa"
+    }
+  ],
+  // Reminders and expired holds, every hour on the hour (UTC).
+  "triggers": {
+    "crons": ["0 * * * *"]
+  },
+  "vars": {
+    "CRON_INTERVAL_MINUTES": "60"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

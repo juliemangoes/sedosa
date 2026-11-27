@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const raw = await req.text();
   let event;
   try {
-    event = stripe().webhooks.constructEvent(raw, sig ?? "", secret);
+    event = await stripe().webhooks.constructEventAsync(raw, sig ?? "", secret);
   } catch {
     return new Response("Bad signature", { status: 400 });
   }

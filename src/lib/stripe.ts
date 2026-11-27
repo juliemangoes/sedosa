@@ -6,12 +6,14 @@ import { confirmDeposit, recordPayment, BookingError } from "./booking";
 import { longDateTime } from "./format";
 import type { Settings } from "./settings";
 import { notifyBooked } from "./notify";
+import { onWorkers } from "./runtime";
 
 let client: Stripe | null = null;
 export function stripe(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) throw new Error("STRIPE_SECRET_KEY is not set");
-  client ??= new Stripe(key);
+  // Workers have no Node HTTP agent; Stripe talks over fetch there.
+  client ??= new Stripe(key, onWorkers ? { httpClient: Stripe.createFetchHttpClient() } : undefined);
   return client;
 }
 

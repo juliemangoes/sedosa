@@ -11,6 +11,11 @@ test-results/
 playwright-report/
 .vercel
 
+# Cloudflare (OpenNext build output and local wrangler state)
+.open-next/
+.wrangler/
+.dev.vars
+
 # Impeccable: engine binary (downloaded on demand) and review captures
 .claude/skills/impeccable/scripts/bin/
 .impeccable/review/

@@ -3,16 +3,46 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-/** Shrinks a photo in the browser before upload (phones take 4–12 MB photos). */
-export async function downscale(file: File, max = 1800): Promise<Blob> {
+/**
+ * Gets a photo ready in the browser before upload (phones take 4–12 MB photos):
+ * turned upright, category photos cropped to 4:3 at 1200×900, everything else
+ * fitted within 1600px, and re-encoded as JPEG, which also drops camera and
+ * location data. The server only checks and stores the result.
+ */
+export async function prepareUpload(file: File, kind: "category" | "receipt" | "gallery"): Promise<Blob> {
   try {
     const bmp = await createImageBitmap(file, { imageOrientation: "from-image" } as ImageBitmapOptions);
-    const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    let sx = 0;
+    let sy = 0;
+    let sw = bmp.width;
+    let sh = bmp.height;
+    let w: number;
+    let h: number;
+    if (kind === "category") {
+      // Centre crop to 4:3, then at most 1200×900.
+      if (sw / sh > 4 / 3) {
+        sw = Math.round(sh * (4 / 3));
+        sx = Math.round((bmp.width - sw) / 2);
+      } else {
+        sh = Math.round(sw * (3 / 4));
+        sy = Math.round((bmp.height - sh) / 2);
+      }
+      const scale = Math.min(1, 1200 / sw);
+      w = Math.round(sw * scale);
+      h = Math.round(sh * scale);
+    } else {
+      const scale = Math.min(1, 1600 / Math.max(sw, sh));
+      w = Math.round(sw * scale);
+      h = Math.round(sh * scale);
+    }
     const canvas = document.createElement("canvas");
-    canvas.width = Math.round(bmp.width * scale);
-    canvas.height = Math.round(bmp.height * scale);
-    canvas.getContext("2d")!.drawImage(bmp, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/jpeg", 0.9));
+    canvas.width = w;
+    canvas.height = h;
+    const g = canvas.getContext("2d")!;
+    g.imageSmoothingQuality = "high";
+    g.drawImage(bmp, sx, sy, sw, sh, 0, 0, w, h);
+    bmp.close();
+    const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/jpeg", kind === "receipt" ? 0.8 : 0.86));
     return blob ?? file;
   } catch {
     return file; // let the server try (it will explain if it can't read it)
@@ -43,7 +73,7 @@ export default function ImageUpload({ kind, categoryId, currentUrl, label, onUpl
     setPreview(local);
     try {
       const fd = new FormData();
-      fd.set("file", await downscale(file), "photo.jpg");
+      fd.set("file", await prepareUpload(file, kind), "photo.jpg");
       fd.set("kind", kind);
       if (categoryId) fd.set("categoryId", String(categoryId));
       const res = await fetch("/api/admin/media", { method: "POST", body: fd });

@@ -151,34 +151,54 @@ is nothing to install.
 ```bash
 npm test          # availability engine, booking rules, Stripe flow (mocked), finance, WhatsApp scheduling, image processing
 npm run e2e       # real browser: landing + category cards, booking, accounts, reschedule/cancel, race, dashboard, finance, WhatsApp, phone, accessibility
+npm run cf:preview # build for Cloudflare and run it locally in workerd (see playwright.workers.config.ts to run the e2e suite against it)
 ```
 
 `npm run e2e` builds the app and serves it on port 3100 with a throwaway
 database. Stop `npm run dev` first if Next.js complains about another instance.
 
-## Deploy (Vercel + Neon, about 15 minutes)
+## Deploy (Cloudflare Workers + Neon)
+
+The site runs on Cloudflare Workers through the OpenNext adapter
+([`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare)), with a
+Postgres database on [Neon](https://neon.tech). Pushing to `main` redeploys it.
 
 1. **Database**: create a free Postgres database at [neon.tech](https://neon.tech)
-   (Vercel Postgres or Supabase work too) and copy the connection string.
-2. **Vercel**: import this GitHub repo. Add the environment variables below and
-   deploy. The build (`vercel.json`) creates the tables and loads the menu on
-   first deploy.
-3. **Stripe** (optional but recommended): in Stripe → Developers → Webhooks, add
+   (region **AWS US East (N. Virginia)**, the closest to Georgia) and copy its
+   connection string (`postgresql://…`).
+2. **Cloudflare account**: sign up at [cloudflare.com](https://dash.cloudflare.com).
+   The **Workers Paid** plan ($5/month) is recommended: the free plan allows
+   only 10 ms of CPU per request, which rendering a page can go over.
+3. **Connect this repo**: Workers & Pages → Create → Import a repository →
+   pick this GitHub repo, and name the Worker **`sedosa`** (it must match
+   `wrangler.jsonc`). Under build settings:
+   - Build command: `npm run db:setup && npx opennextjs-cloudflare build`
+   - Deploy command: `npx opennextjs-cloudflare deploy`
+   - Build variable: `DATABASE_URL` = the Neon connection string. The build
+     uses it to create the tables and load the menu (only into an empty
+     database), and stops with a clear message if it's missing.
+4. **Variables and secrets** (the Worker → Settings → Variables and secrets):
+   add the runtime values below. Use the **Secret** type for passwords and keys.
+5. **Deploy**. The site appears at `https://sedosa.<your-subdomain>.workers.dev`.
+   Set `APP_URL` to that address (or your own domain, step 6) and redeploy, so
+   links in emails and reminders point to the right place.
+6. **Your domain** (optional): the Worker → Settings → Domains & Routes → Add
+   a custom domain (the domain's DNS must be on Cloudflare).
+7. **Stripe** (optional but recommended): in Stripe → Developers → Webhooks, add
    an endpoint at `https://YOUR-DOMAIN/api/stripe/webhook` for
    `checkout.session.completed`, `checkout.session.expired` and
    `checkout.session.async_payment_succeeded`. Put its signing secret in
    `STRIPE_WEBHOOK_SECRET`.
-4. **Email**: create a [Resend](https://resend.com) account, verify your
+8. **Email**: create a [Resend](https://resend.com) account, verify your
    domain, and set `RESEND_API_KEY` and `EMAIL_FROM`.
-5. **Texts** (optional): get a Twilio number. US business texting requires
+9. **Texts** (optional): get a Twilio number. US business texting requires
    **A2P 10DLC registration** in Twilio before messages are delivered.
-6. Point your domain at Vercel, put the link in your Instagram bio, re-enter
-   any upcoming Acuity appointments under **New appointment**, then turn
-   Acuity off.
+10. Put the link in your Instagram bio, re-enter any upcoming Acuity
+    appointments under **New appointment**, then turn Acuity off.
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `DATABASE_URL` | yes | Postgres connection string |
+| `DATABASE_URL` | yes | Postgres connection string (as a build variable **and** a runtime secret) |
 | `APP_URL` | yes | e.g. `https://book.sedosabeauty.com`, used in links |
 | `ADMIN_PASSWORD` | yes | dashboard password |
 | `SESSION_SECRET` | yes | long random string (`openssl rand -base64 32`) |
@@ -189,24 +209,29 @@ database. Stop `npm run dev` first if Next.js complains about another instance.
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` | optional | texts |
 | `TWILIO_WHATSAPP_FROM` | optional | your WhatsApp Business sender (e.g. `+14045550000`), for automatic WhatsApp reminders |
 | `TWILIO_WHATSAPP_CONTENT_SID` | optional | an approved WhatsApp template for reminders (see below) |
-| `CRON_INTERVAL_MINUTES` | optional | how often the cron job runs; default `1440` (daily). Set `60` if you run it hourly |
+
+`CRON_INTERVAL_MINUTES` is already set to `60` in `wrangler.jsonc`.
+
+**Faster database connections** (optional): a Worker opens a fresh database
+connection for each request. Cloudflare **Hyperdrive** keeps them warm: create
+a Hyperdrive configuration from the Neon connection string (Workers & Pages →
+Hyperdrive), then add `"hyperdrive": [{ "binding": "HYPERDRIVE", "id": "<its id>" }]`
+to `wrangler.jsonc`. The app uses it automatically when the binding exists.
 
 **Client accounts need email.** Sign-in codes are sent with Resend, so on a
 live site account sign-in only appears once `RESEND_API_KEY` and `EMAIL_FROM`
 are set. In local development (and in the test suite, via
-`DEV_LOGIN_CODES=1`) the code is shown on screen instead. Never set
-`DEV_LOGIN_CODES` on a real deployment.
+`DEV_LOGIN_CODES=1`) the code is shown on screen instead. Codes are never
+shown on screen on Cloudflare. Never set `DEV_LOGIN_CODES` on a real deployment.
 
 Until email or SMS is configured, messages are still recorded under
 **Messages**, so nothing is lost while you set things up.
 
-**Reminders** run from `/api/cron/reminders`. `vercel.json` schedules it daily
-at 13:00 UTC (8 AM Eastern), which works on Vercel's free plan. Each run
-sends email/text reminders for the next 24 hours, and any WhatsApp reminder
-that falls due before the next run (so they go out a little early rather than
-late). On Vercel Pro you can change it to hourly (and set
-`CRON_INTERVAL_MINUTES=60`), or ping the URL hourly from any cron service
-with the header `Authorization: Bearer $CRON_SECRET`.
+**Reminders** run from `/api/cron/reminders`. A Cron Trigger in
+`wrangler.jsonc` runs it every hour (`worker.ts` calls the route with
+`CRON_SECRET`). Each run releases unpaid holds, sends email/text reminders for
+the next 24 hours, and sends any WhatsApp reminder that falls due before the
+next run.
 
 **WhatsApp works in two modes:**
 
@@ -226,10 +251,12 @@ with the header `Authorization: Bearer $CRON_SECRET`.
 Reminders are only queued for clients who opted in. Rescheduling moves them,
 and canceling removes them.
 
-**Photos** (category pictures and receipts) are stored in the database, so
-there is no extra storage service to set up. Uploads are resized on the phone
-first, then re-encoded on the server (category photos cropped to 4:3, metadata
-and location data stripped).
+**Photos** (category pictures, the photo wall and receipts) are stored in the
+database, so there is no extra storage service to set up. Uploads are sized in
+the browser first (turned upright, category photos cropped to 4:3, re-encoded
+as JPEG, which drops camera and location data); the server checks each one is
+a real image and strips any metadata left. Cloudflare Workers can't run native
+image libraries, so nothing is re-encoded on the server.
 
 ## Design system
 
@@ -276,10 +303,13 @@ src/lib/booking.ts                create / reschedule / cancel / deposit logic
 src/lib/notify.ts                 email + SMS templates
 src/lib/whatsapp.ts               WhatsApp links, templates, scheduled reminders
 src/lib/finance.ts                income/expense ledger, periods, CSV
-src/lib/media.ts                  photo processing (sharp) and storage
+src/lib/media.ts                  photo checks, metadata stripping and storage
 src/db/schema.ts, drizzle/        database schema + migrations
 src/db/seed-data.ts               the studio's menu, forms and locations
 src/components/landing/           landing page sections (hero, openings, artist, policies, prep, visit, photo wall)
 src/content/prep.ts               prep checklists shown on the landing + confirmation pages
+src/content/photos.ts             built-in hero and category photos (licensed; originals in photos/)
+wrangler.jsonc, worker.ts         Cloudflare Worker config, cron trigger and entry point
+open-next.config.ts               OpenNext (Cloudflare adapter) settings
 src/assets/brand/                 portrait and results photos cropped from the studio's graphics (origin noted in each file)
 ```

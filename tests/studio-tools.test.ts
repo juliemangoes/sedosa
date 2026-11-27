@@ -248,25 +248,31 @@ describe("finance", () => {
 });
 
 describe("media", () => {
-  const photo = (w: number, h: number) => sharp({ create: { width: w, height: h, channels: 3, background: { r: 230, g: 120, b: 190 } } }).jpeg().toBuffer();
+  // Uploads arrive already sized by the browser; the server checks, measures and cleans them.
+  const solid = (w: number, h: number) => sharp({ create: { width: w, height: h, channels: 3, background: { r: 230, g: 120, b: 190 } } });
+  const exif = { IFD0: { Make: "PhoneCo", Model: "Camera 12" }, IFD3: { GPSLatitudeRef: "N", GPSLatitude: "33/1 36/1 0/1" } };
+  const has = (b: Uint8Array, text: string) => Buffer.from(b).includes(Buffer.from(text));
 
-  it("crops category photos to 4:3 WebP", async () => {
-    const out = await processImage(await photo(3000, 4000), "category");
-    expect(out).toMatchObject({ width: 1200, height: 900, mime: "image/webp" });
-    expect((await sharp(out.bytes).metadata()).format).toBe("webp");
+  it("reads the size of JPEG, PNG and WebP uploads", async () => {
+    expect(await processImage(await solid(1200, 900).jpeg().toBuffer(), "category")).toMatchObject({ width: 1200, height: 900, mime: "image/jpeg" });
+    expect(await processImage(await solid(640, 800).png().toBuffer(), "gallery")).toMatchObject({ width: 640, height: 800, mime: "image/png" });
+    expect(await processImage(await solid(1600, 1067).webp().toBuffer(), "gallery")).toMatchObject({ width: 1600, height: 1067, mime: "image/webp" });
+    expect(await processImage(await solid(500, 300).webp({ lossless: true }).toBuffer(), "receipt")).toMatchObject({ width: 500, height: 300, mime: "image/webp" });
   });
 
-  it("keeps landing-page photos whole, never enlarged", async () => {
-    expect(await processImage(await photo(3000, 2000), "gallery")).toMatchObject({ width: 1600, height: 1067, mime: "image/webp" });
-    expect(await processImage(await photo(640, 800), "gallery")).toMatchObject({ width: 640, height: 800 });
+  it("strips camera and location data, and the image still decodes", async () => {
+    for (const img of [solid(800, 600).jpeg(), solid(800, 600).png(), solid(800, 600).webp()]) {
+      const input = await img.withExifMerge(exif).toBuffer();
+      expect(has(input, "PhoneCo")).toBe(true);
+      const out = await processImage(input, "gallery");
+      expect(has(out.bytes, "PhoneCo")).toBe(false);
+      expect((await sharp(out.bytes).metadata()).exif).toBeUndefined();
+      expect(await sharp(out.bytes).metadata()).toMatchObject({ width: 800, height: 600 });
+    }
   });
 
-  it("keeps receipts whole, never enlarged", async () => {
-    expect(await processImage(await photo(2400, 3200), "receipt")).toMatchObject({ width: 1200, height: 1600 });
-    expect(await processImage(await photo(500, 300), "receipt")).toMatchObject({ width: 500, height: 300 });
-  });
-
-  it("rejects files that aren't images", async () => {
+  it("rejects files that aren't images, and oversized ones", async () => {
     await expect(processImage(Buffer.from("definitely not a jpeg"), "receipt")).rejects.toBeInstanceOf(MediaError);
+    await expect(processImage(await solid(5000, 3000).jpeg().toBuffer(), "gallery")).rejects.toBeInstanceOf(MediaError);
   });
 });

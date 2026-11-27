@@ -15,7 +15,10 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:seed": "tsx scripts/seed.ts",
-    "db:setup": "tsx scripts/migrate.ts && tsx scripts/seed.ts"
+    "db:setup": "tsx scripts/migrate.ts && tsx scripts/seed.ts",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:deploy": "npm run db:setup && opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "engines": {
     "node": ">=20.9"
@@ -24,6 +27,7 @@
     "@electric-sql/pglite": "^0.5.17",
     "@fontsource-variable/jost": "^5.3.0",
     "@fontsource-variable/oswald": "^5.3.0",
+    "@opennextjs/cloudflare": "^1.20.19",
     "drizzle-orm": "^0.45.4",
     "jose": "^6.2.18",
     "luxon": "^3.7.2",
@@ -31,7 +35,6 @@
     "pg": "^8.23.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "sharp": "^0.35.5",
     "stripe": "^23.2.0",
     "zod": "^4.6.7"
   },
@@ -45,9 +48,11 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "drizzle-kit": "^0.31.11",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.5",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
-    "vitest": "^5.1.1"
+    "vitest": "^5.1.1",
+    "wrangler": "^4.168.0"
   }
 }
